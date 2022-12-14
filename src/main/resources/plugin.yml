@@ -1,0 +1,30 @@
+name: Depo_Market_1_16_5
+version: '${version}'
+main: depo_market.depo_market_1_16_5.Depo_Market_1_16_5
+api-version: 1.16
+authors: [ Deponn ]
+description: Plugin that add market and economy to minecraft
+
+
+commands: #自作プラグインのコマンドを宣言
+  start_market:
+    description: マーケットを生成
+    usage: /start_market
+    permission: market
+  stop_market:
+    description: マーケットを止める
+    usage: /stop_market
+    permission: market
+  place_market:
+    description: マーケット窓口を実体化
+    usage: /place_market
+    permission: market
+  tax:
+    description: 徴税
+    usage: /tax
+    permission: market
+
+permissions:
+  market:
+    description: op only
+    default: op
