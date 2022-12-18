@@ -4,24 +4,26 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 
-public final class Depo_Market_1_16_5 extends JavaPlugin {
+public final class Depo_Market_1_16_5 extends JavaPlugin implements TabCompleter,Listener{
 
-    private int market;
-    private boolean market_run_flag = false;
-    private boolean market_exist_flag = false;
+    MarketOperator Operator;
 
     @Override
     public void onEnable() {
+        getServer().getPluginManager().registerEvents(this, this);
+        Operator = new MarketOperator(this);
         getLogger().info("Depo_Marketが有効化されました。");
-
     }
 
     @Override
@@ -48,17 +50,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin {
                 // パース失敗
                 return true;
             }
-            if (!market_run_flag) {
-                if (!market_exist_flag) {
-                    market = 1;
-                    market_exist_flag = true;
-                }
-                market_run_flag = true;
-            }else {
-                getLogger().info("市場はすでに起動中です");
-                return true;
-            }
-
+            return Operator.StartMarket(player);
         } else if (cmd.getName().equalsIgnoreCase("stop_market")) {
             //コマンド引数を処理
             CommandParser parser = CommandParser.parse_stop_market(sender, args);
@@ -66,32 +58,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin {
                 // パース失敗
                 return true;
             }
-            if(market_run_flag) {
-                market_run_flag = false;
-                if (market_exist_flag) {
-                    if (parser.delete_all) {
-                        market = 0;
-                        market_exist_flag = false;
-                    }
-                }else{
-                    getLogger().info("予期しないバグが発生して市場の生成されないまま動いていました。");
-                    return true;
-                }
-            }else{
-                if (market_exist_flag){
-                        if (parser.delete_all) {
-                            market = 0;
-                            market_exist_flag = false;
-                        }else {
-                            getLogger().info("市場はすでに停止です");
-                            return true;
-                        }
-                }else{
-                    getLogger().info("市場はすでに停止です");
-                    return true;
-                }
-            }
-
+            return Operator.StopMarket(player,parser.delete_all);
         } else if (cmd.getName().equalsIgnoreCase("place_market")) {
             //コマンド引数を処理
             CommandParser parser = CommandParser.parse_place_market(sender, args);
@@ -99,8 +66,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin {
                 // パース失敗
                 return true;
             }
-            getLogger().info("商人を置きます");
-
+            return Operator.PlaceMarket(player);
         } else if (cmd.getName().equalsIgnoreCase("tax")) {
             //コマンド引数を処理
             CommandParser parser = CommandParser.parse_tax(sender, args);
@@ -108,12 +74,37 @@ public final class Depo_Market_1_16_5 extends JavaPlugin {
                 // パース失敗
                 return true;
             }
-            if (market_run_flag) {
-                getLogger().info("徴税します");
-            }else {
-                getLogger().info("市場が動いていません");
-            }
+            return Operator.Tax(player);
         }
         return true;
     }
+
+    @EventHandler
+    public void onEntityClick(PlayerInteractEntityEvent e) {
+        Operator.CustomerClick(e.getPlayer(),e.getRightClicked());
+    }
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent e) {
+        if (Operator.isMenu((Player) e.getWhoClicked())) {
+            e.setCancelled(true);
+            Operator.MenuClick((Player) e.getWhoClicked(),e.getCurrentItem(),e.getRawSlot());
+        }
+    }
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent e){
+        Operator.MenuClose((Player) e.getPlayer());
+    }
+
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (command.getName().equalsIgnoreCase("stop_market")) {
+            return CommandParser.suggest_stop_market(sender, args);
+        } else if (command.getName().equalsIgnoreCase("tax")) {
+            return CommandParser.suggest_tax(sender, args);
+        }else {
+            return new ArrayList<String>();
+        }
+    }
+
 }

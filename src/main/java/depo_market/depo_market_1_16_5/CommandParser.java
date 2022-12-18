@@ -49,9 +49,6 @@ public class CommandParser {
                     .collect(Collectors.toList());
         }
     }
-    public static List<String> suggest_none(CommandSender sender, String[] args) {
-            return Arrays.asList("a","a");
-    }
 
     /**
      * コマンドをパースする
@@ -65,18 +62,18 @@ public class CommandParser {
     }
     public static CommandParser parse_stop_market(CommandSender sender, String[] args) {
         boolean delete_data = false;
-
         List<String> argsList = Arrays.asList(args);
+
         if (argsList.contains("delete")) {
-            int index = argsList.indexOf("delete");
-            if (index + 1 >= argsList.size()) {
-                // 引数の次がなかった場合、エラー
-                sender.sendMessage(ChatColor.RED + "deleteの次にallが必要です");
+            if (argsList.contains("all")) {
+                delete_data = true;
+            }else {
+                sender.sendMessage(ChatColor.RED + "deleteとallの両方が必要です");
                 return new CommandParser(false);
             }
-            if (Objects.equals(argsList.get(index + 1), "all")) {
-                delete_data = true;
-            }
+        } else if (argsList.contains("all")) {
+            sender.sendMessage(ChatColor.RED + "deleteとallの両方が必要です");
+            return new CommandParser(false);
         }
         CommandParser Me = new CommandParser((true));
         Me.delete_all = delete_data;
