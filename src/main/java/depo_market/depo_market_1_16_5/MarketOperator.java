@@ -8,32 +8,24 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 public class MarketOperator {
 
+    private final int InventoryBoxNum = 27;
     private final Depo_Market_1_16_5 plugin;
     private MarketObject market;
     private boolean market_run_flag = false;
     private boolean market_exist_flag = false;
-    private final Map<String, Integer>player_inventory = new HashMap<>();;
-    private final Inventory menu;
+
+    private final Map<String, Boolean>player_is_in_Menu = new HashMap<>();
+    private final Map<String, Integer>player_select_slot = new HashMap<>();
+    private final ArrayList<MenuItem> MenuItemList = new ArrayList<>();
 
     public MarketOperator(Depo_Market_1_16_5 plugin){
         this.plugin = plugin;
-
-        this.menu = Bukkit.createInventory(null, 27, "trade_menu");
-
-        final ItemStack item = new ItemStack(Material.DIAMOND_SWORD, 1);
-        final ItemMeta meta = item.getItemMeta();
-
-        Objects.requireNonNull(meta).setDisplayName("ダイヤモンド剣");
-        meta.setLore(Arrays.asList("First line","Second line"));
-        item.setItemMeta(meta);
-        this.menu.addItem(item);
+        this.MenuItemList.add(new MenuItem(Material.DIAMOND_SWORD,2,"ダイヤ剣",Arrays.asList("First line","Second line")));
+        this.MenuItemList.add(new MenuItem(Material.IRON_ORE,2,"鉄",Arrays.asList("First line","Second line")));
     }
     public boolean StartMarket(Player player){
         if (!market_run_flag) {
@@ -97,27 +89,39 @@ public class MarketOperator {
         if(ClickedEntity instanceof Villager) {
             Villager ClickedCustomer = (Villager)ClickedEntity;
             if(ClickedCustomer.hasMetadata("Customer") && ClickedCustomer.getMetadata("Customer").get(0).asBoolean()) {
-                player_inventory.put(player.getName(),1);
-                player.openInventory(menu);
+                player_is_in_Menu.put(player.getName(), true);
+                player_select_slot.put(player.getName(), -1);
+                final Inventory MainMenu = Bukkit.createInventory(null, InventoryBoxNum, "trade_menu");
+                for (MenuItem menuItem : MenuItemList) {
+                    MainMenu.addItem(menuItem.GetItem());
+                }
+                player.openInventory((MainMenu));
             }
         }
     }
     public boolean isMenu(Player player){
-        return player_inventory.get(player.getName()) == 1 || player_inventory.get(player.getName()) == 2;
+        return player_is_in_Menu.getOrDefault(player.getName(),false);
     }
     public void MenuClick(Player player, ItemStack item, int slot){
         if (item != null) {
             if(!item.getType().isAir()){
-                if(player_inventory.get(player.getName()) == 1 ) {
-                    player_inventory.put(player.getName(), 2);
-                    player.sendMessage("1クリックしました:" + slot);
-                } else if (player_inventory.get(player.getName()) == 2) {
-                    player.sendMessage("2クリックしました:" + slot);
+                if(player_select_slot.getOrDefault(player.getName(),-2) == -1) {
+                    final Inventory submenu =  Bukkit.createInventory(null, InventoryBoxNum, "trade_menu");
+                    MenuItem menuItem = new MenuItem(Material.ACACIA_BOAT,1,"あかしあ",Arrays.asList("First line","Second line"));
+                    submenu.addItem(menuItem.GetItem());
+                    player.openInventory(submenu);
+                    player_select_slot.put(player.getName(), slot);
+                    player_is_in_Menu.put(player.getName(),true);
+                } else if (player_select_slot.getOrDefault(player.getName(),-2) >= 0) {
+                    player.sendMessage("クリックしました:" + slot);
                 }
             }
         }
     }
     public void MenuClose(Player player) {
-        player_inventory.remove(player.getName());
+        player_is_in_Menu.put(player.getName(),false);
+        player_select_slot.put(player.getName(),-2);
+        player.sendMessage("インベントリ解放");
     }
+
 }
