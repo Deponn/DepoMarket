@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,13 +13,12 @@ public class MenuItem {
     private final Material material;
     private final int amount;
     private final String name;
-    private final List<String> lore;
+    private List<String> lore = Arrays.asList("first line" , "second line");
 
-    public MenuItem(Material material, int amount, String name, List<String> lore){
+    public MenuItem(Material material, int amount, String name){
         this.material = material;
         this.amount = amount;
         this.name = name;
-        this.lore = lore;
     }
 
     public ItemStack GetItem(){
@@ -28,5 +28,16 @@ public class MenuItem {
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
+    }
+
+    public void setLore(String first,String second){
+        lore = Arrays.asList(first,second);
+    }
+
+    public Material getMaterial(){
+        return material;
+    }
+    public String getName(){
+        return name;
     }
 }

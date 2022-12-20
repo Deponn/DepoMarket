@@ -18,14 +18,21 @@ public class MarketOperator {
     private boolean market_run_flag = false;
     private boolean market_exist_flag = false;
 
+    private final Map<String, Boolean>ItemList = new HashMap<>();
     private final Map<String, Boolean>player_is_in_Menu = new HashMap<>();
     private final Map<String, Integer>player_select_slot = new HashMap<>();
     private final ArrayList<MenuItem> MenuItemList = new ArrayList<>();
 
     public MarketOperator(Depo_Market_1_16_5 plugin){
         this.plugin = plugin;
-        this.MenuItemList.add(new MenuItem(Material.DIAMOND_SWORD,2,"ダイヤ剣",Arrays.asList("First line","Second line")));
-        this.MenuItemList.add(new MenuItem(Material.IRON_ORE,2,"鉄",Arrays.asList("First line","Second line")));
+
+        this.MenuItemList.add(new MenuItem(Material.DIAMOND,1,"ダイヤ"));
+        this.MenuItemList.add(new MenuItem(Material.IRON_INGOT,1,"鉄"));
+        this.MenuItemList.add(new MenuItem(Material.STONE_BRICKS,1,"丸石"));
+        this.MenuItemList.add(new MenuItem(Material.SAND,1,"砂"));
+        this.MenuItemList.add(new MenuItem(Material.OAK_WOOD,1,"オーク"));
+        this.MenuItemList.add(new MenuItem(Material.BREAD,1,"パン"));
+        this.MenuItemList.add(new MenuItem(Material.QUARTZ,1,"クオーツ"));
     }
     public boolean StartMarket(Player player){
         if (!market_run_flag) {
@@ -106,9 +113,15 @@ public class MarketOperator {
         if (item != null) {
             if(!item.getType().isAir()){
                 if(player_select_slot.getOrDefault(player.getName(),-2) == -1) {
+                    final Material SelectedMaterial = MenuItemList.get(slot).getMaterial();
+                    final String SelectedName = MenuItemList.get(slot).getName();
                     final Inventory submenu =  Bukkit.createInventory(null, InventoryBoxNum, "trade_menu");
-                    MenuItem menuItem = new MenuItem(Material.ACACIA_BOAT,1,"あかしあ",Arrays.asList("First line","Second line"));
-                    submenu.addItem(menuItem.GetItem());
+                    final ArrayList<MenuItem> SubMenuItemList = new ArrayList<>();
+                    SubMenuItemList.add(new MenuItem(SelectedMaterial,1,SelectedName));
+                    for (MenuItem menuItem : SubMenuItemList) {
+                        menuItem.setLore("aaa","aaa");
+                        submenu.addItem(menuItem.GetItem());
+                    }
                     player.openInventory(submenu);
                     player_select_slot.put(player.getName(), slot);
                     player_is_in_Menu.put(player.getName(),true);
