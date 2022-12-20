@@ -68,7 +68,7 @@ public class CommandParser {
             if (argsList.contains("all")) {
                 delete_data = true;
             }else {
-                sender.sendMessage(ChatColor.RED + "deleteとallの両方が必要です");
+                sender.sendMessage(ChatColor.DARK_GRAY + "deleteとallの両方が必要です");
                 return new CommandParser(false);
             }
         } else if (argsList.contains("all")) {
