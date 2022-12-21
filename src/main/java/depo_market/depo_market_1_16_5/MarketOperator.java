@@ -2,11 +2,15 @@ package depo_market.depo_market_1_16_5;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
+
 
 import java.util.*;
 
@@ -18,6 +22,9 @@ public class MarketOperator {
     private final int INDEX_OF_SUB_MENU = -2;
     private final Depo_Market_1_16_5 plugin;
     private MarketObject market;
+    private final ScoreboardManager scoreboardManager;
+    private final Scoreboard scoreboard;
+    private Object[] teams;
     private boolean market_run_flag = false;
     private boolean market_exist_flag = false;
     private final Map<String, Boolean>player_is_in_Menu = new HashMap<>();
@@ -28,6 +35,9 @@ public class MarketOperator {
 
     public MarketOperator(Depo_Market_1_16_5 plugin){
         this.plugin = plugin;
+        this.scoreboardManager = Bukkit.getScoreboardManager();
+        this.scoreboard = Objects.requireNonNull(scoreboardManager).getMainScoreboard();
+        this.teams = scoreboard.getTeams().toArray();
         this.TradeAmountList.add(1);
         this.TradeAmountList.add(16);
         this.TradeAmountList.add(64);
@@ -70,9 +80,20 @@ public class MarketOperator {
     public boolean StartMarket(Player player){
         if (!market_run_flag) {
             if (!market_exist_flag) {
-                market = new MarketObject();
+                market = new MarketObject(0);
                 market_exist_flag = true;
-                player.chat("市場実体化");
+                player.sendMessage("市場実体化");
+                teams = scoreboard.getTeams().toArray();
+                for (Object teamObj : teams) {
+                    Team team = (Team)teamObj;
+                    player.sendMessage(team.toString());
+                    Object[]  members= team.getEntries().toArray();
+                    for (Object member : members){
+                        if(player.getName().equals(member)){
+                            player.sendMessage(team.toString());
+                        }
+                    }
+                }
             }
             market_run_flag = true;
             player.sendMessage("市場開始");
@@ -87,8 +108,7 @@ public class MarketOperator {
             player.chat("市場停止");
             if (market_exist_flag) {
                 if (delete_all) {
-                    market_exist_flag = false;
-                    player.sendMessage("市場破壊");
+                    DestroyMarket(player);
                 }
             }else{
                 player.sendMessage("予期しないバグが発生して市場の生成されないまま動いていました。");
@@ -96,8 +116,7 @@ public class MarketOperator {
         }else{
             if (market_exist_flag){
                 if (delete_all) {
-                    market_exist_flag = false;
-                    player.sendMessage("市場破壊");
+                    DestroyMarket(player);
                 }else {
                     player.sendMessage("市場はすでに停止です");
                 }
@@ -123,6 +142,26 @@ public class MarketOperator {
             player.sendMessage("市場が動いていません");
         }
         return true;
+    }
+
+    public void DestroyMarket(Player player){
+        market_exist_flag = false;
+        player.sendMessage("市場破壊");
+        player.sendMessage("hhh");
+        for (World world : Bukkit.getWorlds()) {
+            player.sendMessage("aaa");
+            for (Entity entity : world.getLivingEntities()) {
+                if (entity instanceof Villager) {
+                    player.sendMessage("ccc");
+                    if (entity.getScoreboardTags().contains("Customer")) {
+                        player.sendMessage("ddd");
+                        ((Villager) entity).setHealth(0);
+                        player.sendMessage("eee");
+                    }
+                }
+            }
+        }
+        player.sendMessage("fff");
     }
 
     public void CustomerClick(Player player, Entity ClickedEntity){
@@ -176,7 +215,7 @@ public class MarketOperator {
         }
     }
     public void MenuClose(Player player) {
-        if(player_is_in_Menu.get(player.getName()) ){
+        if(player_is_in_Menu.getOrDefault(player.getName(),false) ){
             player_is_in_Menu.put(player.getName(), false);
             player_inv_state.put(player.getName(), INDEX_OF_SUB_MENU);
         }

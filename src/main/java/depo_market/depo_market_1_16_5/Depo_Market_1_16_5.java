@@ -108,3 +108,5 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements TabCompleter
     }
 
 }
+
+// destroyにわける、市場作る、金動かす、セーブ機能
