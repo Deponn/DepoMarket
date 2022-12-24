@@ -8,21 +8,44 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
-public final class Depo_Market_1_16_5 extends JavaPlugin implements TabCompleter,Listener{
+public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
 
     MarketOperator Operator;
 
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
-        Operator = new MarketOperator(this);
+        Objects.requireNonNull(this.getCommand("tax")).setTabCompleter(new CommandSuggest());
+        Objects.requireNonNull(this.getCommand("give_money")).setTabCompleter(new CommandSuggest());
+        Objects.requireNonNull(this.getCommand("set_disadvantage")).setTabCompleter(new CommandSuggest());
+        Operator = new MarketOperator();
+        FileConfiguration configuration = getConfig();
+        boolean ConfExist = configuration.contains("Depo_isRun");
+        if(ConfExist){
+            boolean isRun = configuration.getBoolean("Depo_isRun");
+            List<String> TeamNames = configuration.getStringList("Depo_teams");
+            List<Float> TeamMoneys = configuration.getFloatList("Depo_moneys");
+            List<String> ItemNames = configuration.getStringList("Depo_Items");
+            List<Float> ItemPrices = configuration.getFloatList("Depo_Prices");
+            List<Integer> ItemBuy = configuration.getIntegerList("Depo_buy");
+            List<Integer> ItemSell = configuration.getIntegerList("Depo_sell");
+            Map<String,Float> TeamData = new HashMap<>();
+            for (int i = 0; i < TeamNames.size(); i++) {
+                TeamData.put(TeamNames.get(i),TeamMoneys.get(i));
+            }
+            Map<String,ItemPrice> MarketData = new HashMap<>();
+            for (int i = 0; i < ItemNames.size(); i++) {
+                MarketData.put(ItemNames.get(i),new ItemPrice(ItemPrices.get(i),ItemBuy.get(i),ItemSell.get(i)));
+            }
+            Operator.LoadData(TeamData,MarketData,isRun);
+        }
         getLogger().info("Depo_Marketが有効化されました。");
     }
 
@@ -43,30 +66,21 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements TabCompleter
         Player player = (Player) sender;
 
         // コマンド処理...
-        if (cmd.getName().equalsIgnoreCase("start_market")) {
-            //コマンド引数を処理
-            CommandParser parser = CommandParser.parse_start_market(sender, args);
-            if (!parser.isSuccess) {
-                // パース失敗
-                return true;
-            }
+        if (cmd.getName().equalsIgnoreCase("initialize_market")) {
+            return Operator.InitializeMarket(player);
+
+        } else if (cmd.getName().equalsIgnoreCase("start_market")) {
             return Operator.StartMarket(player);
+
         } else if (cmd.getName().equalsIgnoreCase("stop_market")) {
-            //コマンド引数を処理
-            CommandParser parser = CommandParser.parse_stop_market(sender, args);
-            if (!parser.isSuccess) {
-                // パース失敗
-                return true;
-            }
-            return Operator.StopMarket(player,parser.delete_all);
-        } else if (cmd.getName().equalsIgnoreCase("place_market")) {
-            //コマンド引数を処理
-            CommandParser parser = CommandParser.parse_place_market(sender, args);
-            if (!parser.isSuccess) {
-                // パース失敗
-                return true;
-            }
-            return Operator.PlaceMarket(player);
+            return Operator.StopMarket(player);
+
+        } else if (cmd.getName().equalsIgnoreCase("place_customer")) {
+            return Operator.PlaceCustomer(player);
+
+        } else if (cmd.getName().equalsIgnoreCase("kill_all_customer")) {
+            return Operator.KillAllCustomer();
+
         } else if (cmd.getName().equalsIgnoreCase("tax")) {
             //コマンド引数を処理
             CommandParser parser = CommandParser.parse_tax(sender, args);
@@ -75,6 +89,25 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements TabCompleter
                 return true;
             }
             return Operator.Tax(player);
+        } else if (cmd.getName().equalsIgnoreCase("give_money")) {
+            //コマンド引数を処理
+            CommandParser parser = CommandParser.parse_tax(sender, args);
+            if (!parser.isSuccess) {
+                // パース失敗
+                return true;
+            }
+            return Operator.GiveMoney(player);
+        } else if (cmd.getName().equalsIgnoreCase("set_disadvantage")) {
+            //コマンド引数を処理
+            CommandParser parser = CommandParser.parse_disadvantage(sender, args);
+            if (!parser.isSuccess) {
+                // パース失敗
+                return true;
+            }
+            return Operator.SetDisAdvantage(player);
+
+        } else if (cmd.getName().equalsIgnoreCase("reload_team")) {
+            return Operator.ReloadTeam(player);
         }
         return true;
     }
@@ -91,20 +124,42 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements TabCompleter
         }
     }
     @EventHandler
-    public void onInventoryClose(InventoryCloseEvent e){
-        Operator.MenuClose((Player) e.getPlayer());
+    public void onInventoryClose(InventoryCloseEvent e) {
+        boolean saveFlag;
+        saveFlag = Operator.MenuClose((Player) e.getPlayer());
+        if(saveFlag){
+            saveData();
+        }
     }
 
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (command.getName().equalsIgnoreCase("stop_market")) {
-            return CommandParser.suggest_stop_market(sender, args);
-        } else if (command.getName().equalsIgnoreCase("tax")) {
-            return CommandParser.suggest_tax(sender, args);
-        }else {
-            return new ArrayList<String>();
+    public void saveData(){
+        Map<String, ItemPrice> MarketData = Operator.getMarketData();
+        Map<String, Float> teamData = Operator.getTeamMoneyData();
+        boolean MarketState = Operator.getMarketState();
+        List<String> TeamNames = new ArrayList<>(teamData.keySet());
+        List<Float> TeamMoneys = new ArrayList<>();
+        for(String team : TeamNames){
+            TeamMoneys.add(teamData.get(team));
         }
+        List<String> ItemNames = new ArrayList<>(MarketData.keySet());
+        List<Float> ItemPrices = new ArrayList<>();
+        List<Integer> ItemBuy = new ArrayList<>();
+        List<Integer> ItemSell = new ArrayList<>();
+        for(String item : ItemNames){
+            ItemPrices.add(MarketData.get(item).getPrice());
+            ItemBuy.add(MarketData.get(item).getAmountOfBought());
+            ItemSell.add(MarketData.get(item).getAmountOfSold());
+        }
+        FileConfiguration configuration = new YamlConfiguration();
+        configuration.set("Depo_isRun",MarketState);
+        configuration.set("Depo_teams",TeamNames);
+        configuration.set("Depo_moneys",TeamMoneys);
+        configuration.set("Depo_Items",ItemNames);
+        configuration.set("Depo_Prices",ItemPrices);
+        configuration.set("Depo_buy",ItemBuy);
+        configuration.set("Depo_sell",ItemSell);
+        saveConfig();
     }
 
 }

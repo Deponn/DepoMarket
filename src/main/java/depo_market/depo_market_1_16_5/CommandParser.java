@@ -1,12 +1,15 @@
 package depo_market.depo_market_1_16_5;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 
 /**
  * コマンドを処理するパーサークラス
@@ -14,42 +17,15 @@ import java.util.stream.Stream;
 public class CommandParser {
 
     public final boolean isSuccess;//パース成功したかどうか
-    public boolean delete_all = false;//データを全削除するかどうか
     public int amount_of_money = 0;//金額
     public int team_name = 0;//相手のチーム名
+    public String disadvantage = "none";
 
 
     // オブジェクト生成。パースが成功しているかを受け取る
     private CommandParser(boolean isSuccess) {
         this.isSuccess = isSuccess;
     }
-
-    /**
-     * コマンドのTAB補完候補を返す
-     *
-     * @param sender コマンド送信者
-     * @param args   引数
-     * @return コマンド補完候補
-     */
-    public static List<String> suggest_stop_market(CommandSender sender, String[] args) {
-        List<String> argsList = Arrays.asList(args);
-        return Stream.of("delete","all")
-                    .filter(s -> !argsList.contains(s))
-                    .collect(Collectors.toList());
-    }
-    public static List<String> suggest_tax(CommandSender sender, String[] args) {
-        List<String> argsList = Arrays.asList(args);
-        if (argsList.size() > 1 && "-amount".equals(argsList.get(argsList.size() - 2))) {
-            return Arrays.asList("0", "5", "20","100");
-        } else if (argsList.size() > 1 && "-team".equals(argsList.get(argsList.size() - 2))) {
-            return Arrays.asList("1", "2", "3");
-        }else {
-            return Stream.of("-amount", "-team")
-                    .filter(s -> !argsList.contains(s))
-                    .collect(Collectors.toList());
-        }
-    }
-
     /**
      * コマンドをパースする
      *
@@ -57,31 +33,6 @@ public class CommandParser {
      * @param args   引数
      * @return コマンド補完候補
      */
-    public static CommandParser parse_start_market(CommandSender sender, String[] args) {
-        return new CommandParser(true);
-    }
-    public static CommandParser parse_stop_market(CommandSender sender, String[] args) {
-        boolean delete_data = false;
-        List<String> argsList = Arrays.asList(args);
-
-        if (argsList.contains("delete")) {
-            if (argsList.contains("all")) {
-                delete_data = true;
-            }else {
-                sender.sendMessage(ChatColor.DARK_GRAY + "deleteとallの両方が必要です");
-                return new CommandParser(false);
-            }
-        } else if (argsList.contains("all")) {
-            sender.sendMessage(ChatColor.RED + "deleteとallの両方が必要です");
-            return new CommandParser(false);
-        }
-        CommandParser Me = new CommandParser((true));
-        Me.delete_all = delete_data;
-        return Me;
-    }
-    public static CommandParser parse_place_market(CommandSender sender, String[] args) {
-        return new CommandParser(true);
-    }
     public static CommandParser parse_tax(CommandSender sender, String[] args) {
         List<String> argsList = Arrays.asList(args);
 
@@ -127,6 +78,22 @@ public class CommandParser {
         CommandParser Me = new CommandParser(true);
         Me.team_name = team_name;
         Me.amount_of_money = amount_of_money;
+        return Me;
+    }
+    public static CommandParser parse_disadvantage(CommandSender sender, String[] args) {
+        List<String> argsList = Arrays.asList(args);
+        String disadvantage;
+        if (argsList.contains("-disable_buy")) {
+            disadvantage = "-disable_buy";
+        }else if(argsList.contains("-health")){
+            disadvantage = "-health";
+        }else if(argsList.contains("-none")){
+            disadvantage = "-none";
+        }else {
+            return new CommandParser(false);
+        }
+        CommandParser Me = new CommandParser(true);
+        Me.disadvantage = disadvantage;
         return Me;
     }
 }
