@@ -22,15 +22,10 @@ public class MarketOperator {
             ItemDataList.put(key, data.get(key));
         }
     }
-    public void Initialize(Player player,ArrayList<ItemMenuSlot> initialPriceList){
-        if (!market_run_flag) {
-            ItemDataList = new HashMap<>();
-            for(ItemMenuSlot Item : initialPriceList){
-                this.ItemDataList.put(Item.getEnName(),new ItemPrice(Item.getInitialPrice()));
-            }
-            player.sendMessage("市場を初期化する");
-        }else {
-            player.sendMessage("市場が動いてる間は初期化できません");
+    public void Initialize(ArrayList<ItemMenuSlot> initialPriceList) {
+        ItemDataList = new HashMap<>();
+        for (ItemMenuSlot Item : initialPriceList) {
+            this.ItemDataList.put(Item.getEnName(), new ItemPrice(Item.getInitialPrice()));
         }
     }
     public void StartMarket(Player player) {

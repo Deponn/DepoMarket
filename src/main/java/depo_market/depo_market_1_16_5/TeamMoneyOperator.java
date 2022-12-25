@@ -22,6 +22,13 @@ public class TeamMoneyOperator {
             teams.put(team.getName(), 0f);
         }
     }
+    public void Initialize() {
+        Object[] teamObjects = scoreboard.getTeams().toArray();
+        for (Object teamObj : teamObjects) {
+            Team team = (Team) teamObj;
+            teams.put(team.getName(), 0f);
+        }
+    }
     public void LoadTeams(Map<String, Float> LoadData) {
         List<String> keys = new ArrayList<>(LoadData.keySet());
         for(String key : keys){
@@ -38,7 +45,7 @@ public class TeamMoneyOperator {
             }
         }
     }
-    public boolean setTeamMoney(Player player, float money) {
+    public boolean PlayerInTeam(Player player){
         Object[] teamObjects = scoreboard.getTeams().toArray();
         for (Object teamObj : teamObjects) {
             Team team = (Team) teamObj;
@@ -46,7 +53,6 @@ public class TeamMoneyOperator {
                 Object[] members = team.getEntries().toArray();
                 for (Object member : members) {
                     if (player.getName().equals(member)) {
-                        teams.put(team.getName(), money);
                         return true;
                     }
                 }
@@ -55,7 +61,22 @@ public class TeamMoneyOperator {
         }
         return false;
     }
-    public boolean addTeamMoney(Player player, float money) {
+    public void setTeamMoney(Player player, float money) {
+        Object[] teamObjects = scoreboard.getTeams().toArray();
+        for (Object teamObj : teamObjects) {
+            Team team = (Team) teamObj;
+            if (teams.containsKey(team.getName())) {
+                Object[] members = team.getEntries().toArray();
+                for (Object member : members) {
+                    if (player.getName().equals(member)) {
+                        teams.put(team.getName(), money);
+                    }
+                }
+
+            }
+        }
+    }
+    public void addTeamMoney(Player player, float money) {
         Object[] teamObjects = scoreboard.getTeams().toArray();
         for (Object teamObj : teamObjects) {
             Team team = (Team) teamObj;
@@ -64,13 +85,11 @@ public class TeamMoneyOperator {
                 for (Object member : members) {
                     if (player.getName().equals(member)) {
                         teams.put(team.getName(), teams.get(team.getName()) + money);
-                        return true;
                     }
                 }
 
             }
         }
-        return false;
     }
     public  Map<String, Float> getData(){
         return teams;

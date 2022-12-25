@@ -17,12 +17,12 @@ public class ItemStackData {
     public ItemStackData(Material material , String nameJP){
         this.material = material;
         this.NameJP = nameJP;
-        Lore = Arrays.asList("None","None");
+        Lore = Arrays.asList("","");
     }
     public ItemStackData(ItemStackData me){
         this.material = me.getMaterial();
         this.NameJP = me.getJpName();
-        Lore = Arrays.asList("None","None");
+        Lore = Arrays.asList("","");
     }
     public void setLore(String text1,String text2) {
         Lore = Arrays.asList(text1, text2);

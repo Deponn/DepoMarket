@@ -2,6 +2,7 @@ package depo_market.depo_market_1_16_5;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +29,15 @@ public class CommandParser {
      * @param args   引数
      * @return コマンド補完候補
      */
+    public static CommandParser parse_initialize(CommandSender sender, String[] args) {
+        List<String> argsList = Arrays.asList(args);
+        if (argsList.contains(sender.getName())) {
+            return new CommandParser(true);
+        }else {
+            sender.sendMessage(ChatColor.RED + "自分の名前を入れてください");
+            return new CommandParser(false);
+        }
+    }
     public static CommandParser parse_tax(CommandSender sender, String[] args) {
         List<String> argsList = Arrays.asList(args);
 

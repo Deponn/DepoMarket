@@ -66,6 +66,11 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
 
         // コマンド処理...
         if (cmd.getName().equalsIgnoreCase("initialize_market")) {
+            CommandParser parser = CommandParser.parse_initialize(sender, args);
+            if (!parser.isSuccess) {
+                // パース失敗
+                return true;
+            }
             return Operator.InitializeMarket(player);
 
         } else if (cmd.getName().equalsIgnoreCase("start_market")) {
@@ -107,6 +112,8 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
 
         } else if (cmd.getName().equalsIgnoreCase("reload_team")) {
             return Operator.ReloadTeam(player);
+        } else if (cmd.getName().equalsIgnoreCase("Look_teams")) {
+            return Operator.LookTeams(player);
         }
         return true;
     }
@@ -127,7 +134,6 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         boolean saveFlag;
         saveFlag = Operator.MenuClose((Player) e.getPlayer());
         if(saveFlag){
-            getLogger().info("セーブ");
             saveData();
         }
     }
