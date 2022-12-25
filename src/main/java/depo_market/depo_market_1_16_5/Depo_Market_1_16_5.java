@@ -11,13 +11,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.*;
 
 public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
 
-    MarketOperator Operator;
+    PluginOperator Operator;
 
     @Override
     public void onEnable() {
@@ -25,7 +24,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         Objects.requireNonNull(this.getCommand("tax")).setTabCompleter(new CommandSuggest());
         Objects.requireNonNull(this.getCommand("give_money")).setTabCompleter(new CommandSuggest());
         Objects.requireNonNull(this.getCommand("set_disadvantage")).setTabCompleter(new CommandSuggest());
-        Operator = new MarketOperator();
+        Operator = new PluginOperator();
         FileConfiguration configuration = getConfig();
         boolean ConfExist = configuration.contains("Depo_isRun");
         if(ConfExist){
@@ -128,6 +127,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         boolean saveFlag;
         saveFlag = Operator.MenuClose((Player) e.getPlayer());
         if(saveFlag){
+            getLogger().info("セーブ");
             saveData();
         }
     }
@@ -151,7 +151,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             ItemBuy.add(MarketData.get(item).getAmountOfBought());
             ItemSell.add(MarketData.get(item).getAmountOfSold());
         }
-        FileConfiguration configuration = new YamlConfiguration();
+        FileConfiguration configuration = getConfig();;
         configuration.set("Depo_isRun",MarketState);
         configuration.set("Depo_teams",TeamNames);
         configuration.set("Depo_moneys",TeamMoneys);

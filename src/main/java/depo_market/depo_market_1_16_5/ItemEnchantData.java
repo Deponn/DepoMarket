@@ -11,7 +11,7 @@ public class ItemEnchantData extends ItemMenuSlot {
     private final ArrayList<Integer> EnchantLevels = new ArrayList<>();
 
     public ItemEnchantData(Material material, String nameEn,String nameJP,  float price) {
-        super(material, nameJP, nameEn, price);
+        super(material, nameEn,nameJP,  price);
     }
 
     public void addEnchant(Enchantment enchant, Integer level) {

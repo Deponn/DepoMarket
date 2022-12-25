@@ -19,6 +19,11 @@ public class ItemStackData {
         this.NameJP = nameJP;
         Lore = Arrays.asList("None","None");
     }
+    public ItemStackData(ItemStackData me){
+        this.material = me.getMaterial();
+        this.NameJP = me.getJpName();
+        Lore = Arrays.asList("None","None");
+    }
     public void setLore(String text1,String text2) {
         Lore = Arrays.asList(text1, text2);
     }

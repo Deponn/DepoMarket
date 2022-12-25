@@ -22,7 +22,7 @@ public class ItemPrice {
     public void addAmountOfBought(int Amount){
         AmountOfBought += Amount;
     }
-    public void SetPrice(int price){
+    public void SetPrice(float price){
         Price = price;
     }
     public float getPrice(){

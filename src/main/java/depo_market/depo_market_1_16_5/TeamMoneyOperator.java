@@ -55,6 +55,23 @@ public class TeamMoneyOperator {
         }
         return false;
     }
+    public boolean addTeamMoney(Player player, float money) {
+        Object[] teamObjects = scoreboard.getTeams().toArray();
+        for (Object teamObj : teamObjects) {
+            Team team = (Team) teamObj;
+            if (teams.containsKey(team.getName())) {
+                Object[] members = team.getEntries().toArray();
+                for (Object member : members) {
+                    if (player.getName().equals(member)) {
+                        teams.put(team.getName(), teams.get(team.getName()) + money);
+                        return true;
+                    }
+                }
+
+            }
+        }
+        return false;
+    }
     public  Map<String, Float> getData(){
         return teams;
     }
