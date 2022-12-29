@@ -1,12 +1,17 @@
 package depo_market.depo_market_1_16_5;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,7 +40,15 @@ public class CommandSuggest implements TabCompleter{
         if (argsList.size() > 1 && "-amount".equals(argsList.get(argsList.size() - 2))) {
             return Arrays.asList("0", "5", "20","100");
         } else if (argsList.size() > 1 && "-team".equals(argsList.get(argsList.size() - 2))) {
-            return Arrays.asList("1", "2", "3");
+            ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+            Scoreboard scoreboard = Objects.requireNonNull(scoreboardManager).getMainScoreboard();
+            Object[] teamObjects = scoreboard.getTeams().toArray();
+            List<String> teamNames = new ArrayList<>();
+            for(Object teamObj : teamObjects){
+                Team team = (Team)teamObj;
+                teamNames.add(team.getName());
+            }
+            return teamNames;
         }else {
             return Stream.of("-amount", "-team")
                     .filter(s -> !argsList.contains(s))

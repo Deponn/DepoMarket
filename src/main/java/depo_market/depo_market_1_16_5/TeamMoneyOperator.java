@@ -1,6 +1,9 @@
 package depo_market.depo_market_1_16_5;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -46,69 +49,59 @@ public class TeamMoneyOperator {
         }
     }
     public boolean PlayerInTeam(Player player){
-        Object[] teamObjects = scoreboard.getTeams().toArray();
-        for (Object teamObj : teamObjects) {
-            Team team = (Team) teamObj;
-            if (teams.containsKey(team.getName())) {
-                Object[] members = team.getEntries().toArray();
-                for (Object member : members) {
-                    if (player.getName().equals(member)) {
-                        return true;
-                    }
-                }
-
-            }
-        }
-        return false;
+        return TeamOfPlayer(player) != null;
     }
-    public void setTeamMoney(Player player, float money) {
-        Object[] teamObjects = scoreboard.getTeams().toArray();
-        for (Object teamObj : teamObjects) {
-            Team team = (Team) teamObj;
-            if (teams.containsKey(team.getName())) {
-                Object[] members = team.getEntries().toArray();
-                for (Object member : members) {
-                    if (player.getName().equals(member)) {
-                        teams.put(team.getName(), money);
-                    }
-                }
-
-            }
-        }
+    public void addTeamMoney(String team, float money) {
+        teams.put(team, teams.get(team) + money);
     }
     public void addTeamMoney(Player player, float money) {
-        Object[] teamObjects = scoreboard.getTeams().toArray();
-        for (Object teamObj : teamObjects) {
-            Team team = (Team) teamObj;
-            if (teams.containsKey(team.getName())) {
-                Object[] members = team.getEntries().toArray();
-                for (Object member : members) {
-                    if (player.getName().equals(member)) {
-                        teams.put(team.getName(), teams.get(team.getName()) + money);
-                    }
-                }
-
-            }
+        Team myTeam = TeamOfPlayer(player);
+        if(myTeam != null) {
+            teams.put(myTeam.getName(), teams.get(myTeam.getName()) + money);
         }
+
     }
     public  Map<String, Float> getData(){
         return teams;
     }
     public float getTeamMoney(Player player){
+        Team MyTeam = TeamOfPlayer(player);
+        if(MyTeam != null) {
+            return teams.get(MyTeam.getName());
+        }else {
+            return 0;
+        }
+    }
+
+    public void setTeamHealth(Player player) {
+        Team targetTeam = TeamOfPlayer(player);
+        if(targetTeam!= null) {
+            Set<String> playerSet = targetTeam.getEntries();
+            Object[] playerObjects = playerSet.toArray();
+            List<String> playerNames = new ArrayList<>();
+            for (Object playerObj : playerObjects) {
+                playerNames.add((String) playerObj);
+            }
+            World world = player.getWorld();
+            List<Player> players = world.getPlayers();
+            for (Player targetPlayer : players) {
+                if(playerNames.contains(targetPlayer.getName())){
+                    AttributeInstance healthAttribute = targetPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                    Objects.requireNonNull(healthAttribute).setBaseValue(20 * (1 + Math.tanh(getTeamMoney(player))));
+                }
+            }
+        }
+    }
+    private Team TeamOfPlayer(Player player) {
         Object[] teamObjects = scoreboard.getTeams().toArray();
         for (Object teamObj : teamObjects) {
             Team team = (Team) teamObj;
             if (teams.containsKey(team.getName())) {
-                Object[] members = team.getEntries().toArray();
-                for (Object member : members) {
-                    if (player.getName().equals(member)) {
-                        return teams.get(team.getName());
-                    }
+                if (team.hasEntry(player.getName())) {
+                    return team;
                 }
-
             }
         }
-        return 0;
+        return null;
     }
-
 }

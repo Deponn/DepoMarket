@@ -29,6 +29,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         boolean ConfExist = configuration.contains("Depo_isRun");
         if(ConfExist){
             boolean isRun = configuration.getBoolean("Depo_isRun");
+            String disadvantage = configuration.getString("disadvantage");
             List<String> TeamNames = configuration.getStringList("Depo_teams");
             List<Float> TeamMoneys = configuration.getFloatList("Depo_moneys");
             List<String> ItemNames = configuration.getStringList("Depo_Items");
@@ -43,7 +44,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             for (int i = 0; i < ItemNames.size(); i++) {
                 MarketData.put(ItemNames.get(i),new ItemPrice(ItemPrices.get(i),ItemBuy.get(i),ItemSell.get(i)));
             }
-            Operator.LoadData(TeamData,MarketData,isRun);
+            Operator.LoadData(TeamData,MarketData,isRun,disadvantage);
         }
         getLogger().info("Depo_Marketが有効化されました。");
     }
@@ -92,7 +93,8 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                 // パース失敗
                 return true;
             }
-            return Operator.Tax(player);
+            float amount = parser.amount_of_money;
+            return Operator.Tax(player,parser.team_name, amount);
         } else if (cmd.getName().equalsIgnoreCase("give_money")) {
             //コマンド引数を処理
             CommandParser parser = CommandParser.parse_tax(sender, args);
@@ -100,7 +102,8 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                 // パース失敗
                 return true;
             }
-            return Operator.GiveMoney(player);
+            float amount = parser.amount_of_money;
+            return Operator.GiveMoney(player,parser.team_name, amount);
         } else if (cmd.getName().equalsIgnoreCase("set_disadvantage")) {
             //コマンド引数を処理
             CommandParser parser = CommandParser.parse_disadvantage(sender, args);
@@ -108,7 +111,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                 // パース失敗
                 return true;
             }
-            return Operator.SetDisAdvantage(player);
+            return Operator.SetDisAdvantage(player,parser.disadvantage);
 
         } else if (cmd.getName().equalsIgnoreCase("reload_team")) {
             return Operator.ReloadTeam(player);
@@ -143,6 +146,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         Map<String, ItemPrice> MarketData = Operator.getMarketData();
         Map<String, Float> teamData = Operator.getTeamMoneyData();
         boolean MarketState = Operator.getMarketState();
+        String disadvantage = Operator.getDisadvantageName();
         List<String> TeamNames = new ArrayList<>(teamData.keySet());
         List<Float> TeamMoneys = new ArrayList<>();
         for(String team : TeamNames){
@@ -158,6 +162,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             ItemSell.add(MarketData.get(item).getAmountOfSold());
         }
         FileConfiguration configuration = getConfig();;
+        configuration.set("disadvantage",disadvantage);
         configuration.set("Depo_isRun",MarketState);
         configuration.set("Depo_teams",TeamNames);
         configuration.set("Depo_moneys",TeamMoneys);

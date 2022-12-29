@@ -14,7 +14,7 @@ public class CommandParser {
 
     public final boolean isSuccess;//パース成功したかどうか
     public int amount_of_money = 0;//金額
-    public int team_name = 0;//相手のチーム名
+    public String team_name = "none";//相手のチーム名
     public String disadvantage = "none";
 
 
@@ -41,7 +41,7 @@ public class CommandParser {
     public static CommandParser parse_tax(CommandSender sender, String[] args) {
         List<String> argsList = Arrays.asList(args);
 
-        int team_name = 0;
+        String team_name = "none";
         int amount_of_money = 0;
 
         if (argsList.contains("-team")) {
@@ -54,7 +54,7 @@ public class CommandParser {
             }
             try {
                 // チーム番号
-                team_name = Integer.parseInt(argsList.get(index + 1));
+                team_name = argsList.get(index + 1);
             } catch (NumberFormatException e) {
                 sender.sendMessage(ChatColor.RED + "数値が不正です。 -team <数字>");
                 return new CommandParser(false);
@@ -89,11 +89,11 @@ public class CommandParser {
         List<String> argsList = Arrays.asList(args);
         String disadvantage;
         if (argsList.contains("-disable_buy")) {
-            disadvantage = "-disable_buy";
+            disadvantage = "disable_buy";
         }else if(argsList.contains("-health")){
-            disadvantage = "-health";
+            disadvantage = "health";
         }else if(argsList.contains("-none")){
-            disadvantage = "-none";
+            disadvantage = "none";
         }else {
             return new CommandParser(false);
         }
