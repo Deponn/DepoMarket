@@ -10,8 +10,10 @@ public class MarketOperator {
 
     private boolean market_run_flag = false;
     private Map<String, ItemPrice> ItemDataList;
+    private final DataBaseTradeItem dataBaseTradeItem;
     public MarketOperator(ArrayList<ItemMenuSlot> initialPriceList){
         this.ItemDataList = new HashMap<>();
+        this.dataBaseTradeItem = new DataBaseTradeItem();
         for(ItemMenuSlot Item : initialPriceList){
             this.ItemDataList.put(Item.getEnName(),new ItemPrice(Item.getInitialPrice()));
         }
@@ -51,28 +53,39 @@ public class MarketOperator {
         return market_run_flag;
     }
     public float buy(String nameEn,int Amount){
+        float price = ChangePrice(nameEn,Amount, true);
         ItemDataList.get(nameEn).addAmountOfBought(Amount);
-        ChangePrice(nameEn,Amount);
-        float price = ItemDataList.get(nameEn).getPrice();
-        return price * Amount;
+        return price;
     }
     public float sell(String nameEn,int Amount){
+        float price = ChangePrice(nameEn, Amount, false);
         ItemDataList.get(nameEn).addAmountOfSold(Amount);
-        ChangePrice(nameEn, - Amount);
-        float price = ItemDataList.get(nameEn).getPrice();
-        return price * Amount;
+        return price;
     }
     public Map<String, ItemPrice> getData(){
         return ItemDataList;
     }
 
-    private void ChangePrice(String nameEn,int Amount){
-        float newPrice;
+    private float ChangePrice(String nameEn,int Amount, boolean isBuy){
+        float initialPrice = dataBaseTradeItem.getInitialPrice(nameEn);
+        int buy;
+        if(isBuy) {
+            buy = 1;
+        }else{
+            buy = -1;
+        }
         ItemPrice itemPrice = ItemDataList.get(nameEn);
         float price = itemPrice.getPrice();
-        int difference = Math.abs(itemPrice.getAmountOfBought() - itemPrice.getAmountOfSold());
-        int sum = itemPrice.getAmountOfBought() + itemPrice.getAmountOfSold() + 1;
-        newPrice = (float) (price * (1 + ( 1 / 32000.0 ) * Amount * price * Math.sqrt((double)difference / (double)sum)));
-        itemPrice.SetPrice(newPrice);
+        int difference = itemPrice.getAmountOfBought() - itemPrice.getAmountOfSold();
+        int sum = itemPrice.getAmountOfBought() + itemPrice.getAmountOfSold();
+        float WholePrice = 0;
+        for (int i = 0; i < Amount; i++) {
+            difference = difference + buy;
+            sum = sum + 1;
+            price =  price * (float)Math.exp(( 1 / 30000.0 ) * initialPrice * buy * Math.sqrt((double)Math.abs(difference) / (double)(sum)));
+                    WholePrice = WholePrice + price;
+        }
+        itemPrice.SetPrice(price);
+        return WholePrice;
     }
 }

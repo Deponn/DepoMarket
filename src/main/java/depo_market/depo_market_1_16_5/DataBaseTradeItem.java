@@ -4,12 +4,15 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DataBaseTradeItem {
     private final ArrayList<ItemMenuSlot> MenuSlotList = new ArrayList<>();
     private final ArrayList<Integer> TradeAmountList = new ArrayList<>();
     private final ArrayList<ItemEnchantData> itemEnchantList = new ArrayList<>();
     private final ArrayList<ItemMenuSlot> InitialPriceList = new ArrayList<>();
+    private final Map<String, Float> InitialPriceMap = new HashMap<>();
 
     public DataBaseTradeItem(){
         this.TradeAmountList.add(1);
@@ -62,6 +65,9 @@ public class DataBaseTradeItem {
             InitialPriceList.add(MenuSlotList.get(i));
         }
         InitialPriceList.addAll(itemEnchantList);
+        for(ItemMenuSlot item : InitialPriceList){
+            InitialPriceMap.put(item.getEnName(),item.getInitialPrice());
+        }
     }
     public ArrayList<ItemMenuSlot> getMenuSlotList(){
         return MenuSlotList;
@@ -75,5 +81,7 @@ public class DataBaseTradeItem {
     public ArrayList<ItemMenuSlot> getInitialPriceList(){
         return InitialPriceList;
     }
-
+    public float getInitialPrice(String nameEn){
+        return InitialPriceMap.get(nameEn);
+    }
 }

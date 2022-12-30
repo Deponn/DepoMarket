@@ -8,8 +8,8 @@ public class ItemPrice {
 
     public ItemPrice(float price){
         this.Price = price;
-        this.AmountOfSold = 0;
-        this.AmountOfBought = 0;
+        this.AmountOfSold = 1;
+        this.AmountOfBought = 1;
     }
     public ItemPrice(float price,int amountOfBought,int amountOfSold){
         this.Price = price;
