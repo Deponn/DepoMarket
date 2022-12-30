@@ -38,7 +38,7 @@ public class CommandSuggest implements TabCompleter{
     private static List<String> suggest_tax(CommandSender sender, String[] args) {
         List<String> argsList = Arrays.asList(args);
         if (argsList.size() > 1 && "-amount".equals(argsList.get(argsList.size() - 2))) {
-            return Arrays.asList("0", "5", "20","100");
+            return Arrays.asList("0", "100", "500","1000");
         } else if (argsList.size() > 1 && "-team".equals(argsList.get(argsList.size() - 2))) {
             ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
             Scoreboard scoreboard = Objects.requireNonNull(scoreboardManager).getMainScoreboard();

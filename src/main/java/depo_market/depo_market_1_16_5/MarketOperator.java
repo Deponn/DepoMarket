@@ -51,22 +51,28 @@ public class MarketOperator {
         return market_run_flag;
     }
     public float buy(String nameEn,int Amount){
-        float price = ItemDataList.get(nameEn).getPrice();
-        float money = price * Amount;
-        ItemDataList.get(nameEn).SetPrice(price + 1f);
         ItemDataList.get(nameEn).addAmountOfBought(Amount);
-        return money;
+        ChangePrice(nameEn,Amount);
+        float price = ItemDataList.get(nameEn).getPrice();
+        return price * Amount;
     }
     public float sell(String nameEn,int Amount){
-        float price = ItemDataList.get(nameEn).getPrice();
-        float money = price * Amount;
-        ItemDataList.get(nameEn).SetPrice(price - 1f);
         ItemDataList.get(nameEn).addAmountOfSold(Amount);
-        return money;
+        ChangePrice(nameEn, - Amount);
+        float price = ItemDataList.get(nameEn).getPrice();
+        return price * Amount;
     }
     public Map<String, ItemPrice> getData(){
         return ItemDataList;
     }
 
-
+    private void ChangePrice(String nameEn,int Amount){
+        float newPrice;
+        ItemPrice itemPrice = ItemDataList.get(nameEn);
+        float price = itemPrice.getPrice();
+        int difference = Math.abs(itemPrice.getAmountOfBought() - itemPrice.getAmountOfSold());
+        int sum = itemPrice.getAmountOfBought() + itemPrice.getAmountOfSold() + 1;
+        newPrice = (float) (price * (1 + ( 1 / 128000.0 ) * Amount * price * Math.sqrt((double)difference / (double)sum)));
+        itemPrice.SetPrice(newPrice);
+    }
 }

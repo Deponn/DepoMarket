@@ -19,7 +19,7 @@ public class MenuMaker {
         this.market = market;
     }
     public Inventory MainMenu(ArrayList<ItemMenuSlot> MenuSlots,float Money){
-        final Inventory MainMenu = Bukkit.createInventory(null, WholeSlotNum, "trade_menu");
+        final Inventory MainMenu = Bukkit.createInventory(null, WholeSlotNum, "取引メニュー");
         final int MenuSlotsNum = MenuSlots.size();
         final ArrayList<ItemStackData> ItemMenuSlotList =  new ArrayList<>();
         ItemStackData itemStackData;
@@ -29,7 +29,7 @@ public class MenuMaker {
             ItemMenuSlotList.add(itemStackData);
         }
         for (int i = MenuSlotsNum; i < WholeSlotNum - 2; i++) {
-            ItemMenuSlotList.add(new ItemStackData(NoneMaterial, "押せない"));
+            ItemMenuSlotList.add(new ItemStackData(NoneMaterial, "押せません"));
         }
         itemStackData = new ItemSubMenuSlot(CheckMaterial, "所持金",1);
         itemStackData.setLore("所持金",String.valueOf(Money));
@@ -44,7 +44,7 @@ public class MenuMaker {
         return MainMenu;
     }
     public Inventory SubMenu(Material material, String nameJp, String nameEn,ArrayList<Integer> TradeAmountList,float Money){
-        final Inventory submenu = Bukkit.createInventory(null, WholeSlotNum, "trade_menu");
+        final Inventory submenu = Bukkit.createInventory(null, WholeSlotNum, "取引メニュー");
         final ArrayList<ItemSubMenuSlot> subItemMenuSlotList = new ArrayList<>();
         ItemSubMenuSlot Item;
         for(Integer Amount : TradeAmountList) {
@@ -53,7 +53,7 @@ public class MenuMaker {
             subItemMenuSlotList.add(Item);
         }
         for (int i = TradeAmountList.size();i<RowSlotNum;i++) {
-            subItemMenuSlotList.add(new ItemSubMenuSlot(NoneMaterial, "押せない",1));
+            subItemMenuSlotList.add(new ItemSubMenuSlot(NoneMaterial, "押せません",1));
         }
         for(Integer Amount : TradeAmountList) {
             Item = new ItemSubMenuSlot(material, nameJp,Amount);
@@ -61,7 +61,7 @@ public class MenuMaker {
             subItemMenuSlotList.add(Item);
         }
         for (int i = TradeAmountList.size() + RowSlotNum;i<WholeSlotNum - 2;i++) {
-            subItemMenuSlotList.add(new ItemSubMenuSlot(NoneMaterial, "押せない",1));
+            subItemMenuSlotList.add(new ItemSubMenuSlot(NoneMaterial, "押せません",1));
         }
         Item = new ItemSubMenuSlot(CheckMaterial, "所持金",1);
         Item.setLore("所持金",String.valueOf(Money));
@@ -79,7 +79,7 @@ public class MenuMaker {
     }
 
     public  Inventory EnchantMenu(ArrayList<ItemEnchantData> itemEnchantList,float Money){
-        final Inventory EnchantMenu = Bukkit.createInventory(null, WholeSlotNum, "trade_menu");
+        final Inventory EnchantMenu = Bukkit.createInventory(null, WholeSlotNum, "エンチャントアイテム取引メニュー");
         final ArrayList<ItemStackData> enchantItemMenuSlotList = new ArrayList<>();
         ItemStackData Item;
         for(ItemEnchantData Item_Enchant : itemEnchantList) {
@@ -88,7 +88,7 @@ public class MenuMaker {
             enchantItemMenuSlotList.add(Item);
         }
         for (int i = itemEnchantList.size(); i<RowSlotNum; i++) {
-            enchantItemMenuSlotList.add(new ItemStackData(NoneMaterial, "押せない"));
+            enchantItemMenuSlotList.add(new ItemStackData(NoneMaterial, "押せません"));
         }
         for(ItemEnchantData Item_Enchant : itemEnchantList) {
             Item = new ItemStackData(Item_Enchant.getMaterial(),  Item_Enchant.getJpName());
@@ -96,7 +96,7 @@ public class MenuMaker {
             enchantItemMenuSlotList.add(Item);
         }
         for (int i = itemEnchantList.size() + RowSlotNum; i<WholeSlotNum - 2; i++) {
-            enchantItemMenuSlotList.add(new ItemStackData(NoneMaterial, "押せない"));
+            enchantItemMenuSlotList.add(new ItemStackData(NoneMaterial, "押せません"));
         }
         Item = new ItemSubMenuSlot(CheckMaterial, "所持金",1);
         Item.setLore("所持金",String.valueOf(Money));

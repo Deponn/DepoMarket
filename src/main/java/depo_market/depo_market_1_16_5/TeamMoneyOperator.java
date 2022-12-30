@@ -87,7 +87,7 @@ public class TeamMoneyOperator {
             for (Player targetPlayer : players) {
                 if(playerNames.contains(targetPlayer.getName())){
                     AttributeInstance healthAttribute = targetPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-                    Objects.requireNonNull(healthAttribute).setBaseValue(20 * (1 + Math.tanh(getTeamMoney(player))));
+                    Objects.requireNonNull(healthAttribute).setBaseValue(20 * (1 + Math.tanh(getTeamMoney(player)/20000)));
                 }
             }
         }

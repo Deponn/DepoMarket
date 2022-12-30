@@ -86,10 +86,10 @@ public class PlayersMenuOperator {
         } else if (player_inv_state == SLOT_OF_ENCHANT) {
             if (ClickedSlot >= 0 & ClickedSlot < dataBaseTradeItem.getItemEnchantList().size()) {
                 BuyEnchantItem(ClickedSlot,disadvantage);
-                MakeSubMenu(player_inv_state);
+                MakeEnchantMenu();
             } else if (ClickedSlot >= 9 & ClickedSlot < dataBaseTradeItem.getItemEnchantList().size() + 9) {
                 SellEnchantItem(ClickedSlot - 9, disadvantage);
-                MakeSubMenu(player_inv_state);
+                MakeEnchantMenu();
             } else if (ClickedSlot == 25) {
                 player.sendMessage(String.valueOf(teamMoneyOperator.getTeamMoney(player)));
             } else if (ClickedSlot == 26) {

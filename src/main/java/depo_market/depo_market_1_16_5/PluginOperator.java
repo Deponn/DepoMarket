@@ -22,7 +22,7 @@ public class PluginOperator {
         this.teamMoneyOperator = new TeamMoneyOperator();
         this.playersMenuOperators = new HashMap<>();
         this.menuMaker = new MenuMaker(27, 9, market);
-        this.Disadvantage = "none";
+        this.Disadvantage = "health";
     }
 
     public void LoadData(Map<String, Float> teamData, Map<String, ItemPrice> marketData, boolean isRun,String disadvantage) {
@@ -50,7 +50,7 @@ public class PluginOperator {
         if (!market.getMarketState()) {
             market.Initialize(dataBaseTradeItem.getInitialPriceList());
             teamMoneyOperator.Initialize();
-            player.sendMessage("市場を初期化する");
+            player.sendMessage("市場を初期化しました");
         }else {
             player.sendMessage("市場が動いてる間は初期化できません");
         }
@@ -91,7 +91,7 @@ public class PluginOperator {
 
     public boolean Tax(Player player,String targetTeamName,Float Amount) {
         if (market.getMarketState()) {
-            player.sendMessage("徴税します");
+            player.sendMessage("徴税しました");
             teamMoneyOperator.addTeamMoney(player,Amount);
             teamMoneyOperator.addTeamMoney(targetTeamName,-Amount);
         } else {
@@ -102,7 +102,7 @@ public class PluginOperator {
 
     public boolean GiveMoney(Player player,String targetTeamName,Float Amount) {
         if (market.getMarketState()) {
-            player.sendMessage("お金をあげます");
+            player.sendMessage("お金をあげました");
             teamMoneyOperator.addTeamMoney(player,-Amount);
             teamMoneyOperator.addTeamMoney(targetTeamName,Amount);
         } else {
@@ -115,19 +115,19 @@ public class PluginOperator {
         Disadvantage = disadvantageName;
         switch (Disadvantage) {
             case "none":
-                player.sendMessage("借金デバフなし");
+                player.sendMessage("借金デバフなしに設定しました");
                 break;
             case "health":
-                player.sendMessage("借金デバフはHPが減る");
+                player.sendMessage("借金デバフとしてHPが減るようになりました");
                 break;
             case "disable_buy":
-                player.sendMessage("借金できない");
+                player.sendMessage("借金できないように設定しました");
         }
         return true;
     }
 
     public boolean ReloadTeam(Player player) {
-        player.sendMessage("チームリロード");
+        player.sendMessage("チームリロードしました");
         teamMoneyOperator.reLoadTeams();
         return true;
     }
@@ -152,7 +152,7 @@ public class PluginOperator {
                 }
             }
         } else {
-            player.sendMessage("閉鎖しています");
+            player.sendMessage("市場が閉鎖しているため取引できません");
         }
     }
 
