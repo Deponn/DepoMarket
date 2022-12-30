@@ -2,7 +2,6 @@ package depo_market.depo_market_1_16_5;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;
