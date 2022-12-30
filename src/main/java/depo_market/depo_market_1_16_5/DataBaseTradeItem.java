@@ -36,7 +36,7 @@ public class DataBaseTradeItem {
         this.MenuSlotList.add(new ItemMenuSlot(Material.TNT, "TNT", "TNT", 128f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.ARROW, "Arrow", "矢", 16f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.LEATHER, "Leather", "革", 32f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.SADDLE, "Saddle", "鞍", 256f));
+        this.MenuSlotList.add(new ItemMenuSlot(Material.CROSSBOW, "CROSSBOW", "クロスボウ", 256f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.BEDROCK, "BEDROCK", "岩盤", 1000f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.ENDER_EYE, "ENDER_EYE", "エンダーアイ", 1000f));
         ItemEnchantData eItem;

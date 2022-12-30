@@ -38,7 +38,7 @@ commands: #自作プラグインのコマンドを宣言
     description: 借金した時のデバフを決める
     usage: /set_disadvantage [デバフ名]
     permission: market
-  reload_team:
+  load_new_team:
     description: チームが新たに作られた時用
     usage: /  reload_team
     permission: market

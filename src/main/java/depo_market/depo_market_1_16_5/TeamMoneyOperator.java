@@ -92,6 +92,23 @@ public class TeamMoneyOperator {
             }
         }
     }
+    public void resetTeamHealth(Player player) {
+        World world = player.getWorld();
+        List<Player> players = world.getPlayers();
+        for (Player targetPlayer : players) {
+            AttributeInstance healthAttribute = targetPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+            Objects.requireNonNull(healthAttribute).setBaseValue(20);
+        }
+    }
+    public void setAllTeamHealth(List<World> worlds) {
+        for (World world : worlds) {
+            List<Player> players = world.getPlayers();
+            for (Player targetPlayer : players) {
+                AttributeInstance healthAttribute = targetPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                Objects.requireNonNull(healthAttribute).setBaseValue(20 * (1 + Math.tanh(getTeamMoney(targetPlayer) / 20000)));
+            }
+        }
+    }
     private Team TeamOfPlayer(Player player) {
         Object[] teamObjects = scoreboard.getTeams().toArray();
         for (Object teamObj : teamObjects) {

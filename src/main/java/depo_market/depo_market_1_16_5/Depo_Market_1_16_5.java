@@ -1,12 +1,14 @@
 package depo_market.depo_market_1_16_5;
 
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
@@ -44,7 +46,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             for (int i = 0; i < ItemNames.size(); i++) {
                 MarketData.put(ItemNames.get(i),new ItemPrice(ItemPrices.get(i),ItemBuy.get(i),ItemSell.get(i)));
             }
-            Operator.LoadData(TeamData,MarketData,isRun,disadvantage);
+            Operator.LoadData(TeamData,MarketData,isRun,disadvantage, Bukkit.getWorlds());
         }
         getLogger().info("Depo_Marketが有効化されました。");
     }
@@ -113,7 +115,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             }
             return Operator.SetDisAdvantage(player,parser.disadvantage);
 
-        } else if (cmd.getName().equalsIgnoreCase("reload_team")) {
+        } else if (cmd.getName().equalsIgnoreCase("load_new_team")) {
             return Operator.ReloadTeam(player);
         } else if (cmd.getName().equalsIgnoreCase("Look_teams")) {
             return Operator.LookTeams(player);
@@ -139,6 +141,11 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         if(saveFlag){
             saveData();
         }
+    }
+    @EventHandler
+    public void onPlayerDeath(PlayerRespawnEvent e){
+        Player player = e.getPlayer();
+        Operator.setPlayerHealth(player);
     }
 
 

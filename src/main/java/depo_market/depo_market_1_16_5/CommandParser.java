@@ -94,6 +94,7 @@ public class CommandParser {
         }else if(argsList.contains("-none")){
             disadvantage = "none";
         }else {
+            sender.sendMessage(ChatColor.RED + "設定を決めてください -disable_buy -health -none");
             return new CommandParser(false);
         }
         CommandParser Me = new CommandParser(true);

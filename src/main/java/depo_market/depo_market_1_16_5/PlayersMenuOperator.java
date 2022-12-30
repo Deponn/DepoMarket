@@ -67,7 +67,7 @@ public class PlayersMenuOperator {
                     MakeSubMenu(ClickedSlot);
                 }
             } else if (ClickedSlot == 25) {
-                player.sendMessage(String.valueOf(teamMoneyOperator.getTeamMoney(player)));
+                player.sendMessage(Math.round(teamMoneyOperator.getTeamMoney(player)) + "円");
             } else if (ClickedSlot == 26) {
                 player.closeInventory();
             }
@@ -204,5 +204,4 @@ public class PlayersMenuOperator {
         }
         teamMoneyOperator.addTeamMoney(player, earnMoney);
     }
-
 }

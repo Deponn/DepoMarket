@@ -72,7 +72,7 @@ public class MarketOperator {
         float price = itemPrice.getPrice();
         int difference = Math.abs(itemPrice.getAmountOfBought() - itemPrice.getAmountOfSold());
         int sum = itemPrice.getAmountOfBought() + itemPrice.getAmountOfSold() + 1;
-        newPrice = (float) (price * (1 + ( 1 / 128000.0 ) * Amount * price * Math.sqrt((double)difference / (double)sum)));
+        newPrice = (float) (price * (1 + ( 1 / 32000.0 ) * Amount * price * Math.sqrt((double)difference / (double)sum)));
         itemPrice.SetPrice(newPrice);
     }
 }
