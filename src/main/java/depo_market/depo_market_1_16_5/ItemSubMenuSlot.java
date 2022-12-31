@@ -6,6 +6,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Objects;
 
+/**
+ * メニューに表示するアイテムのデータを保持するオブジェクトの拡張。アイテムの量も保持
+ */
 public class ItemSubMenuSlot extends ItemStackData{
 
     private final int Amount;

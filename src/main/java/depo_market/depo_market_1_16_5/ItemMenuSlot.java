@@ -2,7 +2,9 @@ package depo_market.depo_market_1_16_5;
 
 import org.bukkit.Material;
 
-
+/**
+ * メニューに表示するアイテムのデータを保持するオブジェクトの拡張。英語でIDとして利用できる名前と初期値段を保持するオブジェクト。
+ */
 public class ItemMenuSlot extends ItemStackData{
 
     private final String NameEn;

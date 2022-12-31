@@ -35,10 +35,17 @@ public class CommandSuggest implements TabCompleter{
             return new ArrayList<String>();
         }
     }
+    /**
+     * 金をあげたり奪ったりするコマンドのTAB補完候補を返す
+     *
+     * @param sender コマンド送信者
+     * @param args   引数
+     * @return コマンド補完候補
+     */
     private static List<String> suggest_tax(CommandSender sender, String[] args) {
         List<String> argsList = Arrays.asList(args);
         if (argsList.size() > 1 && "-amount".equals(argsList.get(argsList.size() - 2))) {
-            return Arrays.asList("0", "100", "500","1000");
+            return Arrays.asList("0", "1000", "10000","100000");
         } else if (argsList.size() > 1 && "-team".equals(argsList.get(argsList.size() - 2))) {
             ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
             Scoreboard scoreboard = Objects.requireNonNull(scoreboardManager).getMainScoreboard();
@@ -55,6 +62,13 @@ public class CommandSuggest implements TabCompleter{
                     .collect(Collectors.toList());
         }
     }
+    /**
+     * デバフを決めるコマンドのTAB補完候補を返す
+     *
+     * @param sender コマンド送信者
+     * @param args   引数
+     * @return コマンド補完候補
+     */
     private static List<String> suggest_disadvantage(CommandSender sender, String[] args) {
         List<String> argsList = Arrays.asList(args);
         return Stream.of("-disable_buy", "-health","-none")

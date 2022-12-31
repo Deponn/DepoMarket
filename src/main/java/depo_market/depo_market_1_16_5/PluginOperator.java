@@ -8,6 +8,10 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
+
+/**
+ * 核となるオペレータークラス。
+ */
 public class PluginOperator {
 
     private final String CUSTOMER_NAME = "Depo_Customer";
@@ -17,7 +21,9 @@ public class PluginOperator {
     private final MenuMaker menuMaker;
     private final Map<String, PlayersMenuOperator> playersMenuOperators;
     private String Disadvantage;
+    private boolean existData;
 
+    //必要なオブジェクトを実体化し保持
     public PluginOperator() {
         this.dataBaseTradeItem = new DataBaseTradeItem();
         this.market = new MarketOperator(dataBaseTradeItem.getInitialPriceList());
@@ -25,13 +31,15 @@ public class PluginOperator {
         this.playersMenuOperators = new HashMap<>();
         this.menuMaker = new MenuMaker(27, 9, market);
         this.Disadvantage = "health";
+        this.existData = false;
     }
-
+    //データをロードする。初期化してからコンフィグにセーブデータがあれば呼ばれる
     public void LoadData(Map<String, Float> teamData, Map<String, ItemPrice> marketData, boolean isRun, String disadvantage, List<World> world) {
         market.loadData(isRun, marketData);
         teamMoneyOperator.LoadTeams(teamData);
         Disadvantage = disadvantage;
         teamMoneyOperator.setAllTeamHealth(world);
+        existData = true;
     }
 
     public Map<String, ItemPrice> getMarketData() {
@@ -54,6 +62,7 @@ public class PluginOperator {
         if (!market.getMarketState()) {
             market.Initialize(dataBaseTradeItem.getInitialPriceList());
             teamMoneyOperator.Initialize();
+            existData = true;
             player.sendMessage("市場を初期化しました");
         } else {
             player.sendMessage("市場が動いてる間は初期化できません");
@@ -62,7 +71,11 @@ public class PluginOperator {
     }
 
     public boolean StartMarket(Player player) {
-        market.StartMarket(player);
+        if(existData) {
+            market.StartMarket(player);
+        }else {
+            player.sendMessage("データが存在しないので初期化してから初めてください");
+        }
         return true;
     }
 
@@ -72,6 +85,7 @@ public class PluginOperator {
         return true;
     }
 
+    //商人として村人を生む。村人にはタグ付けして管理。
     public boolean PlaceCustomer(Player player) {
         Villager Customer = (Villager) player.getWorld().spawnEntity(player.getLocation(), EntityType.VILLAGER);
         Customer.setCustomName("取引商人");
@@ -80,7 +94,7 @@ public class PluginOperator {
         Customer.setRemoveWhenFarAway(false);
         return true;
     }
-
+    //タグ付けされた村人を殺す
     public boolean KillAllCustomer() {
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getLivingEntities()) {
@@ -154,6 +168,7 @@ public class PluginOperator {
         return true;
     }
 
+    //村人をクリックしたときに商人タグがあれば取引メニューに移行
     public void CustomerClick(Player player, Entity ClickedEntity) {
         if (market.getMarketState()) {
             if (ClickedEntity instanceof Villager) {
@@ -170,13 +185,14 @@ public class PluginOperator {
         }
     }
 
+    //プレイヤーがメニュー状態なら真を返す。返された側は真ならアイテムをインベントリから取れないようにする。
     public boolean isMenu(Player player) {
         if (playersMenuOperators.containsKey(player.getName())) {
             return playersMenuOperators.get(player.getName()).isMenu();
         }
         return false;
     }
-
+    //プレイヤーがメニュー状態でインベントリクリックなら呼ばれる。メニュー処理オブジェクトを呼ぶ
     public void MenuClick(Player player, ItemStack item, int ClickedSlot) {
         if (item != null) {
             if (!item.getType().isAir()) {

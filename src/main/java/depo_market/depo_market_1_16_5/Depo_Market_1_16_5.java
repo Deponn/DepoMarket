@@ -18,15 +18,22 @@ import java.util.*;
 
 public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
 
-    PluginOperator Operator;
+    PluginOperator Operator;//プラグインの処理を実際に行いデータを保持するオペレーターオブジェクトを保持する変数
 
+    /**
+     * 初期処理とコンフィグに保存したデータをロードする
+     */
     @Override
     public void onEnable() {
+        //イベントを受け取れるようにする。
         getServer().getPluginManager().registerEvents(this, this);
+        //コマンドのタブコンプリートを実装
         Objects.requireNonNull(this.getCommand("tax")).setTabCompleter(new CommandSuggest());
         Objects.requireNonNull(this.getCommand("give_money")).setTabCompleter(new CommandSuggest());
         Objects.requireNonNull(this.getCommand("set_disadvantage")).setTabCompleter(new CommandSuggest());
+        //プラグインの処理を実際に行いデータを保持するオペレーターオブジェクト実体化
         Operator = new PluginOperator();
+        //コンフィグが存在する場合はロードする。リストをそれぞれロードし、マップに変換。順序がそろってる前提
         FileConfiguration configuration = getConfig();
         boolean ConfExist = configuration.contains("Depo_isRun");
         if(ConfExist){
@@ -56,7 +63,9 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         getLogger().info("Depo_Marketが無効化されました。");
     }
 
-
+    /**
+     * コマンド処理、コマンドごとに分岐してオペレーターに投げる
+     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         // プレイヤーがコマンドを投入した際の処理...
@@ -123,10 +132,12 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         return true;
     }
 
+    //エンティティクリックイベント。商人クリック用
     @EventHandler
     public void onEntityClick(PlayerInteractEntityEvent e) {
         Operator.CustomerClick(e.getPlayer(),e.getRightClicked());
     }
+    //インベントリをクリックしたとき、取引メニューの動作を設定
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         if (Operator.isMenu((Player) e.getWhoClicked())) {
@@ -134,6 +145,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             Operator.MenuClick((Player) e.getWhoClicked(),e.getCurrentItem(),e.getRawSlot());
         }
     }
+    //インベントリを閉じたとき、取引メニュー閉じてるフラグを建てる用、取引メニューを閉じたならコンフィグにセーブ
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
         boolean saveFlag;
@@ -142,13 +154,14 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             saveData();
         }
     }
+    //プレイヤーが死んでもHPが減ったままにする
     @EventHandler
     public void onPlayerDeath(PlayerRespawnEvent e){
         Player player = e.getPlayer();
         Operator.setPlayerHealth(player);
     }
 
-
+    //コンフィグにセーブ。マップデータを受け取り、そのキーのリストを受け取り、キーにタグ付けられたデータをリスト化していく。キーとデータがそろうはず。
     public void saveData(){
         Map<String, ItemPrice> MarketData = Operator.getMarketData();
         Map<String, Float> teamData = Operator.getTeamMoneyData();

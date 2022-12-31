@@ -1,5 +1,8 @@
 package depo_market.depo_market_1_16_5;
 
+/**
+ * アイテムの値段。取引量を保持するオブジェクト。
+ */
 public class ItemPrice {
     private float Price;
     private int AmountOfSold;

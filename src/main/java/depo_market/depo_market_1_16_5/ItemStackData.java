@@ -8,6 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * メニューに表示するアイテムのデータを保持するオブジェクト。アイテム種類と日本語の名前とアイテム説明欄を保持
+ */
 public class ItemStackData {
 
     private final Material material;

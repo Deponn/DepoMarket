@@ -5,6 +5,9 @@ import org.bukkit.enchantments.Enchantment;
 
 import java.util.ArrayList;
 
+/**
+ * メニューに表示するアイテムのデータを保持するオブジェクトの拡張。つけるエンチャントをリストとして保持するオブジェクト。
+ */
 public class ItemEnchantData extends ItemMenuSlot {
 
     private final ArrayList<Enchantment> enchants = new ArrayList<>();

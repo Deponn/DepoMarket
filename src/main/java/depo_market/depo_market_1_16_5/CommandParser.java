@@ -14,7 +14,7 @@ public class CommandParser {
     public final boolean isSuccess;//パース成功したかどうか
     public int amount_of_money = 0;//金額
     public String team_name = "none";//相手のチーム名
-    public String disadvantage = "none";
+    public String disadvantage = "none";//デバフの種類
 
 
     // オブジェクト生成。パースが成功しているかを受け取る
@@ -22,7 +22,7 @@ public class CommandParser {
         this.isSuccess = isSuccess;
     }
     /**
-     * コマンドをパースする
+     * 初期化コマンドをパースする
      *
      * @param sender コマンド送信者
      * @param args   引数
@@ -37,6 +37,13 @@ public class CommandParser {
             return new CommandParser(false);
         }
     }
+    /**
+     * お金をあげたり奪ったりするコマンドをパースする
+     *
+     * @param sender コマンド送信者
+     * @param args   引数
+     * @return コマンド補完候補
+     */
     public static CommandParser parse_tax(CommandSender sender, String[] args) {
         List<String> argsList = Arrays.asList(args);
 
@@ -44,7 +51,7 @@ public class CommandParser {
         int amount_of_money = 0;
 
         if (argsList.contains("-team")) {
-            // 引数が何番目か取得し、若い番号を採用する
+            // 引数が何番目か取得し、番号を採用する
             int index = argsList.indexOf("-team");
             if (index + 1 >= argsList.size()) {
                 // 引数の次がなかった場合、エラー
@@ -52,7 +59,7 @@ public class CommandParser {
                 return new CommandParser(false);
             }
             try {
-                // チーム番号
+                // チーム
                 team_name = argsList.get(index + 1);
             } catch (NumberFormatException e) {
                 sender.sendMessage(ChatColor.RED + "数値が不正です。 -team <数字>");
@@ -62,7 +69,7 @@ public class CommandParser {
             return new CommandParser(false);
         }
         if (argsList.contains("-amount")) {
-            // 引数が何番目か取得し、若い番号を採用する
+            // 引数が何番目か取得し、番号を採用する
             int index = argsList.indexOf("-amount");
             if (index + 1 >= argsList.size()) {
                 // 引数の次がなかった場合、エラー
@@ -84,6 +91,13 @@ public class CommandParser {
         Me.amount_of_money = amount_of_money;
         return Me;
     }
+    /**
+     * デバフコマンドをパースする
+     *
+     * @param sender コマンド送信者
+     * @param args   引数
+     * @return コマンド補完候補
+     */
     public static CommandParser parse_disadvantage(CommandSender sender, String[] args) {
         List<String> argsList = Arrays.asList(args);
         String disadvantage;
