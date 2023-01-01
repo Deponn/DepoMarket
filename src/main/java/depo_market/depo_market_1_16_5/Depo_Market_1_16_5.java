@@ -89,7 +89,9 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             return Operator.StartMarket(player);
 
         } else if (cmd.getName().equalsIgnoreCase("stop_market")) {
-            return Operator.StopMarket(player);
+            boolean flag = Operator.StopMarket(player);
+            saveData();
+            return flag;
 
         } else if (cmd.getName().equalsIgnoreCase("place_customer")) {
             return Operator.PlaceCustomer(player);

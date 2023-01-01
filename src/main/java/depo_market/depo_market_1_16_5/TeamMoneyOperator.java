@@ -85,7 +85,7 @@ public class TeamMoneyOperator {
         return teams;
     }
 
-    //チームの全員のHPを管理する。
+    //プレイヤーがいるチームの全員のHPを管理する。すべてのワールドのすべてのプレイヤーを検索したそのチームに所属していたらHPを変更。
     public void setTeamHealth(Player player) {
         Team targetTeam = TeamOfPlayer(player);
         if(targetTeam!= null) {
@@ -95,12 +95,15 @@ public class TeamMoneyOperator {
             for (Object playerObj : playerObjects) {
                 playerNames.add((String) playerObj);
             }
-            World world = player.getWorld();
-            List<Player> players = world.getPlayers();
-            for (Player targetPlayer : players) {
-                if(playerNames.contains(targetPlayer.getName())){
-                    AttributeInstance healthAttribute = targetPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-                    Objects.requireNonNull(healthAttribute).setBaseValue(20 * (1 + Math.tanh(getTeamMoney(player)/MONEY_HEALTH)));
+            List<World> worlds = Bukkit.getWorlds();
+            for (World world : worlds) {
+                List<Player> players = world.getPlayers();
+                for (Player targetPlayer : players) {
+                    if (playerNames.contains(targetPlayer.getName())) {
+                        AttributeInstance healthAttribute = targetPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                        //お金の量が0から離れれば離れるほど、HPも増減する。ハイパボリックタンジェントを利用
+                        Objects.requireNonNull(healthAttribute).setBaseValue(20 * (1 + Math.tanh(getTeamMoney(player) / MONEY_HEALTH)));
+                    }
                 }
             }
         }
@@ -124,7 +127,7 @@ public class TeamMoneyOperator {
             }
         }
     }
-    //プレイヤーがチームに所属しているか判定
+    //プレイヤーがチームに所属しているか判定すべてのチームのすべてのメンバーと照合し一致する名前があったらそのチームを返す。
     private Team TeamOfPlayer(Player player) {
         Object[] teamObjects = scoreboard.getTeams().toArray();
         for (Object teamObj : teamObjects) {

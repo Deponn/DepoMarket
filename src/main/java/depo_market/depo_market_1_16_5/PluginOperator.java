@@ -155,6 +155,7 @@ public class PluginOperator {
         return true;
     }
 
+    //すべてのチームの所持金を確認
     public boolean LookTeams(Player player) {
         Map<String, Float> teamData = teamMoneyOperator.getData();
         Set<String> teams = teamData.keySet();
@@ -209,6 +210,7 @@ public class PluginOperator {
         }
     }
 
+    //プレイヤーが死んでもHPが減ったままにする
     public void setPlayerHealth(Player player) {
         teamMoneyOperator.setTeamHealth(player);
     }
