@@ -59,12 +59,18 @@ public class PlayersMenuOperator {
             }
             //サブメニューのとき。選んだ場合売り買いをし、メニューを更新
         } else if (player_inv_state >= 1) {
+            //50000円以上の取引ができない
             if (ClickedSlot >= 0 & ClickedSlot < dataBaseTradeItem.getTradeAmountList().size()) {
-                BuyItem(player_inv_state, ClickedSlot, disadvantage);
+                if (market.getPrice(dataBaseTradeItem.getMenuSlotList().get(player_inv_state).getEnName()) * dataBaseTradeItem.getTradeAmountList().get(ClickedSlot) < 50000) {
+                    BuyItem(player_inv_state, ClickedSlot, disadvantage);
+                }
                 MakeSubMenu(player_inv_state);
             } else if (ClickedSlot >= 9 & ClickedSlot < dataBaseTradeItem.getTradeAmountList().size() + 9) {
-                SellItem(player_inv_state, ClickedSlot - 9, disadvantage);
+                if (market.getPrice(dataBaseTradeItem.getMenuSlotList().get(player_inv_state).getEnName()) * dataBaseTradeItem.getTradeAmountList().get(ClickedSlot - 9) < 50000) {
+                    SellItem(player_inv_state, ClickedSlot - 9, disadvantage);
+                }
                 MakeSubMenu(player_inv_state);
+
             } else if (ClickedSlot == 25) {
                 player.sendMessage(Math.round(teamMoneyOperator.getTeamMoney(player)) + "円");
             } else if (ClickedSlot == 26) {
