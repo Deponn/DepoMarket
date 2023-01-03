@@ -14,7 +14,7 @@ public class PlayersMenuOperator {
     private final int SLOT_OF_ENCHANT = 0;
     private final int INDEX_OF_MAIN_MENU = -1;
     private final int INDEX_OF_OUT_OF_MENU = -2;
-    private final float BOUND_OF_MONEY = 5000000;
+    private final float BOUND_OF_MONEY = 1000000;
     private final Player player;
     private final MarketOperator market;
     private final TeamMoneyOperator teamMoneyOperator;
@@ -235,7 +235,7 @@ public class PlayersMenuOperator {
             } else {
                 tradedAmount = tradeAmount;
             }
-            earnMoney = -market.buy(SelectedEnName, tradedAmount);//金額を計算。値段も変動
+            earnMoney = - market.buy(SelectedEnName, tradedAmount) * 1.01f;//金額を計算。値段も変動
         } else {
             remainItem = PlayerInventory.removeItem(TradeItemStack);//アイテム受け渡し
             if (remainItem.containsKey(0)) {
@@ -243,7 +243,7 @@ public class PlayersMenuOperator {
             } else {
                 tradedAmount = tradeAmount;
             }
-            earnMoney = market.sell(SelectedEnName, tradedAmount);//金額を計算。値段も変動
+            earnMoney = market.sell(SelectedEnName, tradedAmount) * 0.99f;//金額を計算。値段も変動
         }
         teamMoneyOperator.addTeamMoney(player, earnMoney);//お金をチームに加算。
     }
