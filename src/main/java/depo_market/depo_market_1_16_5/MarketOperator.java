@@ -61,41 +61,22 @@ public class MarketOperator {
 
     //アイテムの買うとき取引量を記録。値段変動メソッドを呼び出す
     public float buy(String nameEn,int Amount){
-        float price = ChangePrice(nameEn,Amount, true);
+        float price = getWholePrice(nameEn,Amount);
         ItemDataList.get(nameEn).addAmountOfBought(Amount);
         return price;
     }
 
     //アイテムの売るとき取引量を記録。値段変動メソッドを呼び出す
     public float sell(String nameEn,int Amount){
-        float price = ChangePrice(nameEn, Amount, false);
+        float price = getWholePrice(nameEn, Amount);
         ItemDataList.get(nameEn).addAmountOfSold(Amount);
         return price;
     }
 
-    //値段の変動を行う。変動した値段ごとに足していき、最終的な取引金額を返す。
-    private float ChangePrice(String nameEn,int Amount, boolean isBuy){
-        float initialPrice = dataBaseTradeItem.getInitialPrice(nameEn);
-        int buy;
-        if(isBuy) {
-            buy = 1;
-        }else{
-            buy = -1;
-        }
+    //値段の変動を行なわない。
+    private float getWholePrice(String nameEn, int Amount){
         ItemPrice itemPrice = ItemDataList.get(nameEn);
         float price = itemPrice.getPrice();
-        int difference = itemPrice.getAmountOfBought() - itemPrice.getAmountOfSold();
-        int sum = itemPrice.getAmountOfBought() + itemPrice.getAmountOfSold();
-        float WholePrice = 0;
-        //値段を取引ひとつごとに更新。
-        for (int i = 0; i < Amount; i++) {
-            difference = difference + buy;
-            sum = sum + 1;
-            //値段は勝ったら増えて売ったら減る。売買が偏るほど変動が激しく、取引量が多いほど変動が少ない。初期金額が多いほど貴重と考えて変動が多い。
-            price =  price * (float)Math.exp(( 1 / 10000.0 ) * Math.sqrt(initialPrice) * buy * Math.sqrt((double)Math.abs(difference) / (double)(sum)));
-            WholePrice = WholePrice + price;
-        }
-        itemPrice.SetPrice(price);
-        return WholePrice;
+        return price * Amount;
     }
 }

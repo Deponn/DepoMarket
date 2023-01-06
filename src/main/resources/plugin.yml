@@ -7,44 +7,47 @@ description: Plugin that add market and economy to minecraft
 
 
 commands: #自作プラグインのコマンドを宣言
-  initialize_market:
+  DpInitializeMarket:
     description: マーケットのデータを初期化する
-    usage: /initialize_market [自分の名前]
-  start_market:
+    usage: /  DpInitializeMarket [自分の名前]
+  DpStartMarket:
     description: マーケットを開始
-    usage: /start_market
+    usage: /  DpStartMarket
     permission: market
-  stop_market:
+  DpStopMarket:
     description: マーケットを止める
-    usage: /stop_market
+    usage: /  DpStopMarket
     permission: market
-  place_customer:
+  DpPlaceCustomer:
     description: マーケット窓口を一人分実体化
-    usage: /place_customer
+    usage: /  DpPlaceCustomer
     permission: market
-  kill_all_customer:
+  DpKillAllCustomer:
     description: 全マーケット窓口を削除
-    usage: /kill_all_customer
+    usage: /  DpKillAllCustomer
     permission: market
-  tax:
+  DpTax:
     description: 徴税
-    usage: /tax [チーム名] [金額]
+    usage: /  DpTax [チーム名] [金額]
     permission: market
-  give_money:
+  DpGiveMoney:
     description: お金をあげる
-    usage: /give_money [チーム名] [金額]
+    usage: /  DpGiveMoney [チーム名] [金額]
     permission: market
-  set_disadvantage:
+  DpSetDisadvantage:
     description: 借金した時のデバフを決める
-    usage: /set_disadvantage [デバフ名]
+    usage: /  DpSetDisadvantage [デバフ名]
     permission: market
-  load_new_team:
+  DpLoadNewTeam:
     description: チームが新たに作られた時用
-    usage: /  reload_team
+    usage: /    DpLoadNewTeam
     permission: market
-  Look_teams:
+  DpLookTeams:
     description: 全チームの所持金を見る
-    usage: / Look_teams
+    usage: /   DpLookTeams
+  DpRevive:
+    description: 生き返らせる
+    usage: /   DpRevive
 
 permissions:
   market:

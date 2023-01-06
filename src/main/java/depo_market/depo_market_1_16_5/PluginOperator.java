@@ -2,6 +2,7 @@ package depo_market.depo_market_1_16_5;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
@@ -164,6 +165,20 @@ public class PluginOperator {
                 player.sendMessage(ChatColor.RED + key + ":" + "     " + Math.round(teamData.get(key)) + "円");
             }else {
                 player.sendMessage(key + ":" + "     " + Math.round(teamData.get(key)) + "円");
+            }
+        }
+        return true;
+    }
+
+    public boolean Revive(){
+        List<World> worlds = Bukkit.getWorlds();
+        for(World world : worlds){
+            List<Player> players = world.getPlayers();
+            for (Player player : players){
+                if(player.getGameMode().equals(GameMode.SPECTATOR)){
+                    player.setGameMode(GameMode.SURVIVAL);
+                    teamMoneyOperator.addTeamMoney(player,-50);
+                }
             }
         }
         return true;
