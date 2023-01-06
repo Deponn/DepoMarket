@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'Depo_Market'
-version = 'v1'
+version = 'vK1'
 
 repositories {
     mavenCentral()

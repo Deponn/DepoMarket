@@ -235,7 +235,7 @@ public class PlayersMenuOperator {
             } else {
                 tradedAmount = tradeAmount;
             }
-            earnMoney = - market.buy(SelectedEnName, tradedAmount) * 1.01f;//金額を計算。値段も変動
+            earnMoney = - market.buy(SelectedEnName, tradedAmount);//金額を計算。値段も変動
         } else {
             remainItem = PlayerInventory.removeItem(TradeItemStack);//アイテム受け渡し
             if (remainItem.containsKey(0)) {
@@ -243,7 +243,7 @@ public class PlayersMenuOperator {
             } else {
                 tradedAmount = tradeAmount;
             }
-            earnMoney = market.sell(SelectedEnName, tradedAmount) * 0.99f;//金額を計算。値段も変動
+            earnMoney = market.sell(SelectedEnName, tradedAmount);//金額を計算。値段も変動
         }
         teamMoneyOperator.addTeamMoney(player, earnMoney);//お金をチームに加算。
     }

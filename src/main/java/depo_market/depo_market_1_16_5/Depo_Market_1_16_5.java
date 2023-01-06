@@ -82,7 +82,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         Player player = (Player) sender;
 
         // コマンド処理...
-        if (cmd.getName().equalsIgnoreCase("depo_initialize_market")) {
+        if (cmd.getName().equalsIgnoreCase("DpInitializeMarket")) {
             CommandParser parser = CommandParser.parse_initialize(sender, args);
             if (!parser.isSuccess) {
                 // パース失敗

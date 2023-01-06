@@ -27,25 +27,15 @@ public class DataBaseTradeItem {
         this.MenuSlotList.add(new ItemMenuSlot(Material.IRON_INGOT, "Iron", "鉄", 640f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.NETHERITE_INGOT, "Netherite", "ネザーライト", 10000f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.COAL, "Coal", "石炭", 160f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.QUARTZ, "Quartz", "クオーツ", 160f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.CLAY_BALL, "Clay", "粘土", 320f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.SLIME_BALL, "Slime", "スライムボール", 160f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.OAK_LOG, "Oak", "オークの原木", 160f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.ACACIA_LOG, "Acacia", "アカシアの原木", 160f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.BIRCH_LOG, "BIRCH", "白樺の原木", 160f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.SPRUCE_LOG, "SPRUCE", "トウヒの原木", 160f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.DARK_OAK_LOG, "DARK_OAK", "ダークオークの原木", 160f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.JUNGLE_LOG, "JUNGLE", "ジャングルの原木", 160f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.COBBLESTONE, "CobbleStone", "丸石", 20f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.SAND, "Sand", "砂", 40f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.EMERALD, "Emerald", "エメラルド", 2560f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.BREAD, "Bread", "パン", 160f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.TNT, "TNT", "TNT", 1280f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.ARROW, "Arrow", "矢", 160f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.LEATHER, "Leather", "革", 320f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.CROSSBOW, "CROSSBOW", "クロスボウ", 2560f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.BEDROCK, "BEDROCK", "岩盤", 10000f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.ENDER_EYE, "ENDER_EYE", "エンダーアイ", 10000f));
+
         ItemEnchantData eItem;
         eItem = new ItemEnchantData(Material.DIAMOND_PICKAXE, "D_PICK_1", "幸運修繕効率強化耐久ピッケル", 20000f);
         eItem.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 3);
