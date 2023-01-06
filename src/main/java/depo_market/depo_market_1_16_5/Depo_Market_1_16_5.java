@@ -28,9 +28,9 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         //イベントを受け取れるようにする。
         getServer().getPluginManager().registerEvents(this, this);
         //コマンドのタブコンプリートを実装
-        Objects.requireNonNull(this.getCommand("tax")).setTabCompleter(new CommandSuggest());
-        Objects.requireNonNull(this.getCommand("give_money")).setTabCompleter(new CommandSuggest());
-        Objects.requireNonNull(this.getCommand("set_disadvantage")).setTabCompleter(new CommandSuggest());
+        Objects.requireNonNull(this.getCommand("DpTax")).setTabCompleter(new CommandSuggest());
+        Objects.requireNonNull(this.getCommand("DpGiveMoney")).setTabCompleter(new CommandSuggest());
+        Objects.requireNonNull(this.getCommand("DpSetDisadvantage")).setTabCompleter(new CommandSuggest());
         //プラグインの処理を実際に行いデータを保持するオペレーターオブジェクト実体化
         Operator = new PluginOperator();
         //コンフィグが存在する場合はロードする。リストをそれぞれロードし、マップに変換。順序がそろってる前提
@@ -77,7 +77,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         Player player = (Player) sender;
 
         // コマンド処理...
-        if (cmd.getName().equalsIgnoreCase("initialize_market")) {
+        if (cmd.getName().equalsIgnoreCase("DpInitializeMarket")) {
             CommandParser parser = CommandParser.parse_initialize(sender, args);
             if (!parser.isSuccess) {
                 // パース失敗
@@ -85,21 +85,21 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             }
             return Operator.InitializeMarket(player);
 
-        } else if (cmd.getName().equalsIgnoreCase("start_market")) {
+        } else if (cmd.getName().equalsIgnoreCase("DpStartMarket")) {
             return Operator.StartMarket(player);
 
-        } else if (cmd.getName().equalsIgnoreCase("stop_market")) {
+        } else if (cmd.getName().equalsIgnoreCase("DpStopMarket")) {
             boolean flag = Operator.StopMarket(player);
             saveData();
             return flag;
 
-        } else if (cmd.getName().equalsIgnoreCase("place_customer")) {
+        } else if (cmd.getName().equalsIgnoreCase("DpPlaceCustomer")) {
             return Operator.PlaceCustomer(player);
 
-        } else if (cmd.getName().equalsIgnoreCase("kill_all_customer")) {
+        } else if (cmd.getName().equalsIgnoreCase("DpKillAllCustomers")) {
             return Operator.KillAllCustomer();
 
-        } else if (cmd.getName().equalsIgnoreCase("tax")) {
+        } else if (cmd.getName().equalsIgnoreCase("DpTax")) {
             //コマンド引数を処理
             CommandParser parser = CommandParser.parse_tax(sender, args);
             if (!parser.isSuccess) {
@@ -108,7 +108,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             }
             float amount = parser.amount_of_money;
             return Operator.Tax(player,parser.team_name, amount);
-        } else if (cmd.getName().equalsIgnoreCase("give_money")) {
+        } else if (cmd.getName().equalsIgnoreCase("DpGiveMoney")) {
             //コマンド引数を処理
             CommandParser parser = CommandParser.parse_tax(sender, args);
             if (!parser.isSuccess) {
@@ -117,7 +117,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             }
             float amount = parser.amount_of_money;
             return Operator.GiveMoney(player,parser.team_name, amount);
-        } else if (cmd.getName().equalsIgnoreCase("set_disadvantage")) {
+        } else if (cmd.getName().equalsIgnoreCase("DpSetDisadvantage")) {
             //コマンド引数を処理
             CommandParser parser = CommandParser.parse_disadvantage(sender, args);
             if (!parser.isSuccess) {
@@ -126,9 +126,9 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             }
             return Operator.SetDisAdvantage(player,parser.disadvantage);
 
-        } else if (cmd.getName().equalsIgnoreCase("load_new_team")) {
+        } else if (cmd.getName().equalsIgnoreCase("DpNewTeam")) {
             return Operator.ReloadTeam(player);
-        } else if (cmd.getName().equalsIgnoreCase("Look_teams")) {
+        } else if (cmd.getName().equalsIgnoreCase("DpLookTeams")) {
             return Operator.LookTeams(player);
         }
         return true;
