@@ -149,7 +149,7 @@ public class PlayersMenuOperator {
     //売りの時、売れるか判定して取引処理メソッドを呼ぶ
     private void SellItem(Material SelectedMaterial,String SelectedEnName, int tradeAmount, String disadvantage) {
         if (operator.teamMoneyOperator.PlayerInTeam(player)) {
-            if (operator.teamMoneyOperator.getTeamMoney(player) <= BOUND_OF_MONEY) {
+            if (operator.teamMoneyOperator.getTeamMoney(player) <= BOUND_OF_MONEY * 2) {
                 TradeItem(SelectedMaterial,SelectedEnName,tradeAmount,false);
                 if (disadvantage.equals("health")) {
                     operator.teamMoneyOperator.setTeamHealth(player);
@@ -191,7 +191,7 @@ public class PlayersMenuOperator {
     //売りの時、売れるか判定して取引処理メソッドを呼ぶ
     private void SellEnchantItem(int EnchantIndex, String disadvantage) {
         if (operator.teamMoneyOperator.PlayerInTeam(player)) {
-            if (operator.teamMoneyOperator.getTeamMoney(player) <= BOUND_OF_MONEY) {
+            if (operator.teamMoneyOperator.getTeamMoney(player) <= BOUND_OF_MONEY * 2) {
                 TradeEnchantItem(EnchantIndex, false);
                 if (disadvantage.equals("health")) {
                     operator.teamMoneyOperator.setTeamHealth(player);
