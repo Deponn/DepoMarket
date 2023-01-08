@@ -185,7 +185,7 @@ public class PluginOperator {
     }
 
     //村人をクリックしたときに商人タグがあれば取引メニューに移行
-    public void CustomerClick(Player player, Entity ClickedEntity) {
+    public boolean CustomerClick(Player player, Entity ClickedEntity) {
         if (market.getMarketState()) {
             if (ClickedEntity instanceof Villager) {
                 Villager ClickedCustomer = (Villager) ClickedEntity;
@@ -194,11 +194,20 @@ public class PluginOperator {
                         playersMenuOperators.put(player.getName(), new PlayersMenuOperator(player, this));
                     }
                     playersMenuOperators.get(player.getName()).MakeMainMenu();
+                    return true;
                 }
             }
         } else {
-            player.sendMessage("市場が閉鎖しているため取引できません");
+            if (ClickedEntity instanceof Villager) {
+                Villager ClickedCustomer = (Villager) ClickedEntity;
+                if (ClickedCustomer.getScoreboardTags().contains(CUSTOMER_NAME)) {
+                    player.sendMessage("市場が閉鎖しているため取引できません");
+                    return true;
+                }
+            }
         }
+        player.sendMessage("クリックイベントがDepo_Mountainによって上書きされています");
+        return false;
     }
 
     //プレイヤーがメニュー状態なら真を返す。返された側は真ならアイテムをインベントリから取れないようにする。

@@ -123,7 +123,8 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
     //エンティティクリックイベント。商人クリック用
     @EventHandler
     public void onEntityClick(PlayerInteractEntityEvent e) {
-        Operator.CustomerClick(e.getPlayer(),e.getRightClicked());
+        boolean a;
+        a = Operator.CustomerClick(e.getPlayer(),e.getRightClicked());
     }
     //インベントリをクリックしたとき、取引メニューの動作を設定
     @EventHandler
