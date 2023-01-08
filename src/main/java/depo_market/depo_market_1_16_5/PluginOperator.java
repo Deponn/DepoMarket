@@ -158,17 +158,21 @@ public class PluginOperator {
         return true;
     }
     public void KillEvent(Player Killer,Player KilledPlayer) {
-        Killer.sendMessage("キルしたので1000獲得");
-        KilledPlayer.sendMessage("キルされたので1000失った");
-        teamMoneyOperator.addTeamMoney(Killer, 1000);
-        teamMoneyOperator.addPlayerMoney(Killer, 1000);
-        teamMoneyOperator.addTeamMoney(KilledPlayer, -1000);
-        teamMoneyOperator.addPlayerMoney(KilledPlayer, -1000);
+        if(market.getMarketState()) {
+            Killer.sendMessage("キルしたので1000獲得");
+            KilledPlayer.sendMessage("キルされたので1000失った");
+            teamMoneyOperator.addTeamMoney(Killer, 1000);
+            teamMoneyOperator.addPlayerMoney(Killer, 1000);
+            teamMoneyOperator.addTeamMoney(KilledPlayer, -1000);
+            teamMoneyOperator.addPlayerMoney(KilledPlayer, -1000);
+        }
     }
     public void KillEvent(Player KilledPlayer) {
-        KilledPlayer.sendMessage("死んでしまったため1000失った");
-        teamMoneyOperator.addTeamMoney(KilledPlayer, -1000);
-        teamMoneyOperator.addPlayerMoney(KilledPlayer, -1000);
+        if (market.getMarketState()) {
+            KilledPlayer.sendMessage("死んでしまったため1000失った");
+            teamMoneyOperator.addTeamMoney(KilledPlayer, -1000);
+            teamMoneyOperator.addPlayerMoney(KilledPlayer, -1000);
+        }
     }
     public boolean LookScore(Player player){
         for (World world : Bukkit.getWorlds()) {
@@ -223,6 +227,8 @@ public class PluginOperator {
 
     //プレイヤーが死んでもHPが減ったままにする
     public void setPlayerHealth(Player player) {
-        teamMoneyOperator.setTeamHealth(player);
+        if(market.getMarketState()) {
+            teamMoneyOperator.setTeamHealth(player);
+        }
     }
 }
