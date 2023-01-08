@@ -21,22 +21,7 @@ public class CommandParser {
     private CommandParser(boolean isSuccess) {
         this.isSuccess = isSuccess;
     }
-    /**
-     * 初期化コマンドをパースする
-     *
-     * @param sender コマンド送信者
-     * @param args   引数
-     * @return コマンド補完候補
-     */
-    public static CommandParser parse_initialize(CommandSender sender, String[] args) {
-        List<String> argsList = Arrays.asList(args);
-        if (argsList.contains(sender.getName())) {
-            return new CommandParser(true);
-        }else {
-            sender.sendMessage(ChatColor.RED + "自分の名前を入れてください");
-            return new CommandParser(false);
-        }
-    }
+
     /**
      * お金をあげたり奪ったりするコマンドをパースする
      *
@@ -44,7 +29,7 @@ public class CommandParser {
      * @param args   引数
      * @return コマンド補完候補
      */
-    public static CommandParser parse_tax(CommandSender sender, String[] args) {
+    public static CommandParser parse_give_money(CommandSender sender, String[] args) {
         List<String> argsList = Arrays.asList(args);
 
         String team_name = "none";

@@ -1,6 +1,6 @@
 package depo_market.depo_market_1_16_5;
 
-import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,10 +13,9 @@ public class MarketOperator {
 
     private boolean market_run_flag = false;//取引停止と取引可能のフラグ
     private Map<String, ItemPrice> ItemDataList;//アイテムの値段を保持するオブジェクトのマップ
-    private final DataBaseTradeItem dataBaseTradeItem;//アイテムの値段の初期値を得るため
+
     public MarketOperator(ArrayList<ItemMenuSlot> initialPriceList){
         this.ItemDataList = new HashMap<>();
-        this.dataBaseTradeItem = new DataBaseTradeItem();
         for(ItemMenuSlot Item : initialPriceList){
             this.ItemDataList.put(Item.getEnName(),new ItemPrice(Item.getInitialPrice()));
         }
@@ -33,20 +32,20 @@ public class MarketOperator {
             this.ItemDataList.put(Item.getEnName(), new ItemPrice(Item.getInitialPrice()));
         }
     }
-    public void StartMarket(Player player) {
+    public void StartMarket() {
         if (!market_run_flag) {
-            player.sendMessage("市場開始");
+            Bukkit.getLogger().info("市場開始");
             market_run_flag = true;
         } else {
-            player.sendMessage("市場はすでに起動中です");
+            Bukkit.getLogger().info("市場はすでに起動中です");
         }
     }
-    public void StopMarket(Player player){
+    public void StopMarket(){
         if(market_run_flag) {
             market_run_flag = false;
-            player.chat("市場停止");
+            Bukkit.getLogger().info("市場停止");
         }else {
-            player.sendMessage("市場はすでに停止です");
+            Bukkit.getLogger().info("市場はすでに停止です");
         }
     }
     public float getPrice(String nameEn){

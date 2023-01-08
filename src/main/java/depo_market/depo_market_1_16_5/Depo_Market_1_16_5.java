@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -28,7 +29,6 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         //イベントを受け取れるようにする。
         getServer().getPluginManager().registerEvents(this, this);
         //コマンドのタブコンプリートを実装
-        Objects.requireNonNull(this.getCommand("DpTax")).setTabCompleter(new CommandSuggest());
         Objects.requireNonNull(this.getCommand("DpGiveMoney")).setTabCompleter(new CommandSuggest());
         Objects.requireNonNull(this.getCommand("DpSetDisadvantage")).setTabCompleter(new CommandSuggest());
         //プラグインの処理を実際に行いデータを保持するオペレーターオブジェクト実体化
@@ -69,8 +69,22 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 
-        if (cmd.getName().equalsIgnoreCase("DpRevive")) {
-            return Operator.Revive();
+        if (cmd.getName().equalsIgnoreCase("DpStartMarket")) {
+            return Operator.StartMarket();
+
+        } else if (cmd.getName().equalsIgnoreCase("DpStopMarket")) {
+            boolean flag = Operator.StopMarket();
+            saveData();
+            return flag;
+        }else if (cmd.getName().equalsIgnoreCase("DpGiveMoney")) {
+            //コマンド引数を処理
+            CommandParser parser = CommandParser.parse_give_money(sender, args);
+            if (!parser.isSuccess) {
+                // パース失敗
+                return true;
+            }
+            float amount = parser.amount_of_money;
+            return Operator.GiveMoney(parser.team_name, amount);
         }
 
         // プレイヤーがコマンドを投入した際の処理...
@@ -82,47 +96,13 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         Player player = (Player) sender;
 
         // コマンド処理...
-        if (cmd.getName().equalsIgnoreCase("DpInitializeMarket")) {
-            CommandParser parser = CommandParser.parse_initialize(sender, args);
-            if (!parser.isSuccess) {
-                // パース失敗
-                return true;
-            }
-            return Operator.InitializeMarket(player);
-
-        } else if (cmd.getName().equalsIgnoreCase("DpStartMarket")) {
-            return Operator.StartMarket(player);
-
-        } else if (cmd.getName().equalsIgnoreCase("DpStopMarket")) {
-            boolean flag = Operator.StopMarket(player);
-            saveData();
-            return flag;
-
-        } else if (cmd.getName().equalsIgnoreCase("DpPlaceCustomer")) {
+        if (cmd.getName().equalsIgnoreCase("DpPlaceCustomer")) {
             return Operator.PlaceCustomer(player);
 
         } else if (cmd.getName().equalsIgnoreCase("DpKillAllCustomer")) {
             return Operator.KillAllCustomer();
 
-        } else if (cmd.getName().equalsIgnoreCase("DpTax")) {
-            //コマンド引数を処理
-            CommandParser parser = CommandParser.parse_tax(sender, args);
-            if (!parser.isSuccess) {
-                // パース失敗
-                return true;
-            }
-            float amount = parser.amount_of_money;
-            return Operator.Tax(player,parser.team_name, amount);
-        } else if (cmd.getName().equalsIgnoreCase("DpGiveMoney")) {
-            //コマンド引数を処理
-            CommandParser parser = CommandParser.parse_tax(sender, args);
-            if (!parser.isSuccess) {
-                // パース失敗
-                return true;
-            }
-            float amount = parser.amount_of_money;
-            return Operator.GiveMoney(player,parser.team_name, amount);
-        } else if (cmd.getName().equalsIgnoreCase("DpSetDisadvantage")) {
+        }else if (cmd.getName().equalsIgnoreCase("DpSetDisadvantage")) {
             //コマンド引数を処理
             CommandParser parser = CommandParser.parse_disadvantage(sender, args);
             if (!parser.isSuccess) {
@@ -131,10 +111,11 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             }
             return Operator.SetDisAdvantage(player,parser.disadvantage);
 
-        } else if (cmd.getName().equalsIgnoreCase("DpLoadNewTeam")) {
-            return Operator.ReloadTeam(player);
-        } else if (cmd.getName().equalsIgnoreCase("DpLookTeams")) {
+        }else if (cmd.getName().equalsIgnoreCase("DpLoadNewTeams")) {
             return Operator.LookTeams(player);
+        }
+        else if (cmd.getName().equalsIgnoreCase("DpLookScore")) {
+            return Operator.LookScore(player);
         }
         return true;
     }
@@ -161,9 +142,19 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             saveData();
         }
     }
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent e){
+        Player player = (Player) e.getEntity();
+        Player killer = player.getKiller();
+        if(killer != null) {
+            Operator.KillEvent(killer, player);
+        }else{
+            Operator.KillEvent(player);
+        }
+    }
     //プレイヤーが死んでもHPが減ったままにする
     @EventHandler
-    public void onPlayerDeath(PlayerRespawnEvent e){
+    public void onPlayerRevive(PlayerRespawnEvent e){
         Player player = e.getPlayer();
         Operator.setPlayerHealth(player);
     }
@@ -201,5 +192,3 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
     }
 
 }
-
-// destroyにわける、市場作る、金動かす、セーブ機能

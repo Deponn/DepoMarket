@@ -25,10 +25,8 @@ public class CommandSuggest implements TabCompleter{
      */
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (command.getName().equalsIgnoreCase("DpTax")) {
-            return suggest_tax(sender, args);
-        }else if(command.getName().equalsIgnoreCase("DpGiveMoney")) {
-            return suggest_tax(sender, args);
+        if(command.getName().equalsIgnoreCase("DpGiveMoney")) {
+            return suggest_give_money(sender, args);
         }else if (command.getName().equalsIgnoreCase("DpSetDisadvantage")){
             return suggest_disadvantage(sender, args);
         }else {
@@ -42,10 +40,10 @@ public class CommandSuggest implements TabCompleter{
      * @param args   引数
      * @return コマンド補完候補
      */
-    private static List<String> suggest_tax(CommandSender sender, String[] args) {
+    private static List<String> suggest_give_money(CommandSender sender, String[] args) {
         List<String> argsList = Arrays.asList(args);
         if (argsList.size() > 1 && "-amount".equals(argsList.get(argsList.size() - 2))) {
-            return Arrays.asList("0", "1000", "10000","100000");
+            return Arrays.asList("-10000","0","10000");
         } else if (argsList.size() > 1 && "-team".equals(argsList.get(argsList.size() - 2))) {
             ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
             Scoreboard scoreboard = Objects.requireNonNull(scoreboardManager).getMainScoreboard();

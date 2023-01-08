@@ -7,9 +7,6 @@ description: Plugin that add market and economy to minecraft
 
 
 commands: #自作プラグインのコマンドを宣言
-  DpInitializeMarket:
-    description: マーケットのデータを初期化する
-    usage: /  DpInitializeMarket [自分の名前]
   DpStartMarket:
     description: マーケットを開始
     usage: /  DpStartMarket
@@ -26,10 +23,6 @@ commands: #自作プラグインのコマンドを宣言
     description: 全マーケット窓口を削除
     usage: /  DpKillAllCustomer
     permission: market
-  DpTax:
-    description: 徴税
-    usage: /  DpTax [チーム名] [金額]
-    permission: market
   DpGiveMoney:
     description: お金をあげる
     usage: /  DpGiveMoney [チーム名] [金額]
@@ -38,16 +31,14 @@ commands: #自作プラグインのコマンドを宣言
     description: 借金した時のデバフを決める
     usage: /  DpSetDisadvantage [デバフ名]
     permission: market
-  DpLoadNewTeam:
-    description: チームが新たに作られた時用
-    usage: /    DpLoadNewTeam
-    permission: market
   DpLookTeams:
     description: 全チームの所持金を見る
-    usage: /   DpLookTeams
-  DpRevive:
-    description: 生き返らせる
-    usage: /   DpRevive
+    usage: /   DpLoadNewTeams
+    permission: market
+  DpLookScore:
+    description: スコアを見る
+    usage: /     DpLookScore
+    permission: market
 
 permissions:
   market:

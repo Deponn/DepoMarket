@@ -19,6 +19,7 @@ public class TeamMoneyOperator {
     final float MONEY_HEALTH = 300000f;
     private final Scoreboard scoreboard;
     private final Map<String, Float> teams = new HashMap<>();
+    private final Map<Player,Float> playerMoney = new HashMap<>();
 
     //スコアボードに存在するチームを確認。所持金を初期値０にする
     public TeamMoneyOperator() {
@@ -38,6 +39,13 @@ public class TeamMoneyOperator {
             Team team = (Team) teamObj;
             teams.put(team.getName(), 0f);
         }
+        List<World> worlds = Bukkit.getWorlds();
+        for (World world : worlds){
+            List<Player> players = world.getPlayers();
+            for (Player player : players){
+                playerMoney.put(player,0f);
+            }
+        }
     }
 
     //ロード、所持金を更新する
@@ -48,16 +56,6 @@ public class TeamMoneyOperator {
         }
     }
 
-    //スコアボードに存在するチームを確認。初めて確認されたチームなら所持金を初期値０にする
-    public void reLoadTeams() {
-        Object[] teamObjects = scoreboard.getTeams().toArray();
-        for (Object teamObj : teamObjects) {
-            Team team = (Team) teamObj;
-            if (!teams.containsKey(team.getName())) {
-                teams.put(team.getName(), 0f);
-            }
-        }
-    }
     public boolean PlayerInTeam(Player player){
         return TeamOfPlayer(player) != null;
     }
@@ -109,12 +107,14 @@ public class TeamMoneyOperator {
         }
     }
     //すべてのチームの全員のHPを元に戻す
-    public void resetTeamHealth(Player player) {
-        World world = player.getWorld();
-        List<Player> players = world.getPlayers();
-        for (Player targetPlayer : players) {
-            AttributeInstance healthAttribute = targetPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-            Objects.requireNonNull(healthAttribute).setBaseValue(20);
+    public void resetTeamHealth() {
+        List<World> worlds = Bukkit.getWorlds();
+        for(World world : worlds) {
+            List<Player> players = world.getPlayers();
+            for (Player targetPlayer : players) {
+                AttributeInstance healthAttribute = targetPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                Objects.requireNonNull(healthAttribute).setBaseValue(20);
+            }
         }
     }
     //すべてのチームの全員のHPを更新
@@ -139,5 +139,16 @@ public class TeamMoneyOperator {
             }
         }
         return null;
+    }
+    public void addPlayerMoney(Player player,float money){
+        float oldMoney = playerMoney.get(player);
+        playerMoney.put(player,oldMoney + money);
+    }
+
+    public float getPlayerMoney(Player player){
+        if(playerMoney.containsKey(player)){
+            return playerMoney.get(player);
+        }
+        return 0f;
     }
 }

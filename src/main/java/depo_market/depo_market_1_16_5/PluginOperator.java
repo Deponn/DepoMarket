@@ -8,7 +8,13 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
-
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * 核となるオペレータークラス。
@@ -16,10 +22,10 @@ import java.util.*;
 public class PluginOperator {
 
     private final String CUSTOMER_NAME = "Depo_Customer";
-    private final MarketOperator market;
-    private final TeamMoneyOperator teamMoneyOperator;
-    private final DataBaseTradeItem dataBaseTradeItem;
-    private final MenuMaker menuMaker;
+    public final MarketOperator market;
+    public final TeamMoneyOperator teamMoneyOperator;
+    public final DataBaseTradeItem dataBaseTradeItem;
+    public final MenuMaker menuMaker;
     private final Map<String, PlayersMenuOperator> playersMenuOperators;
     private String Disadvantage;
     private boolean existData;
@@ -59,30 +65,30 @@ public class PluginOperator {
         return teamMoneyOperator.getData();
     }
 
-    public boolean InitializeMarket(Player player) {
+    private void InitializeMarket() {
         if (!market.getMarketState()) {
             market.Initialize(dataBaseTradeItem.getInitialPriceList());
             teamMoneyOperator.Initialize();
             existData = true;
-            player.sendMessage("市場を初期化しました");
+            Bukkit.getLogger().info("市場を初期化しました");
         } else {
-            player.sendMessage("市場が動いてる間は初期化できません");
+            Bukkit.getLogger().info("市場が動いてる間は初期化できません");
         }
-        return true;
     }
 
-    public boolean StartMarket(Player player) {
+    public boolean StartMarket() {
+        InitializeMarket();
         if(existData) {
-            market.StartMarket(player);
+            market.StartMarket();
         }else {
-            player.sendMessage("データが存在しないので初期化してから初めてください");
+            Bukkit.getLogger().info("データが存在しないので初期化してから初めてください");
         }
         return true;
     }
 
-    public boolean StopMarket(Player player) {
-        market.StopMarket(player);
-        teamMoneyOperator.resetTeamHealth(player);
+    public boolean StopMarket() {
+        market.StopMarket();
+        teamMoneyOperator.resetTeamHealth();
         return true;
     }
 
@@ -109,24 +115,12 @@ public class PluginOperator {
         return true;
     }
 
-    public boolean Tax(Player player, String targetTeamName, Float Amount) {
+    public boolean GiveMoney( String targetTeamName, Float Amount) {
         if (market.getMarketState()) {
-            player.sendMessage(targetTeamName+"から"+ Amount + "円を徴税しました");
-            teamMoneyOperator.addTeamMoney(player, Amount);
-            teamMoneyOperator.addTeamMoney(targetTeamName, -Amount);
-        } else {
-            player.sendMessage("市場が動いていません");
-        }
-        return true;
-    }
-
-    public boolean GiveMoney(Player player, String targetTeamName, Float Amount) {
-        if (market.getMarketState()) {
-            player.sendMessage(targetTeamName+"に"+ Amount + "円だけお金をあげました");
-            teamMoneyOperator.addTeamMoney(player, -Amount);
+            Bukkit.getLogger().info(targetTeamName+"に"+ Amount + "円だけお金をあげました");
             teamMoneyOperator.addTeamMoney(targetTeamName, Amount);
         } else {
-            player.sendMessage("市場が動いていません");
+            Bukkit.getLogger().info("市場が動いていません");
         }
         return true;
     }
@@ -150,12 +144,6 @@ public class PluginOperator {
         return true;
     }
 
-    public boolean ReloadTeam(Player player) {
-        player.sendMessage("チームリロードしました");
-        teamMoneyOperator.reLoadTeams();
-        return true;
-    }
-
     //すべてのチームの所持金を確認
     public boolean LookTeams(Player player) {
         Map<String, Float> teamData = teamMoneyOperator.getData();
@@ -169,16 +157,24 @@ public class PluginOperator {
         }
         return true;
     }
-
-    public boolean Revive(){
-        List<World> worlds = Bukkit.getWorlds();
-        for(World world : worlds){
+    public void KillEvent(Player Killer,Player KilledPlayer) {
+        Killer.sendMessage("キルしたので1000獲得");
+        KilledPlayer.sendMessage("キルされたので1000失った");
+        teamMoneyOperator.addTeamMoney(Killer, 1000);
+        teamMoneyOperator.addPlayerMoney(Killer, 1000);
+        teamMoneyOperator.addTeamMoney(KilledPlayer, -1000);
+        teamMoneyOperator.addPlayerMoney(KilledPlayer, -1000);
+    }
+    public void KillEvent(Player KilledPlayer) {
+        KilledPlayer.sendMessage("死んでしまったため1000失った");
+        teamMoneyOperator.addTeamMoney(KilledPlayer, -1000);
+        teamMoneyOperator.addPlayerMoney(KilledPlayer, -1000);
+    }
+    public boolean LookScore(Player player){
+        for (World world : Bukkit.getWorlds()) {
             List<Player> players = world.getPlayers();
-            for (Player player : players){
-                if(player.getGameMode().equals(GameMode.SPECTATOR)){
-                    player.setGameMode(GameMode.SURVIVAL);
-                    teamMoneyOperator.addTeamMoney(player,-50);
-                }
+            for (Player targetPlayer : players){
+                player.chat(targetPlayer.getName() + ":     " + teamMoneyOperator.getPlayerMoney(targetPlayer));
             }
         }
         return true;
@@ -191,7 +187,7 @@ public class PluginOperator {
                 Villager ClickedCustomer = (Villager) ClickedEntity;
                 if (ClickedCustomer.getScoreboardTags().contains(CUSTOMER_NAME)) {
                     if (!playersMenuOperators.containsKey(player.getName())) {
-                        playersMenuOperators.put(player.getName(), new PlayersMenuOperator(player, market, teamMoneyOperator, dataBaseTradeItem, menuMaker));
+                        playersMenuOperators.put(player.getName(), new PlayersMenuOperator(player, this));
                     }
                     playersMenuOperators.get(player.getName()).MakeMainMenu();
                 }
