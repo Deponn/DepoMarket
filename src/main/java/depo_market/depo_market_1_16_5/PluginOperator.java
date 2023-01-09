@@ -15,10 +15,10 @@ import java.util.*;
 public class PluginOperator {
 
     private final String CUSTOMER_NAME = "Depo_Customer";
-    private final MarketOperator market;
-    private final TeamMoneyOperator teamMoneyOperator;
-    private final DataBaseTradeItem dataBaseTradeItem;
-    private final MenuMaker menuMaker;
+    public final MarketOperator market;
+    public final TeamMoneyOperator teamMoneyOperator;
+    public final DataBaseTradeItem dataBaseTradeItem;
+    public final MenuMaker menuMaker;
     private final Map<String, PlayersMenuOperator> playersMenuOperators;
     private String Disadvantage;
     private boolean existData;
@@ -170,20 +170,29 @@ public class PluginOperator {
     }
 
     //村人をクリックしたときに商人タグがあれば取引メニューに移行
-    public void CustomerClick(Player player, Entity ClickedEntity) {
+    public boolean CustomerClick(Player player, Entity ClickedEntity) {
         if (market.getMarketState()) {
             if (ClickedEntity instanceof Villager) {
                 Villager ClickedCustomer = (Villager) ClickedEntity;
                 if (ClickedCustomer.getScoreboardTags().contains(CUSTOMER_NAME)) {
                     if (!playersMenuOperators.containsKey(player.getName())) {
-                        playersMenuOperators.put(player.getName(), new PlayersMenuOperator(player, market, teamMoneyOperator, dataBaseTradeItem, menuMaker));
+                        playersMenuOperators.put(player.getName(), new PlayersMenuOperator(player, this));
                     }
                     playersMenuOperators.get(player.getName()).MakeMainMenu();
+                    return true;
                 }
             }
         } else {
-            player.sendMessage("市場が閉鎖しているため取引できません");
+            if (ClickedEntity instanceof Villager) {
+                Villager ClickedCustomer = (Villager) ClickedEntity;
+                if (ClickedCustomer.getScoreboardTags().contains(CUSTOMER_NAME)) {
+                    player.sendMessage("市場が閉鎖しているため取引できません");
+                    return true;
+                }
+            }
         }
+        player.sendMessage("クリックイベントがDepo_Mountainによって上書きされています");
+        return false;
     }
 
     //プレイヤーがメニュー状態なら真を返す。返された側は真ならアイテムをインベントリから取れないようにする。
@@ -212,6 +221,8 @@ public class PluginOperator {
 
     //プレイヤーが死んでもHPが減ったままにする
     public void setPlayerHealth(Player player) {
-        teamMoneyOperator.setTeamHealth(player);
+        if(market.getMarketState()) {
+            teamMoneyOperator.setTeamHealth(player);
+        }
     }
 }

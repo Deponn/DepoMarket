@@ -47,6 +47,15 @@ public class DataBaseTradeItem {
         this.MenuSlotList.add(new ItemMenuSlot(Material.BEDROCK, "BEDROCK", "岩盤", 10000f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.ENDER_EYE, "ENDER_EYE", "エンダーアイ", 10000f));
         ItemEnchantData eItem;
+        eItem = new ItemEnchantData(Material.BOW, "PoweredBOW", "火ダメノックバック弓", 30000f);
+        eItem.addEnchant(Enchantment.ARROW_DAMAGE, 5);
+        eItem.addEnchant(Enchantment.ARROW_FIRE, 1);
+        eItem.addEnchant(Enchantment.ARROW_KNOCKBACK, 2);
+        this.itemEnchantList.add(eItem);
+        eItem = new ItemEnchantData(Material.DIAMOND_SWORD, "PoweredDIAMOND_SWORD", "ノックバックダメージ強化ダイヤ剣", 20000f);
+        eItem.addEnchant(Enchantment.KNOCKBACK, 2);
+        eItem.addEnchant(Enchantment.DAMAGE_ALL, 5);
+        this.itemEnchantList.add(eItem);
         eItem = new ItemEnchantData(Material.DIAMOND_PICKAXE, "D_PICK_1", "幸運修繕効率強化耐久ピッケル", 20000f);
         eItem.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 3);
         eItem.addEnchant(Enchantment.MENDING, 1);
