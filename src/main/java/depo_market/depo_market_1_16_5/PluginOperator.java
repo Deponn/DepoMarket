@@ -163,15 +163,15 @@ public class PluginOperator {
     }
     public void KillEvent(Player Killer,Player KilledPlayer) {
         if(market.getMarketState()) {
-            Killer.sendMessage("キルしたので3000円獲得");
-            KilledPlayer.sendMessage("キルされたので敵チームが3000円獲得");
+            Killer.sendMessage("キルしたのでチームが3000円を獲得しました。");
+            KilledPlayer.sendMessage("キルされたので敵チームが3000円を獲得しました");
             teamMoneyOperator.addTeamMoney(Killer, 3000);
             teamMoneyOperator.addPlayerMoney(Killer, 3000);
         }
     }
     public void KillEvent(Player KilledPlayer) {
         if (market.getMarketState()) {
-            KilledPlayer.sendMessage("死んでしまったが、キルではないので敵チームはお金を獲得しなかった。");
+            KilledPlayer.sendMessage("キルではないため、所持金の変動はありません");
         }
     }
     public boolean LookScore(Player player){

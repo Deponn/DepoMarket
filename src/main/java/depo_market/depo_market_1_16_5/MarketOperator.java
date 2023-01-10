@@ -34,7 +34,7 @@ public class MarketOperator {
     }
     public void StartMarket() {
         if (!market_run_flag) {
-            Bukkit.getLogger().info("市場開始");
+            Bukkit.getLogger().info("市場を開きます");
             market_run_flag = true;
         } else {
             Bukkit.getLogger().info("市場はすでに起動中です");

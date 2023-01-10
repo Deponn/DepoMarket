@@ -36,8 +36,8 @@ public class MenuMaker {
         for (int i = MenuSlotsNum; i < WholeSlotNum - 2; i++) {
             ItemMenuSlotList.add(new ItemStackData(NoneMaterial, "押せません"));
         }
-        itemStackData = new ItemSubMenuSlot(CheckMaterial, "所持金",1);
-        itemStackData.setLore("所持金", Math.round(Money) + "円");
+        itemStackData = new ItemSubMenuSlot(CheckMaterial, "チームの所持金",1);
+        itemStackData.setLore("チームの所持金", Math.round(Money) + "円");
         ItemMenuSlotList.add(itemStackData);
         itemStackData = new ItemSubMenuSlot(BackMaterial, "戻る",1);
         ItemMenuSlotList.add(itemStackData);
@@ -57,7 +57,7 @@ public class MenuMaker {
         int counter = 0;
         for(Integer Amount : TradeAmountList) {
             Item = new ItemSubMenuSlot(material, nameJp,Amount);
-            Item.setLore("買う", "参考価格:" + Math.round(market.getPrice(nameEn) * Amount) + "円");
+            Item.setLore("買う", "価格:" + Math.round(market.getPrice(nameEn) * Amount) + "円");
             if(Amount == 1 || Math.round(market.getPrice(nameEn) * Amount) < 30000) {
                 subItemMenuSlotList.add(Item);
                 counter += 1;
@@ -69,7 +69,7 @@ public class MenuMaker {
         counter = 0;
         for(Integer Amount : TradeAmountList) {
             Item = new ItemSubMenuSlot(material, nameJp,Amount);
-            Item.setLore("売る", "参考価格:" + Math.round(market.getPrice(nameEn) * Amount) + "円");
+            Item.setLore("売る", "価格:" + Math.round(market.getPrice(nameEn) * Amount) + "円");
             if(Amount == 1 || Math.round(market.getPrice(nameEn) * Amount) < 30000) {
                 subItemMenuSlotList.add(Item);
                 counter = counter + 1;
@@ -78,8 +78,8 @@ public class MenuMaker {
         for (int i = counter + RowSlotNum;i<WholeSlotNum - 2;i++) {
             subItemMenuSlotList.add(new ItemSubMenuSlot(NoneMaterial, "押せません",1));
         }
-        Item = new ItemSubMenuSlot(CheckMaterial, "所持金",1);
-        Item.setLore("所持金", Math.round(Money) + "円");
+        Item = new ItemSubMenuSlot(CheckMaterial, "チームの所持金",1);
+        Item.setLore("チームの所持金", Math.round(Money) + "円");
         subItemMenuSlotList.add(Item);
 
         Item = new ItemSubMenuSlot(BackMaterial, "戻る",1);
@@ -100,7 +100,7 @@ public class MenuMaker {
         ItemStackData Item;
         for(ItemEnchantData Item_Enchant : itemEnchantList) {
             Item = new ItemStackData(Item_Enchant.getMaterial(),  Item_Enchant.getJpName());
-            Item.setLore("買う", "参考価格:" + Math.round(market.getPrice(Item_Enchant.getEnName()) )+ "円" );
+            Item.setLore("買う", "価格:" + Math.round(market.getPrice(Item_Enchant.getEnName()) )+ "円" );
             enchantItemMenuSlotList.add(Item);
         }
         for (int i = itemEnchantList.size(); i<RowSlotNum; i++) {
@@ -108,14 +108,14 @@ public class MenuMaker {
         }
         for(ItemEnchantData Item_Enchant : itemEnchantList) {
             Item = new ItemStackData(Item_Enchant.getMaterial(),  Item_Enchant.getJpName());
-            Item.setLore("売る", "参考価格:" + Math.round(market.getPrice(Item_Enchant.getEnName())) + "円");
+            Item.setLore("売る", "価格:" + Math.round(market.getPrice(Item_Enchant.getEnName())) + "円");
             enchantItemMenuSlotList.add(Item);
         }
         for (int i = itemEnchantList.size() + RowSlotNum; i<WholeSlotNum - 2; i++) {
             enchantItemMenuSlotList.add(new ItemStackData(NoneMaterial, "押せません"));
         }
-        Item = new ItemSubMenuSlot(CheckMaterial, "所持金",1);
-        Item.setLore("所持金", Math.round(Money) + "円");
+        Item = new ItemSubMenuSlot(CheckMaterial, "チームの所持金",1);
+        Item.setLore("チームの所持金", Math.round(Money) + "円");
         enchantItemMenuSlotList.add(Item);
         Item = new ItemSubMenuSlot(BackMaterial, "戻る",1);
         enchantItemMenuSlotList.add(Item);
