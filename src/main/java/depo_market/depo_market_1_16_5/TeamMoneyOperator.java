@@ -16,7 +16,7 @@ import java.util.*;
  * チームごとに所持金を計算する。プレイヤーがチームに所属するかも判定。存在するチームをロードしてチーム名と所持金を記録。
  */
 public class TeamMoneyOperator {
-    final float MONEY_HEALTH = 300000f;
+    final float MONEY_HEALTH = 200000f;
     private final Scoreboard scoreboard;
     private final Map<String, Float> teams = new HashMap<>();
     private final Map<Player,Float> playerMoney = new HashMap<>();
@@ -46,6 +46,7 @@ public class TeamMoneyOperator {
                 playerMoney.put(player,0f);
             }
         }
+        setAllTeamHealth(Bukkit.getWorlds());
     }
 
     //ロード、所持金を更新する
@@ -141,7 +142,7 @@ public class TeamMoneyOperator {
         return null;
     }
     public void addPlayerMoney(Player player,float money){
-        float oldMoney = playerMoney.get(player);
+        float oldMoney = playerMoney.getOrDefault(player, 0f);
         playerMoney.put(player,oldMoney + money);
     }
 

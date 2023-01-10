@@ -34,28 +34,6 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         Objects.requireNonNull(this.getCommand("DpSetDisadvantage")).setTabCompleter(new CommandSuggest());
         //プラグインの処理を実際に行いデータを保持するオペレーターオブジェクト実体化
         Operator = new PluginOperator();
-        //コンフィグが存在する場合はロードする。リストをそれぞれロードし、マップに変換。順序がそろってる前提
-        FileConfiguration configuration = getConfig();
-        boolean ConfExist = configuration.contains("Depo_isRun");
-        if(ConfExist){
-            boolean isRun = configuration.getBoolean("Depo_isRun");
-            String disadvantage = configuration.getString("disadvantage");
-            List<String> TeamNames = configuration.getStringList("Depo_teams");
-            List<Float> TeamMoneys = configuration.getFloatList("Depo_moneys");
-            List<String> ItemNames = configuration.getStringList("Depo_Items");
-            List<Float> ItemPrices = configuration.getFloatList("Depo_Prices");
-            List<Integer> ItemBuy = configuration.getIntegerList("Depo_buy");
-            List<Integer> ItemSell = configuration.getIntegerList("Depo_sell");
-            Map<String,Float> TeamData = new HashMap<>();
-            for (int i = 0; i < TeamNames.size(); i++) {
-                TeamData.put(TeamNames.get(i),TeamMoneys.get(i));
-            }
-            Map<String,ItemPrice> MarketData = new HashMap<>();
-            for (int i = 0; i < ItemNames.size(); i++) {
-                MarketData.put(ItemNames.get(i),new ItemPrice(ItemPrices.get(i),ItemBuy.get(i),ItemSell.get(i)));
-            }
-            Operator.LoadData(TeamData,MarketData,isRun,disadvantage, Bukkit.getWorlds());
-        }
         getLogger().info("Depo_Marketが有効化されました。");
     }
 
@@ -71,9 +49,11 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 
         if (cmd.getName().equalsIgnoreCase("EnableDpPlugin")) {
+            loadData();
             isEnabledPlugin = true;
             return true;
         }else if(cmd.getName().equalsIgnoreCase("DisableDpPlugin")) {
+            saveData();
             isEnabledPlugin = false;
             return true;
         }
@@ -181,6 +161,31 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         if(isEnabledPlugin) {
             Player player = e.getPlayer();
             Operator.setPlayerHealth(player);
+        }
+    }
+
+    private void loadData(){
+        //コンフィグが存在する場合はロードする。リストをそれぞれロードし、マップに変換。順序がそろってる前提
+        FileConfiguration configuration = getConfig();
+        boolean ConfExist = configuration.contains("Depo_isRun");
+        if(ConfExist){
+            boolean isRun = configuration.getBoolean("Depo_isRun");
+            String disadvantage = configuration.getString("disadvantage");
+            List<String> TeamNames = configuration.getStringList("Depo_teams");
+            List<Float> TeamMoneys = configuration.getFloatList("Depo_moneys");
+            List<String> ItemNames = configuration.getStringList("Depo_Items");
+            List<Float> ItemPrices = configuration.getFloatList("Depo_Prices");
+            List<Integer> ItemBuy = configuration.getIntegerList("Depo_buy");
+            List<Integer> ItemSell = configuration.getIntegerList("Depo_sell");
+            Map<String,Float> TeamData = new HashMap<>();
+            for (int i = 0; i < TeamNames.size(); i++) {
+                TeamData.put(TeamNames.get(i),TeamMoneys.get(i));
+            }
+            Map<String,ItemPrice> MarketData = new HashMap<>();
+            for (int i = 0; i < ItemNames.size(); i++) {
+                MarketData.put(ItemNames.get(i),new ItemPrice(ItemPrices.get(i),ItemBuy.get(i),ItemSell.get(i)));
+            }
+            Operator.LoadData(TeamData,MarketData,isRun,disadvantage, Bukkit.getWorlds());
         }
     }
 
