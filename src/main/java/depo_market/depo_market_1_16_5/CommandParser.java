@@ -15,6 +15,9 @@ public class CommandParser {
     public int amount_of_money = 0;//金額
     public String team_name = "none";//相手のチーム名
     public String disadvantage = "none";//デバフの種類
+    public int X;
+    public int Y;
+    public int Z;
 
 
     // オブジェクト生成。パースが成功しているかを受け取る
@@ -98,6 +101,31 @@ public class CommandParser {
         }
         CommandParser Me = new CommandParser(true);
         Me.disadvantage = disadvantage;
+        return Me;
+    }
+    public static CommandParser parse_SetPointCustomer(CommandSender sender, String[] args) {
+        List<String> argsList = Arrays.asList(args);
+        int x;
+        int y;
+        int z;
+        if (argsList.size() != 3) {
+            // 引数の次がなかった場合、エラー
+            sender.sendMessage(ChatColor.RED + "数値が必要です。 <X> <Y> <Z>");
+            return new CommandParser(false);
+        }
+        try {
+            // 金額
+            x = Integer.parseInt(argsList.get(0));
+            y = Integer.parseInt(argsList.get(1));
+            z = Integer.parseInt(argsList.get(2));
+        } catch (NumberFormatException e) {
+            sender.sendMessage(ChatColor.RED + "数値が不正です。 <X> <Y> <Z>");
+            return new CommandParser(false);
+        }
+        CommandParser Me = new CommandParser(true);
+        Me.X = x;
+        Me.Y = y;
+        Me.Z = z;
         return Me;
     }
 }

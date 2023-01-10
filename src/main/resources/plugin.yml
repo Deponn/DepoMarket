@@ -7,6 +7,14 @@ description: Plugin that add market and economy to minecraft
 
 
 commands: #自作プラグインのコマンドを宣言
+  EnableDpPlugin:
+    description: プラグインを有効にする
+    usage: /    EnableDpPlugin
+    permission: market
+  DisableDpPlugin:
+    description: プラグインを無効にする
+    usage: /    DisableDpPlugin
+    permission: market
   DpStartMarket:
     description: マーケットを開始
     usage: /  DpStartMarket
@@ -18,6 +26,10 @@ commands: #自作プラグインのコマンドを宣言
   DpPlaceCustomer:
     description: マーケット窓口を一人分実体化
     usage: /  DpPlaceCustomer
+    permission: market
+  DpSetPointCustomer:
+    description: マーケット窓口を一人分実体化
+    usage: /  DpSetPointCustomer
     permission: market
   DpKillAllCustomer:
     description: 全マーケット窓口を削除

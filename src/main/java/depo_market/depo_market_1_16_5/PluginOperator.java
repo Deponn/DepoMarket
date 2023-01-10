@@ -2,19 +2,15 @@ package depo_market.depo_market_1_16_5;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * 核となるオペレータークラス。
@@ -101,6 +97,14 @@ public class PluginOperator {
         Customer.setRemoveWhenFarAway(false);
         return true;
     }
+    public boolean PlaceCustomer(int X,int Y ,int Z) {
+        Villager Customer = (Villager) Bukkit.getWorlds().get(0).spawnEntity(new Location(Bukkit.getWorlds().get(0), X,Y,Z), EntityType.VILLAGER);
+        Customer.setCustomName("取引商人");
+        Customer.addScoreboardTag(CUSTOMER_NAME);
+        Customer.setInvulnerable(true);
+        Customer.setRemoveWhenFarAway(false);
+        return true;
+    }
     //タグ付けされた村人を殺す
     public boolean KillAllCustomer() {
         for (World world : Bukkit.getWorlds()) {
@@ -159,19 +163,15 @@ public class PluginOperator {
     }
     public void KillEvent(Player Killer,Player KilledPlayer) {
         if(market.getMarketState()) {
-            Killer.sendMessage("キルしたので1000獲得");
-            KilledPlayer.sendMessage("キルされたので1000失った");
-            teamMoneyOperator.addTeamMoney(Killer, 1000);
-            teamMoneyOperator.addPlayerMoney(Killer, 1000);
-            teamMoneyOperator.addTeamMoney(KilledPlayer, -1000);
-            teamMoneyOperator.addPlayerMoney(KilledPlayer, -1000);
+            Killer.sendMessage("キルしたので3000円獲得");
+            KilledPlayer.sendMessage("キルされたので敵チームが3000円獲得");
+            teamMoneyOperator.addTeamMoney(Killer, 3000);
+            teamMoneyOperator.addPlayerMoney(Killer, 3000);
         }
     }
     public void KillEvent(Player KilledPlayer) {
         if (market.getMarketState()) {
-            KilledPlayer.sendMessage("死んでしまったため1000失った");
-            teamMoneyOperator.addTeamMoney(KilledPlayer, -1000);
-            teamMoneyOperator.addPlayerMoney(KilledPlayer, -1000);
+            KilledPlayer.sendMessage("死んでしまったが、キルではないので敵チームはお金を獲得しなかった。");
         }
     }
     public boolean LookScore(Player player){
@@ -206,7 +206,6 @@ public class PluginOperator {
                 }
             }
         }
-        player.sendMessage("クリックイベントがDepo_Mountainによって上書きされています");
         return false;
     }
 

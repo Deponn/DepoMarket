@@ -14,7 +14,7 @@ public class PlayersMenuOperator {
     private final int SLOT_OF_ENCHANT = 0;
     private final int INDEX_OF_MAIN_MENU = -1;
     private final int INDEX_OF_OUT_OF_MENU = -2;
-    private final float BOUND_OF_MONEY = 500000;
+    private final float BOUND_OF_MONEY = 250000;
     private final Player player;
     private final PluginOperator operator;
     private Boolean player_is_in_Menu;
@@ -149,7 +149,7 @@ public class PlayersMenuOperator {
     //売りの時、売れるか判定して取引処理メソッドを呼ぶ
     private void SellItem(Material SelectedMaterial,String SelectedEnName, int tradeAmount, String disadvantage) {
         if (operator.teamMoneyOperator.PlayerInTeam(player)) {
-            if (operator.teamMoneyOperator.getTeamMoney(player) <= BOUND_OF_MONEY * 2) {
+            if (operator.teamMoneyOperator.getTeamMoney(player) <= BOUND_OF_MONEY * 4) {
                 TradeItem(SelectedMaterial,SelectedEnName,tradeAmount,false);
                 if (disadvantage.equals("health")) {
                     operator.teamMoneyOperator.setTeamHealth(player);
@@ -191,7 +191,7 @@ public class PlayersMenuOperator {
     //売りの時、売れるか判定して取引処理メソッドを呼ぶ
     private void SellEnchantItem(int EnchantIndex, String disadvantage) {
         if (operator.teamMoneyOperator.PlayerInTeam(player)) {
-            if (operator.teamMoneyOperator.getTeamMoney(player) <= BOUND_OF_MONEY * 2) {
+            if (operator.teamMoneyOperator.getTeamMoney(player) <= BOUND_OF_MONEY * 4) {
                 TradeEnchantItem(EnchantIndex, false);
                 if (disadvantage.equals("health")) {
                     operator.teamMoneyOperator.setTeamHealth(player);

@@ -19,13 +19,14 @@ import java.util.*;
 
 public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
 
-    PluginOperator Operator;//プラグインの処理を実際に行いデータを保持するオペレーターオブジェクトを保持する変数
-
+    private PluginOperator Operator;//プラグインの処理を実際に行いデータを保持するオペレーターオブジェクトを保持する変数
+    private boolean isEnabledPlugin;
     /**
      * 初期処理とコンフィグに保存したデータをロードする
      */
     @Override
     public void onEnable() {
+        isEnabledPlugin = false;
         //イベントを受け取れるようにする。
         getServer().getPluginManager().registerEvents(this, this);
         //コマンドのタブコンプリートを実装
@@ -38,6 +39,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         boolean ConfExist = configuration.contains("Depo_isRun");
         if(ConfExist){
             boolean isRun = configuration.getBoolean("Depo_isRun");
+            isEnabledPlugin = isRun;
             String disadvantage = configuration.getString("disadvantage");
             List<String> TeamNames = configuration.getStringList("Depo_teams");
             List<Float> TeamMoneys = configuration.getFloatList("Depo_moneys");
@@ -69,53 +71,66 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 
-        if (cmd.getName().equalsIgnoreCase("DpStartMarket")) {
-            return Operator.StartMarket();
-
-        } else if (cmd.getName().equalsIgnoreCase("DpStopMarket")) {
-            boolean flag = Operator.StopMarket();
-            saveData();
-            return flag;
-        }else if (cmd.getName().equalsIgnoreCase("DpGiveMoney")) {
-            //コマンド引数を処理
-            CommandParser parser = CommandParser.parse_give_money(sender, args);
-            if (!parser.isSuccess) {
-                // パース失敗
-                return true;
-            }
-            float amount = parser.amount_of_money;
-            return Operator.GiveMoney(parser.team_name, amount);
-        }
-
-        // プレイヤーがコマンドを投入した際の処理...
-        if (!(sender instanceof Player)) {
-            // コマブロやコンソールからの実行の場合
-            sender.sendMessage(ChatColor.DARK_GRAY + "このコマンドはプレイヤーのみが使えます。");
+        if (cmd.getName().equalsIgnoreCase("EnableDpPlugin")) {
+            isEnabledPlugin = true;
+            return true;
+        }else if(cmd.getName().equalsIgnoreCase("DisableDpPlugin")) {
+            isEnabledPlugin = false;
             return true;
         }
-        Player player = (Player) sender;
+        if(isEnabledPlugin) {
+            if (cmd.getName().equalsIgnoreCase("DpStartMarket")) {
+                return Operator.StartMarket();
 
-        // コマンド処理...
-        if (cmd.getName().equalsIgnoreCase("DpPlaceCustomer")) {
-            return Operator.PlaceCustomer(player);
+            } else if (cmd.getName().equalsIgnoreCase("DpStopMarket")) {
+                boolean flag = Operator.StopMarket();
+                saveData();
+                return flag;
+            } else if (cmd.getName().equalsIgnoreCase("DpGiveMoney")) {
+                //コマンド引数を処理
+                CommandParser parser = CommandParser.parse_give_money(sender, args);
+                if (!parser.isSuccess) {
+                    // パース失敗
+                    return true;
+                }
+                float amount = parser.amount_of_money;
+                return Operator.GiveMoney(parser.team_name, amount);
+            }else if (cmd.getName().equalsIgnoreCase("DpSetPointCustomer")) {
+                CommandParser parser = CommandParser.parse_SetPointCustomer(sender, args);
+                if (!parser.isSuccess) {
+                    // パース失敗
+                    return true;
+                }
+                return Operator.PlaceCustomer(parser.X,parser.Y,parser.Z);
+            } else if (cmd.getName().equalsIgnoreCase("DpKillAllCustomer")) {
+                return Operator.KillAllCustomer();
+            } else
 
-        } else if (cmd.getName().equalsIgnoreCase("DpKillAllCustomer")) {
-            return Operator.KillAllCustomer();
-
-        }else if (cmd.getName().equalsIgnoreCase("DpSetDisadvantage")) {
-            //コマンド引数を処理
-            CommandParser parser = CommandParser.parse_disadvantage(sender, args);
-            if (!parser.isSuccess) {
-                // パース失敗
+                // プレイヤーがコマンドを投入した際の処理...
+            if (!(sender instanceof Player)) {
+                // コマブロやコンソールからの実行の場合
+                sender.sendMessage(ChatColor.DARK_GRAY + "このコマンドはプレイヤーのみが使えます。");
                 return true;
             }
-            return Operator.SetDisAdvantage(player,parser.disadvantage);
+            Player player = (Player) sender;
 
-        }else if (cmd.getName().equalsIgnoreCase("DpLoadNewTeams")) {
-            return Operator.LookTeams(player);
-        }
-        else if (cmd.getName().equalsIgnoreCase("DpLookScore")) {
-            return Operator.LookScore(player);
+            // コマンド処理...
+            if (cmd.getName().equalsIgnoreCase("DpPlaceCustomer")) {
+                return Operator.PlaceCustomer(player);
+            } else if (cmd.getName().equalsIgnoreCase("DpSetDisadvantage")) {
+                //コマンド引数を処理
+                CommandParser parser = CommandParser.parse_disadvantage(sender, args);
+                if (!parser.isSuccess) {
+                    // パース失敗
+                    return true;
+                }
+                return Operator.SetDisAdvantage(player, parser.disadvantage);
+
+            } else if (cmd.getName().equalsIgnoreCase("DpLoadNewTeams")) {
+                return Operator.LookTeams(player);
+            } else if (cmd.getName().equalsIgnoreCase("DpLookScore")) {
+                return Operator.LookScore(player);
+            }
         }
         return true;
     }
@@ -123,41 +138,51 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
     //エンティティクリックイベント。商人クリック用
     @EventHandler
     public void onEntityClick(PlayerInteractEntityEvent e) {
-        boolean a;
-        a = Operator.CustomerClick(e.getPlayer(),e.getRightClicked());
+        if(isEnabledPlugin) {
+            boolean a;
+            a = Operator.CustomerClick(e.getPlayer(), e.getRightClicked());
+        }
     }
     //インベントリをクリックしたとき、取引メニューの動作を設定
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
-        if (Operator.isMenu((Player) e.getWhoClicked())) {
-            e.setCancelled(true);
-            Operator.MenuClick((Player) e.getWhoClicked(),e.getCurrentItem(),e.getRawSlot());
+        if(isEnabledPlugin) {
+            if (Operator.isMenu((Player) e.getWhoClicked())) {
+                e.setCancelled(true);
+                Operator.MenuClick((Player) e.getWhoClicked(), e.getCurrentItem(), e.getRawSlot());
+            }
         }
     }
     //インベントリを閉じたとき、取引メニュー閉じてるフラグを建てる用、取引メニューを閉じたならコンフィグにセーブ
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
-        boolean saveFlag;
-        saveFlag = Operator.MenuClose((Player) e.getPlayer());
-        if(saveFlag){
-            saveData();
+        if(isEnabledPlugin) {
+            boolean saveFlag;
+            saveFlag = Operator.MenuClose((Player) e.getPlayer());
+            if (saveFlag) {
+                saveData();
+            }
         }
     }
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e){
-        Player player = (Player) e.getEntity();
-        Player killer = player.getKiller();
-        if(killer != null) {
-            Operator.KillEvent(killer, player);
-        }else{
-            Operator.KillEvent(player);
+        if(isEnabledPlugin) {
+            Player player = (Player) e.getEntity();
+            Player killer = player.getKiller();
+            if (killer != null) {
+                Operator.KillEvent(killer, player);
+            } else {
+                Operator.KillEvent(player);
+            }
         }
     }
     //プレイヤーが死んでもHPが減ったままにする
     @EventHandler
     public void onPlayerRevive(PlayerRespawnEvent e){
-        Player player = e.getPlayer();
-        Operator.setPlayerHealth(player);
+        if(isEnabledPlugin) {
+            Player player = e.getPlayer();
+            Operator.setPlayerHealth(player);
+        }
     }
 
     //コンフィグにセーブ。マップデータを受け取り、そのキーのリストを受け取り、キーにタグ付けられたデータをリスト化していく。キーとデータがそろうはず。
