@@ -39,7 +39,6 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         boolean ConfExist = configuration.contains("Depo_isRun");
         if(ConfExist){
             boolean isRun = configuration.getBoolean("Depo_isRun");
-            isEnabledPlugin = isRun;
             String disadvantage = configuration.getString("disadvantage");
             List<String> TeamNames = configuration.getStringList("Depo_teams");
             List<Float> TeamMoneys = configuration.getFloatList("Depo_moneys");
