@@ -33,7 +33,7 @@ public class DataBaseTradeItem {
         this.MenuSlotList.add(new ItemMenuSlot(Material.OAK_LOG, "Oak", "オークの原木", 150f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.COBBLESTONE, "CobbleStone", "丸石", 20f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.SAND, "Sand", "砂", 40f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.OBSIDIAN, "OBSIDIAN", "黒曜石", 1000f));
+        //this.MenuSlotList.add(new ItemMenuSlot(Material.OBSIDIAN, "OBSIDIAN", "黒曜石", 1000f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.BREAD, "Bread", "パン", 150f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.COOKED_BEEF, "COOKED_BEEF", "肉", 300f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.TNT, "TNT", "TNT", 3000f));
@@ -59,7 +59,7 @@ public class DataBaseTradeItem {
         eItem.addEnchant(Enchantment.ARROW_FIRE, 1);
         eItem.addEnchant(Enchantment.ARROW_KNOCKBACK, 2);
         this.itemEnchantList.add(eItem);
-        eItem = new ItemEnchantData(Material.CROSSBOW, "PoweredCROSSBOW", "強化クロスボウ", 4000f);
+        eItem = new ItemEnchantData(Material.CROSSBOW, "PoweredCROSSBOW", "強化クロスボウ", 30000f);
         eItem.addEnchant(Enchantment.QUICK_CHARGE, 3);
         eItem.addEnchant(Enchantment.MULTISHOT, 1);
         this.itemEnchantList.add(eItem);

@@ -5,9 +5,7 @@ import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.scoreboard.Team;
+import org.bukkit.scoreboard.*;
 
 import java.util.*;
 
@@ -46,6 +44,7 @@ public class TeamMoneyOperator {
                 playerMoney.put(player,0f);
             }
         }
+        ScoreBoardMake();
         setAllTeamHealth(Bukkit.getWorlds());
     }
 
@@ -144,6 +143,7 @@ public class TeamMoneyOperator {
     public void addPlayerMoney(Player player,float money){
         float oldMoney = playerMoney.getOrDefault(player, 0f);
         playerMoney.put(player,oldMoney + money);
+        ScoreBoardMake();
     }
 
     public float getPlayerMoney(Player player){
@@ -151,5 +151,22 @@ public class TeamMoneyOperator {
             return playerMoney.get(player);
         }
         return 0f;
+    }
+
+    private void ScoreBoardMake(){
+        Objective objective = scoreboard.getObjective("DpMoney");
+        if ( objective == null ) {
+            objective = scoreboard.registerNewObjective("DpMoney", "dummy","所持金");
+            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        }
+        for(String teamName : teams.keySet()){
+            objective.getScore(teamName).setScore(Math.round(teams.get(teamName)));
+        }
+    }
+    public void ScoreBoardDestroy(){
+        Objective objective = scoreboard.getObjective("DpMoney");
+        if ( objective != null ) {
+            objective.unregister();
+        }
     }
 }

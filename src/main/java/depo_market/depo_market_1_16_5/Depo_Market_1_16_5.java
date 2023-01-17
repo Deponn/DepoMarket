@@ -105,7 +105,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                 }
                 return Operator.SetDisAdvantage(player, parser.disadvantage);
 
-            } else if (cmd.getName().equalsIgnoreCase("DpLoadNewTeams")) {
+            } else if (cmd.getName().equalsIgnoreCase("DpLookTeams")) {
                 return Operator.LookTeams(player);
             } else if (cmd.getName().equalsIgnoreCase("DpLookScore")) {
                 return Operator.LookScore(player);

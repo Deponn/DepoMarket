@@ -65,6 +65,7 @@ public class PluginOperator {
         if (!market.getMarketState()) {
             market.Initialize(dataBaseTradeItem.getInitialPriceList());
             teamMoneyOperator.Initialize();
+            playersMenuOperators.clear();
             existData = true;
             Bukkit.getLogger().info("市場を初期化しました");
         } else {
@@ -85,6 +86,7 @@ public class PluginOperator {
     public boolean StopMarket() {
         market.StopMarket();
         teamMoneyOperator.resetTeamHealth();
+        teamMoneyOperator.ScoreBoardDestroy();
         return true;
     }
 
@@ -163,10 +165,10 @@ public class PluginOperator {
     }
     public void KillEvent(Player Killer,Player KilledPlayer) {
         if(market.getMarketState()) {
-            Killer.sendMessage("キルしたのでチームが3000円を獲得しました。");
-            KilledPlayer.sendMessage("キルされたので敵チームが3000円を獲得しました");
-            teamMoneyOperator.addTeamMoney(Killer, 3000);
-            teamMoneyOperator.addPlayerMoney(Killer, 3000);
+            Killer.sendMessage("キルしたのでチームが500円を獲得しました。");
+            KilledPlayer.sendMessage("キルされたので敵チームが500円を獲得しました");
+            teamMoneyOperator.addTeamMoney(Killer, 500);
+            teamMoneyOperator.addPlayerMoney(Killer, 500);
         }
     }
     public void KillEvent(Player KilledPlayer) {
@@ -193,6 +195,7 @@ public class PluginOperator {
                     if (!playersMenuOperators.containsKey(player.getName())) {
                         playersMenuOperators.put(player.getName(), new PlayersMenuOperator(player, this));
                     }
+                    playersMenuOperators.get(player.getName()).setPlayer(player);
                     playersMenuOperators.get(player.getName()).MakeMainMenu();
                     return true;
                 }

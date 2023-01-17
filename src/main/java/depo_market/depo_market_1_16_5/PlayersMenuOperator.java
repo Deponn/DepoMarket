@@ -15,7 +15,7 @@ public class PlayersMenuOperator {
     private final int INDEX_OF_MAIN_MENU = -1;
     private final int INDEX_OF_OUT_OF_MENU = -2;
     private final float BOUND_OF_MONEY = 200000;
-    private final Player player;
+    private Player player;
     private final PluginOperator operator;
     private Boolean player_is_in_Menu;
     private Integer player_inv_state;
@@ -28,6 +28,9 @@ public class PlayersMenuOperator {
         this.player_inv_state = INDEX_OF_OUT_OF_MENU;
     }
 
+    public void setPlayer(Player player){
+        this.player =player;
+    }
     public boolean isMenu() {
         return player_is_in_Menu;
     }
