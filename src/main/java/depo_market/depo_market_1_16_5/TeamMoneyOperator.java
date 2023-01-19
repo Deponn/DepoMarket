@@ -63,11 +63,13 @@ public class TeamMoneyOperator {
     //チームにお金を加算
     public void addTeamMoney(String team, float money) {
         teams.put(team, teams.get(team) + money);
+        ScoreBoardMake(team);
     }
     public void addTeamMoney(Player player, float money) {
         Team myTeam = TeamOfPlayer(player);
         if(myTeam != null) {
             teams.put(myTeam.getName(), teams.get(myTeam.getName()) + money);
+            ScoreBoardMake(myTeam.getName());
         }
 
     }
@@ -143,7 +145,6 @@ public class TeamMoneyOperator {
     public void addPlayerMoney(Player player,float money){
         float oldMoney = playerMoney.getOrDefault(player, 0f);
         playerMoney.put(player,oldMoney + money);
-        ScoreBoardMake();
     }
 
     public float getPlayerMoney(Player player){
@@ -162,6 +163,14 @@ public class TeamMoneyOperator {
         for(String teamName : teams.keySet()){
             objective.getScore(teamName).setScore(Math.round(teams.get(teamName)));
         }
+    }
+    private void ScoreBoardMake(String teamName){
+        Objective objective = scoreboard.getObjective("DpMoney");
+        if ( objective == null ) {
+            objective = scoreboard.registerNewObjective("DpMoney", "dummy","所持金");
+            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        }
+        objective.getScore(teamName).setScore(Math.round(teams.get(teamName)));
     }
     public void ScoreBoardDestroy(){
         Objective objective = scoreboard.getObjective("DpMoney");
