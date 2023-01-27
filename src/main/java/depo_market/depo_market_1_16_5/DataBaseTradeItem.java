@@ -37,7 +37,7 @@ public class DataBaseTradeItem {
         this.MenuSlotList.add(new ItemMenuSlot(Material.BREAD, "Bread", "パン", 150f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.COOKED_BEEF, "COOKED_BEEF", "肉", 300f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.TNT, "TNT", "TNT", 3000f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.ARROW, "Arrow", "矢", 150f));
+        this.MenuSlotList.add(new ItemMenuSlot(Material.ARROW, "Arrow", "矢", 50f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.LEATHER, "Leather", "革", 100f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.WHITE_BED, "Bed", "ベッド", 750f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.BOW, "BOW", "弓", 1500f));
