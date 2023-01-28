@@ -30,7 +30,7 @@ DpLookScoreで個人の取引したお金の総量がわかります。お金を
 "disadvantage"  :文字列　お金の増減の影響  
 "Depo_isRun"    :真偽値　動いているか否か   
 "Depo_teams"    :文字列　チーム一覧   
-"Depo_moneys"   :float   チームのお金
+"Depo_moneys"   :float   チームのお金  
 "Depo_Items"    :文字列　アイテムの名前(プラグイン側で定義)  
 "Depo_Prices"   :float 　アイテムの値段  
 "Depo_buy"      :int     アイテムの売られた量  
