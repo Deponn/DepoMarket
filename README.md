@@ -1,18 +1,16 @@
-# Depo_Market
+# Depo_Market  
 
-チームごとに所持金を記録し、物の売り買いができるようにした。
-
-データをセーブし続けるのでサーバーが落ちても大丈夫
-
+#概要
+チームごとに所持金を記録し、物の売り買いができるようにした。  
+データをセーブし続けるのでサーバーが落ちても大丈夫　　
+#詳細
 プレイヤーをチームに所属させ、
-initialize_market→start_market→place_customerで出てきた商人をクリックすると取引できる。
-一回initialize_marketしたら、もうしないこと。データが消えます。Cancel changes
+dpstart_market→dpplace_customerで出てきた商人をクリックすると取引できる。
+
 チームが増えたらstop_market→load_new_team→start_market
 プラグインを止めるときはstop_market→kill_all_customer
 taxおよびgive_moneyで対象のチームと自分のチームとお金のやり取り(強制)
-
-
-
+#
   initialize_market:
     description: マーケットのデータを初期化する
     usage: /initialize_market [自分の名前]
