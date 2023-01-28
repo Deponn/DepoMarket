@@ -27,12 +27,12 @@ DpLookScoreで個人の取引したお金の総量がわかります。お金を
   /DpLookTeams(プレイヤーのみ使用可能): 全チームの所持金を見る  
   /DpLookScore(プレイヤーのみ使用可能): スコアを見る  
 # config
-"disadvantage"  :disadvantage  
-"Depo_isRun"    :MarketState  
-"Depo_teams"    :TeamNames  
-"Depo_moneys"   :TeamMoneys  
-"Depo_Items"    :ItemNames  
-"Depo_Prices"   :ItemPrices  
-"Depo_buy"      :ItemBuy  
-"Depo_sell"     :ItemSell  
+"disadvantage"  :文字列　お金の増減の影響
+"Depo_isRun"    :真偽値　動いているか否か 
+"Depo_teams"    :文字列　チーム一覧 
+"Depo_moneys"   :float   チームのお金
+"Depo_Items"    :文字列　アイテムの名前(プラグイン側で定義)
+"Depo_Prices"   :float 　アイテムの値段
+"Depo_buy"      :int     アイテムの売られた量
+"Depo_sell"     :int     アイテムの買われた量
 
