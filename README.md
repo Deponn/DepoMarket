@@ -23,7 +23,7 @@ DpLookScoreで個人の取引したお金の総量がわかります。お金を
   /DpSetPointCustomer [X] [Y] [Z] :マーケット窓口を一人分実体化  
   /DpKillAllCustomer:全マーケット窓口を削除  
   /DpGiveMoney -team [チーム名]  -amount [金額] :お金をあげる  
-  /DpSetDisadvantage [-disable_buy or -health or -none](プレイヤーのみ使用可能): 借金した時のデバフを決める  
+  /DpSetDisadvantage [デバフ名](-disable_buy or -health or -none) (プレイヤーのみ使用可能): 借金した時のデバフを決める  
   /DpLookTeams(プレイヤーのみ使用可能): 全チームの所持金を見る  
   /DpLookScore(プレイヤーのみ使用可能): スコアを見る  
 # config
