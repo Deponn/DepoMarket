@@ -45,7 +45,7 @@ commands: #自作プラグインのコマンドを宣言
     permission: market
   DpLookTeams:
     description: 全チームの所持金を見る
-    usage: /   DpLoadNewTeams
+    usage: /     DpLookTeams
     permission: market
   DpLookScore:
     description: スコアを見る
