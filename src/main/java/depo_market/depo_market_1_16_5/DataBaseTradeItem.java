@@ -46,6 +46,7 @@ public class DataBaseTradeItem {
         this.MenuSlotList.add(new ItemMenuSlot(Material.FLINT_AND_STEEL, "FLINT_AND_STEEL", "着火剤", 1000f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.WOLF_SPAWN_EGG, "WOLF_SPAWN_EGG", "オオカミ", 1000f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.BONE, "BONE", "骨", 500f));
+        this.MenuSlotList.add(new ItemMenuSlot(Material.DIRT, "DIRT", "土", 20f));
 
         ItemEnchantData eItem;
         eItem = new ItemEnchantData(Material.DIAMOND_PICKAXE, "LuckyPICKAXE", "幸運ピッケル", 30000f);
