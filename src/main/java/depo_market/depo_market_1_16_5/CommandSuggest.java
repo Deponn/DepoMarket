@@ -28,6 +28,11 @@ public class CommandSuggest implements TabCompleter{
         if(command.getName().equalsIgnoreCase("DpGiveMoney")) {
             return suggest_give_money(sender, args);
         }else if (command.getName().equalsIgnoreCase("DpSetDisadvantage")){
+        if (command.getName().equalsIgnoreCase("DpTax")) {
+            return suggest_tax(sender, args);
+        }else if(command.getName().equalsIgnoreCase("DpGiveMoney")) {
+            return suggest_tax(sender, args);
+        }else if (command.getName().equalsIgnoreCase("DpSetDisadvantage")){
             return suggest_disadvantage(sender, args);
         }else {
             return new ArrayList<String>();

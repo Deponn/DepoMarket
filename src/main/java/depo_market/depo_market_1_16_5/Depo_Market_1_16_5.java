@@ -30,6 +30,9 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         //イベントを受け取れるようにする。
         getServer().getPluginManager().registerEvents(this, this);
         //コマンドのタブコンプリートを実装
+        Objects.requireNonNull(this.getCommand("DpTax")).setTabCompleter(new CommandSuggest());
+        Objects.requireNonNull(this.getCommand("DpGiveMoney")).setTabCompleter(new CommandSuggest());
+        Objects.requireNonNull(this.getCommand("DpSetDisadvantage")).setTabCompleter(new CommandSuggest());
         Objects.requireNonNull(this.getCommand("DpGiveMoney")).setTabCompleter(new CommandSuggest());
         Objects.requireNonNull(this.getCommand("DpSetDisadvantage")).setTabCompleter(new CommandSuggest());
         //プラグインの処理を実際に行いデータを保持するオペレーターオブジェクト実体化
