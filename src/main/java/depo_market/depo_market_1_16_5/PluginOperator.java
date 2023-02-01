@@ -165,8 +165,8 @@ public class PluginOperator {
     }
     public void KillEvent(Player Killer,Player KilledPlayer) {
         if(market.getMarketState()) {
-            Killer.sendMessage("キルしたのでチームが500円を獲得しました。");
-            KilledPlayer.sendMessage("キルされたので敵チームが500円を獲得しました");
+            Killer.sendMessage("キルしたのでチームが5000円を獲得しました。");
+            KilledPlayer.sendMessage("キルされたので敵チームが5000円を獲得しました");
             teamMoneyOperator.addTeamMoney(Killer, 5000);
             teamMoneyOperator.addPlayerMoney(Killer, 5000);
         }
