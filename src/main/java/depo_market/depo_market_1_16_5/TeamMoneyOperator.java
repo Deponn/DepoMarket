@@ -1,5 +1,6 @@
 package depo_market.depo_market_1_16_5;
 
+import depo_market.depo_market_1_16_5.Data.Const;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
@@ -46,7 +47,16 @@ public class TeamMoneyOperator {
         ScoreBoardMake();
         setAllTeamHealth(Bukkit.getWorlds());
     }
-
+    //スコアボードに存在するチームを確認。初めて確認されたチームなら所持金を初期値０にする
+    public void LoadNewTeams() {
+        Object[] teamObjects = scoreboard.getTeams().toArray();
+        for (Object teamObj : teamObjects) {
+            Team team = (Team) teamObj;
+            if (!teams.containsKey(team.getName())) {
+                teams.put(team.getName(), 0f);
+            }
+        }
+    }
     //ロード、所持金を更新する
     public void LoadTeams(Map<String, Float> LoadData) {
         List<String> keys = new ArrayList<>(LoadData.keySet());

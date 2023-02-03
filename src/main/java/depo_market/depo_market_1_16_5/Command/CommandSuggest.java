@@ -1,5 +1,6 @@
-package depo_market.depo_market_1_16_5;
+package depo_market.depo_market_1_16_5.Command;
 
+import depo_market.depo_market_1_16_5.MoneyDisAd;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -71,8 +72,8 @@ public class CommandSuggest implements TabCompleter{
         List<String> argsList = Arrays.asList(args);
         List<String> suggestList = new ArrayList<>();
         if (argsList.size() > 1) {
-            for (MoneyDisAdvantage moneyDisAdvantage : MoneyDisAdvantage.values()) {
-                suggestList.add( "-" + moneyDisAdvantage.getString());
+            for (MoneyDisAd moneyDisAd : MoneyDisAd.values()) {
+                suggestList.add( "-" + moneyDisAd.getString());
             }
             return suggestList;
         }

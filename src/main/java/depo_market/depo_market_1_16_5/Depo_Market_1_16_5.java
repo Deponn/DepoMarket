@@ -1,5 +1,6 @@
 package depo_market.depo_market_1_16_5;
 
+import depo_market.depo_market_1_16_5.Command.*;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -88,19 +89,19 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                 return true;
             } else if (cmd.getName().equalsIgnoreCase(CmdName.GiveMoney.getCmd())) {
                 //コマンド引数を処理
-                CommandParser parser = CommandParser.parse_give_money(sender, args);
+                CmdParserGiveMoney parser = CmdParserGiveMoney.Parse(sender, args);
                 if (!parser.isSuccess) {
                     // パース失敗
                     return true;
                 }
-                float amount = parser.amount_of_money;
+                float amount = parser.amount_of_money; //floatに変換
                 Operator.GiveMoney(parser.team_name, amount);
                 if ((sender instanceof Player)) {
                     sender.sendMessage(ChatColor.DARK_GRAY + parser.team_name + "に" + amount + "円お金をあげました");
                 }
                 return true;
             } else if (cmd.getName().equalsIgnoreCase(CmdName.SetPointCustomer.getCmd())) {
-                CommandParser parser = CommandParser.parse_SetPointCustomer(sender, args);
+                CmdParserSetPoint parser = CmdParserSetPoint.parse(sender, args);
                 if (!parser.isSuccess) {
                     // パース失敗
                     return true;
@@ -133,7 +134,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                 return true;
             } else if (cmd.getName().equalsIgnoreCase(CmdName.SetDisadvantage.getCmd())) {
                 //コマンド引数を処理
-                CommandParser parser = CommandParser.parse_disadvantage(sender, args);
+                CmdParserDisAd parser = CmdParserDisAd.parse(sender, args);
                 if (!parser.isSuccess) {
                     // パース失敗
                     return true;
@@ -147,7 +148,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                 Operator.LookScore(player);
                 return true;
             }else if (cmd.getName().equalsIgnoreCase(CmdName.NewTeam.getCmd())) {
-                ////////////////////////////////////////////Operator.LookScore(player);
+                Operator.LoadNewTeams(player);
                 return true;
             }
         }
@@ -158,8 +159,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
     @EventHandler
     public void onEntityClick(PlayerInteractEntityEvent e) {
         if(isEnabledPlugin) {
-            boolean a;
-            a = Operator.CustomerClick(e.getPlayer(), e.getRightClicked());
+            Operator.CustomerClick(e.getPlayer(), e.getRightClicked());
         }
     }
     //インベントリをクリックしたとき、取引メニューの動作を設定
@@ -225,7 +225,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             for (int i = 0; i < ItemNames.size(); i++) {
                 MarketData.put(ItemNames.get(i),new ItemPrice(ItemPrices.get(i),ItemBuy.get(i),ItemSell.get(i)));
             }
-            Operator.LoadData(TeamData,MarketData,isRun, MoneyDisAdvantage.valueOf(disadvantage), Bukkit.getWorlds());
+            Operator.LoadData(TeamData,MarketData,isRun, MoneyDisAd.valueOf(disadvantage), Bukkit.getWorlds());
         }
     }
 

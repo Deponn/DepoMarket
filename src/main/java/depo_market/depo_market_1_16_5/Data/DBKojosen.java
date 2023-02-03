@@ -1,5 +1,7 @@
-package depo_market.depo_market_1_16_5;
+package depo_market.depo_market_1_16_5.Data;
 
+import depo_market.depo_market_1_16_5.ItemStack.ItemEnchantData;
+import depo_market.depo_market_1_16_5.ItemStack.ItemMenuSlot;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 
@@ -7,17 +9,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DataBaseTradeItem {
-    private final ArrayList<ItemMenuSlot> MenuSlotList = new ArrayList<>();//メインメニューのアイテムリスト
-    private final ArrayList<Integer> TradeAmountList = new ArrayList<>();//サブメニューに表示する数量リスト
-    private final ArrayList<ItemEnchantData> itemEnchantList = new ArrayList<>();//エンチャントアイテムのリスト
-    private final ArrayList<ItemMenuSlot> InitialPriceList = new ArrayList<>();//取引アイテムの全種類リスト
-    private final Map<String, Float> InitialPriceMap = new HashMap<>();//取引アイテムの全種類の初期金額マップ
+public class DBKojosen implements DBInterface {
 
+    private final ArrayList<ItemMenuSlot> MenuSlotList;//メインメニューのアイテムリスト
+    private final ArrayList<Integer> TradeAmountList;//サブメニューに表示する数量リスト
+    private final ArrayList<ItemEnchantData> itemEnchantList;//エンチャントアイテムのリスト
+    private final ArrayList<ItemMenuSlot> InitialPriceList;//取引アイテムの全種類リスト
+    private final Map<String, Float> InitialPriceMap;//取引アイテムの全種類の初期金額マップ
     /**
      * 初期値データやメニューに表示するアイテムのデータを生成するコンストラクタ
      */
-    public DataBaseTradeItem(){
+    public DBKojosen(){
+        MenuSlotList = new ArrayList<>();//メインメニューのアイテムリスト
+        TradeAmountList = new ArrayList<>();//サブメニューに表示する数量リスト
+        itemEnchantList = new ArrayList<>();//エンチャントアイテムのリスト
+        InitialPriceList = new ArrayList<>();//取引アイテムの全種類リスト
+        InitialPriceMap = new HashMap<>();//取引アイテムの全種類の初期金額マップ
+
         this.TradeAmountList.add(1);
         this.TradeAmountList.add(4);
         this.TradeAmountList.add(16);
@@ -25,7 +33,6 @@ public class DataBaseTradeItem {
         this.MenuSlotList.add(new ItemMenuSlot(Material.ENCHANTED_BOOK, "enchant", "エンチャントされたアイテム", 0f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.DIAMOND, "Diamond", "ダイヤ", 3000f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.IRON_INGOT, "Iron", "鉄", 600f));
-        //this.MenuSlotList.add(new ItemMenuSlot(Material.NETHERITE_INGOT, "NETHERITE_INGOT", "ネザーライト", 20000f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.GOLD_INGOT, "GOLD_INGOT", "金", 1000f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.LAPIS_LAZULI, "LAPIS", "ラピス", 1000f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.REDSTONE, "REDSTONE", "レッドストーン", 300f));
@@ -33,7 +40,6 @@ public class DataBaseTradeItem {
         this.MenuSlotList.add(new ItemMenuSlot(Material.OAK_LOG, "Oak", "オークの原木", 150f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.COBBLESTONE, "CobbleStone", "丸石", 20f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.SAND, "Sand", "砂", 40f));
-        //this.MenuSlotList.add(new ItemMenuSlot(Material.OBSIDIAN, "OBSIDIAN", "黒曜石", 1000f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.BREAD, "Bread", "パン", 150f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.COOKED_BEEF, "COOKED_BEEF", "肉", 300f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.TNT, "TNT", "TNT", 3000f));
@@ -80,6 +86,7 @@ public class DataBaseTradeItem {
         eItem = new ItemEnchantData(Material.DIAMOND_BOOTS, "PoweredDIAMOND_BOOTS", "落下ダメージ低下ダイヤ靴", 100000f);
         eItem.addEnchant(Enchantment.PROTECTION_FALL, 4);
         this.itemEnchantList.add(eItem);
+
         for (int i = 1; i < MenuSlotList.size(); i++) {
             InitialPriceList.add(MenuSlotList.get(i));
         }
@@ -88,7 +95,10 @@ public class DataBaseTradeItem {
             InitialPriceMap.put(item.getEnName(),item.getInitialPrice());
         }
     }
-    /**
+    /*
+     * それぞれ、保持しているデータを返すメソッド
+     */
+    /*
      * それぞれ、保持しているデータを返すメソッド
      */
     public ArrayList<ItemMenuSlot> getMenuSlotList(){

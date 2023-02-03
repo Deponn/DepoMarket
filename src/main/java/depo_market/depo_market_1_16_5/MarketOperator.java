@@ -1,5 +1,6 @@
 package depo_market.depo_market_1_16_5;
 
+import depo_market.depo_market_1_16_5.ItemStack.ItemMenuSlot;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;

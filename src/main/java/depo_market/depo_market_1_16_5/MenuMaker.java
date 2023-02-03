@@ -1,5 +1,10 @@
 package depo_market.depo_market_1_16_5;
 
+import depo_market.depo_market_1_16_5.Data.Const;
+import depo_market.depo_market_1_16_5.ItemStack.ItemEnchantData;
+import depo_market.depo_market_1_16_5.ItemStack.ItemMenuSlot;
+import depo_market.depo_market_1_16_5.ItemStack.ItemStackData;
+import depo_market.depo_market_1_16_5.ItemStack.ItemSubMenuSlot;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -14,10 +19,10 @@ public class MenuMaker {
     private static final Material NoneMaterial = Material.GLASS_PANE;
     private static final Material BackMaterial = Material.BOOK;
     private static final Material CheckMaterial = Material.CHEST;
-    private MenuMaker() {}
+
     //メインメニュー生成。取引するアイテムを選ぶためのもの。取引アイテムを並べてあとは押せないガラス。所持金額。戻る。
     // 押したアイテムは押したスロット番号で処理。アイテムにカーソルを合わせると値段が表示
-    public static Inventory MainMenu(ArrayList<ItemMenuSlot> MenuSlots,float Money,MarketOperator market){
+    public static Inventory MainMenu(ArrayList<ItemMenuSlot> MenuSlots, float Money, MarketOperator market){
         final Inventory MainMenu = Bukkit.createInventory(null, Const.WholeSlotNum, "取引メニュー");
         final int MenuSlotsNum = MenuSlots.size();
         final ArrayList<ItemStackData> ItemMenuSlotList =  new ArrayList<>();
@@ -52,7 +57,7 @@ public class MenuMaker {
         for(Integer Amount : TradeAmountList) {
             Item = new ItemSubMenuSlot(material, nameJp,Amount);
             Item.setLore("買う", "価格:" + Math.round(market.getPrice(nameEn) * Amount) + "円");
-            if(Amount == 1 || Math.round(market.getPrice(nameEn) * Amount) < 30000) {
+            if(Amount == 1 || Math.round(market.getPrice(nameEn) * Amount) < Const.BOUND_OF_BUY) {
                 subItemMenuSlotList.add(Item);
                 counter += 1;
             }
@@ -64,7 +69,7 @@ public class MenuMaker {
         for(Integer Amount : TradeAmountList) {
             Item = new ItemSubMenuSlot(material, nameJp,Amount);
             Item.setLore("売る", "価格:" + Math.round(market.getPrice(nameEn) * Amount) + "円");
-            if(Amount == 1 || Math.round(market.getPrice(nameEn) * Amount) < 30000) {
+            if(Amount == 1 || Math.round(market.getPrice(nameEn) * Amount) < Const.BOUND_OF_BUY) {
                 subItemMenuSlotList.add(Item);
                 counter = counter + 1;
             }
@@ -88,7 +93,7 @@ public class MenuMaker {
     }
 
     //サブ生成。エンチャントアイテム選ぶためのものを別に生成。一段目が買い二段目売り。所持金額。戻る。押したアイテムは押したスロットで
-    public static Inventory EnchantMenu(ArrayList<ItemEnchantData> itemEnchantList,float Money,MarketOperator market){
+    public static Inventory EnchantMenu(ArrayList<ItemEnchantData> itemEnchantList, float Money, MarketOperator market){
         final Inventory EnchantMenu = Bukkit.createInventory(null, Const.WholeSlotNum, "エンチャントアイテム取引メニュー");
         final ArrayList<ItemStackData> enchantItemMenuSlotList = new ArrayList<>();
         ItemStackData Item;

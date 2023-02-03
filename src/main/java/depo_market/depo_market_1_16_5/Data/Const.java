@@ -1,4 +1,4 @@
-package depo_market.depo_market_1_16_5;
+package depo_market.depo_market_1_16_5.Data;
 
 public class Const {
     public static String CUSTOMER_NAME = "Depo_Customer";
@@ -8,4 +8,5 @@ public class Const {
     public static int RowSlotNum = 9;
     public static int WholeSlotNum = 27;
     public static float BOUND_OF_MONEY = 200000f;
+    public static float BOUND_OF_BUY = 30000f;
 }

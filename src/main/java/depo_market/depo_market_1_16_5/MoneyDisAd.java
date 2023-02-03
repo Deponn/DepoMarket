@@ -1,6 +1,6 @@
 package depo_market.depo_market_1_16_5;
 
-public enum MoneyDisAdvantage {
+public enum MoneyDisAd {
     DisableBuy("disable_buy"),
     Health("health"),
     None("none");
@@ -8,7 +8,7 @@ public enum MoneyDisAdvantage {
     private final String Name;
 
     // コンストラクタを定義
-    private MoneyDisAdvantage(String name) {
+    private MoneyDisAd(String name) {
         this.Name = name;
     }
 

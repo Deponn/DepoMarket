@@ -1,5 +1,7 @@
 package depo_market.depo_market_1_16_5;
 
+import depo_market.depo_market_1_16_5.Data.Const;
+import depo_market.depo_market_1_16_5.ItemStack.ItemEnchantData;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -60,13 +62,13 @@ public class PlayersMenuOperator {
             //50000円以上の取引ができない
             if (ClickedSlot >= 0 & ClickedSlot < operator.dataBaseTradeItem.getTradeAmountList().size()) {
                 int Amount = operator.dataBaseTradeItem.getTradeAmountList().get(ClickedSlot);
-                if (operator.market.getPrice(EnName) * Amount < 30000) {
+                if (operator.market.getPrice(EnName) * Amount < Const.BOUND_OF_BUY) {
                     BuyItem(material,EnName,Amount);
                 }
                 MakeSubMenu(player_inv_state);
             } else if (ClickedSlot >= 9 & ClickedSlot <  operator.dataBaseTradeItem.getTradeAmountList().size() + 9) {
                 int Amount = operator.dataBaseTradeItem.getTradeAmountList().get(ClickedSlot - 9);
-                if (operator.market.getPrice(EnName) * Amount < 30000) {
+                if (operator.market.getPrice(EnName) * Amount < Const.BOUND_OF_BUY) {
                     SellItem(material,EnName,Amount);
                 }
                 MakeSubMenu(player_inv_state);
@@ -130,12 +132,12 @@ public class PlayersMenuOperator {
     // 取引メソッドは普通アイテム用とエンチャントアイテム用があり、それらは統合された取引メソッドを呼ぶ
     private void BuyItem(Material SelectedMaterial,String SelectedEnName, int tradeAmount) {
         if (operator.teamMoneyOperator.PlayerInTeam(player)) {
-            if (operator.getDisadvantage() == MoneyDisAdvantage.DisableBuy && operator.teamMoneyOperator.getTeamMoney(player) <= 0) {
+            if (operator.getDisadvantage() == MoneyDisAd.DisableBuy && operator.teamMoneyOperator.getTeamMoney(player) <= 0) {
                 player.sendMessage("お金が足りません");
             } else {
                 if (operator.teamMoneyOperator.getTeamMoney(player) >= -Const.BOUND_OF_MONEY) {
                     TradeItem(SelectedMaterial,SelectedEnName,tradeAmount, true);
-                    if (operator.getDisadvantage() == MoneyDisAdvantage.Health) {
+                    if (operator.getDisadvantage() == MoneyDisAd.Health) {
                         operator.teamMoneyOperator.setTeamHealth(player);
                     }
                 } else {
@@ -153,7 +155,7 @@ public class PlayersMenuOperator {
         if (operator.teamMoneyOperator.PlayerInTeam(player)) {
             if (operator.teamMoneyOperator.getTeamMoney(player) <= Const.BOUND_OF_MONEY * 10) {
                 TradeItem(SelectedMaterial,SelectedEnName,tradeAmount,false);
-                if (operator.getDisadvantage() == MoneyDisAdvantage.Health) {
+                if (operator.getDisadvantage() == MoneyDisAd.Health) {
                     operator.teamMoneyOperator.setTeamHealth(player);
                 }
             } else {
@@ -173,12 +175,12 @@ public class PlayersMenuOperator {
     //買いの時、買えるか判定して取引処理メソッドを呼ぶ。
     private void BuyEnchantItem(int EnchantIndex) {
         if (operator.teamMoneyOperator.PlayerInTeam(player)) {
-            if (operator.getDisadvantage() == MoneyDisAdvantage.DisableBuy && operator.teamMoneyOperator.getTeamMoney(player) <= 0) {
+            if (operator.getDisadvantage() == MoneyDisAd.DisableBuy && operator.teamMoneyOperator.getTeamMoney(player) <= 0) {
                 player.sendMessage("お金が足りません");
             } else {
                 if (operator.teamMoneyOperator.getTeamMoney(player) >= -Const.BOUND_OF_MONEY) {
                     TradeEnchantItem(EnchantIndex, true);
-                    if (operator.getDisadvantage() == MoneyDisAdvantage.Health) {
+                    if (operator.getDisadvantage() == MoneyDisAd.Health) {
                         operator.teamMoneyOperator.setTeamHealth(player);
                     }
                 } else {
@@ -195,7 +197,7 @@ public class PlayersMenuOperator {
         if (operator.teamMoneyOperator.PlayerInTeam(player)) {
             if (operator.teamMoneyOperator.getTeamMoney(player) <= Const.BOUND_OF_MONEY * 10) {
                 TradeEnchantItem(EnchantIndex, false);
-                if (operator.getDisadvantage() == MoneyDisAdvantage.Health) {
+                if (operator.getDisadvantage() == MoneyDisAd.Health) {
                     operator.teamMoneyOperator.setTeamHealth(player);
                 }
             } else {

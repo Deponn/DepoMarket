@@ -1,5 +1,9 @@
 package depo_market.depo_market_1_16_5;
 
+import depo_market.depo_market_1_16_5.Data.Const;
+import depo_market.depo_market_1_16_5.Data.DBInterface;
+
+import depo_market.depo_market_1_16_5.Data.DBKojosen;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -19,22 +23,22 @@ public class PluginOperator {
 
     public final MarketOperator market;
     public final TeamMoneyOperator teamMoneyOperator;
-    public final DataBaseTradeItem dataBaseTradeItem;
+    public final DBInterface dataBaseTradeItem;
     private final Map<String, PlayersMenuOperator> playersMenuOperators;
-    private MoneyDisAdvantage Disadvantage;
+    private MoneyDisAd Disadvantage;
     private boolean existData;
 
     //必要なオブジェクトを実体化し保持
     public PluginOperator() {
-        this.dataBaseTradeItem = new DataBaseTradeItem();
+        this.dataBaseTradeItem = new DBKojosen();
         this.market = new MarketOperator(dataBaseTradeItem.getInitialPriceList());
         this.teamMoneyOperator = new TeamMoneyOperator();
         this.playersMenuOperators = new HashMap<>();
-        this.Disadvantage = MoneyDisAdvantage.Health;
+        this.Disadvantage = MoneyDisAd.Health;
         this.existData = false;
     }
     //データをロードする。初期化してからコンフィグにセーブデータがあれば呼ばれる
-    public void LoadData(Map<String, Float> teamData, Map<String, ItemPrice> marketData, boolean isRun, MoneyDisAdvantage disadvantage, List<World> world) {
+    public void LoadData(Map<String, Float> teamData, Map<String, ItemPrice> marketData, boolean isRun, MoneyDisAd disadvantage, List<World> world) {
         market.loadData(isRun, marketData);
         teamMoneyOperator.LoadTeams(teamData);
         Disadvantage = disadvantage;
@@ -50,7 +54,7 @@ public class PluginOperator {
         return market.isMarketRun();
     }
 
-    public MoneyDisAdvantage getDisadvantage() {
+    public MoneyDisAd getDisadvantage() {
         return Disadvantage;
     }
 
@@ -84,6 +88,10 @@ public class PluginOperator {
         teamMoneyOperator.ScoreBoardDestroy();
     }
 
+    public void LoadNewTeams(Player player) {
+        player.sendMessage("チームリロードしました");
+        teamMoneyOperator.LoadNewTeams();
+    }
     //商人として村人を生む。村人にはタグ付けして管理。
     public void PlaceCustomer(Player player) {
         Villager Customer = (Villager) player.getWorld().spawnEntity(player.getLocation(), EntityType.VILLAGER);
@@ -121,14 +129,14 @@ public class PluginOperator {
         }
     }
 
-    public void SetDisAdvantage(Player player, MoneyDisAdvantage  disadvantageName) {
+    public void SetDisAdvantage(Player player, MoneyDisAd disadvantageName) {
         if (!market.isMarketRun()) {
             Disadvantage = disadvantageName;
-            if (Disadvantage == MoneyDisAdvantage.None) {
+            if (Disadvantage == MoneyDisAd.None) {
                 player.sendMessage("借金デバフなしに設定しました");
-            } else if (Disadvantage == MoneyDisAdvantage.Health) {
+            } else if (Disadvantage == MoneyDisAd.Health) {
                 player.sendMessage("借金デバフとしてHPが減るようになりました");
-            } else if (Disadvantage == MoneyDisAdvantage.DisableBuy) {
+            } else if (Disadvantage == MoneyDisAd.DisableBuy) {
                 player.sendMessage("借金できないように設定しました");
             }
         } else {
@@ -171,7 +179,7 @@ public class PluginOperator {
     }
 
     //村人をクリックしたときに商人タグがあれば取引メニューに移行
-    public boolean CustomerClick(Player player, Entity ClickedEntity) {
+    public void CustomerClick(Player player, Entity ClickedEntity) {
         if (market.isMarketRun()) {
             if (ClickedEntity instanceof Villager) {
                 Villager ClickedCustomer = (Villager) ClickedEntity;
@@ -181,7 +189,6 @@ public class PluginOperator {
                     }
                     playersMenuOperators.get(player.getName()).setPlayer(player);
                     playersMenuOperators.get(player.getName()).MakeMainMenu();
-                    return true;
                 }
             }
         } else {
@@ -189,11 +196,9 @@ public class PluginOperator {
                 Villager ClickedCustomer = (Villager) ClickedEntity;
                 if (ClickedCustomer.getScoreboardTags().contains(Const.CUSTOMER_NAME)) {
                     player.sendMessage("市場が閉鎖しているため取引できません");
-                    return true;
                 }
             }
         }
-        return false;
     }
 
     //プレイヤーがメニュー状態なら真を返す。返された側は真ならアイテムをインベントリから取れないようにする。
