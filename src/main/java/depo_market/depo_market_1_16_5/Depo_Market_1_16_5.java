@@ -30,11 +30,9 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         //イベントを受け取れるようにする。
         getServer().getPluginManager().registerEvents(this, this);
         //コマンドのタブコンプリートを実装
-        Objects.requireNonNull(this.getCommand("DpTax")).setTabCompleter(new CommandSuggest());
-        Objects.requireNonNull(this.getCommand("DpGiveMoney")).setTabCompleter(new CommandSuggest());
-        Objects.requireNonNull(this.getCommand("DpSetDisadvantage")).setTabCompleter(new CommandSuggest());
-        Objects.requireNonNull(this.getCommand("DpGiveMoney")).setTabCompleter(new CommandSuggest());
-        Objects.requireNonNull(this.getCommand("DpSetDisadvantage")).setTabCompleter(new CommandSuggest());
+        for(CmdName cmdName : CmdName.values()){
+            Objects.requireNonNull(this.getCommand(cmdName.getCmd())).setTabCompleter(new CommandSuggest());
+        }
         //プラグインの処理を実際に行いデータを保持するオペレーターオブジェクト実体化
         Operator = new PluginOperator();
         getLogger().info("Depo_Marketが有効化されました。");
@@ -51,24 +49,44 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 
-        if (cmd.getName().equalsIgnoreCase("EnableDpPlugin")) {
+        //コマンドの有効化無効化処理
+        if (cmd.getName().equalsIgnoreCase(CmdName.EnablePlugin.getCmd())) {
             loadData();
             isEnabledPlugin = true;
+            if ((sender instanceof Player)) {
+                sender.sendMessage(ChatColor.DARK_GRAY + "プラグイン有効化");
+            }
             return true;
-        }else if(cmd.getName().equalsIgnoreCase("DisableDpPlugin")) {
+        }else if(cmd.getName().equalsIgnoreCase(CmdName.DisablePlugin.getCmd())) {
             saveData();
             isEnabledPlugin = false;
+            if ((sender instanceof Player)) {
+                sender.sendMessage(ChatColor.DARK_GRAY + "プラグイン無効化");
+            }
             return true;
         }
+        //コマンドが無効なら処理をしない
         if(isEnabledPlugin) {
-            if (cmd.getName().equalsIgnoreCase("DpStartMarket")) {
-                return Operator.StartMarket();
-
-            } else if (cmd.getName().equalsIgnoreCase("DpStopMarket")) {
-                boolean flag = Operator.StopMarket();
+            if (cmd.getName().equalsIgnoreCase(CmdName.InitializeMarket.getCmd())) {
+                Operator.InitializeMarket();
+                if ((sender instanceof Player)) {
+                    sender.sendMessage(ChatColor.DARK_GRAY + "市場を初期化");
+                }
+                return true;
+            } else if (cmd.getName().equalsIgnoreCase(CmdName.StartMarket.getCmd())) {
+                Operator.StartMarket();
+                if ((sender instanceof Player)) {
+                    sender.sendMessage(ChatColor.DARK_GRAY + "市場を開始");
+                }
+                return true;
+            } else if (cmd.getName().equalsIgnoreCase(CmdName.StopMarket.getCmd())) {
+                Operator.StopMarket();
                 saveData();
-                return flag;
-            } else if (cmd.getName().equalsIgnoreCase("DpGiveMoney")) {
+                if ((sender instanceof Player)) {
+                    sender.sendMessage(ChatColor.DARK_GRAY + "市場を開始");
+                }
+                return true;
+            } else if (cmd.getName().equalsIgnoreCase(CmdName.GiveMoney.getCmd())) {
                 //コマンド引数を処理
                 CommandParser parser = CommandParser.parse_give_money(sender, args);
                 if (!parser.isSuccess) {
@@ -76,19 +94,31 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                     return true;
                 }
                 float amount = parser.amount_of_money;
-                return Operator.GiveMoney(parser.team_name, amount);
-            }else if (cmd.getName().equalsIgnoreCase("DpSetPointCustomer")) {
+                Operator.GiveMoney(parser.team_name, amount);
+                if ((sender instanceof Player)) {
+                    sender.sendMessage(ChatColor.DARK_GRAY + parser.team_name + "に" + amount + "円お金をあげました");
+                }
+                return true;
+            } else if (cmd.getName().equalsIgnoreCase(CmdName.SetPointCustomer.getCmd())) {
                 CommandParser parser = CommandParser.parse_SetPointCustomer(sender, args);
                 if (!parser.isSuccess) {
                     // パース失敗
                     return true;
                 }
-                return Operator.PlaceCustomer(parser.X,parser.Y,parser.Z);
-            } else if (cmd.getName().equalsIgnoreCase("DpKillAllCustomer")) {
-                return Operator.KillAllCustomer();
-            } else
+                Operator.PlaceCustomer(parser.X, parser.Y, parser.Z);
+                if ((sender instanceof Player)) {
+                    sender.sendMessage(ChatColor.DARK_GRAY + "商人を" + parser.X + parser.Y + parser.Z + "に置きました");
+                }
+                return true;
+            } else if (cmd.getName().equalsIgnoreCase(CmdName.KillAllCustomer.getCmd())) {
+                Operator.KillAllCustomer();
+                if ((sender instanceof Player)) {
+                    sender.sendMessage(ChatColor.DARK_GRAY + "商人を全滅させました。");
+                }
+                return true;
+            }
 
-                // プレイヤーがコマンドを投入した際の処理...
+            // 以降はプレイヤーのみ使えるコマンド
             if (!(sender instanceof Player)) {
                 // コマブロやコンソールからの実行の場合
                 sender.sendMessage(ChatColor.DARK_GRAY + "このコマンドはプレイヤーのみが使えます。");
@@ -97,21 +127,28 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             Player player = (Player) sender;
 
             // コマンド処理...
-            if (cmd.getName().equalsIgnoreCase("DpPlaceCustomer")) {
-                return Operator.PlaceCustomer(player);
-            } else if (cmd.getName().equalsIgnoreCase("DpSetDisadvantage")) {
+            if (cmd.getName().equalsIgnoreCase(CmdName.PlaceCustomer.getCmd())) {
+                Operator.PlaceCustomer(player);
+                player.sendMessage("商人設置");
+                return true;
+            } else if (cmd.getName().equalsIgnoreCase(CmdName.SetDisadvantage.getCmd())) {
                 //コマンド引数を処理
                 CommandParser parser = CommandParser.parse_disadvantage(sender, args);
                 if (!parser.isSuccess) {
                     // パース失敗
                     return true;
                 }
-                return Operator.SetDisAdvantage(player, parser.disadvantage);
-
-            } else if (cmd.getName().equalsIgnoreCase("DpLookTeams")) {
-                return Operator.LookTeams(player);
-            } else if (cmd.getName().equalsIgnoreCase("DpLookScore")) {
-                return Operator.LookScore(player);
+                Operator.SetDisAdvantage(player, parser.disadvantage);
+                return true;
+            } else if (cmd.getName().equalsIgnoreCase(CmdName.LookTeams.getCmd())) {
+                Operator.LookTeams(player);
+                return true;
+            } else if (cmd.getName().equalsIgnoreCase(CmdName.LookScore.getCmd())) {
+                Operator.LookScore(player);
+                return true;
+            }else if (cmd.getName().equalsIgnoreCase(CmdName.NewTeam.getCmd())) {
+                ////////////////////////////////////////////Operator.LookScore(player);
+                return true;
             }
         }
         return true;
@@ -188,7 +225,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             for (int i = 0; i < ItemNames.size(); i++) {
                 MarketData.put(ItemNames.get(i),new ItemPrice(ItemPrices.get(i),ItemBuy.get(i),ItemSell.get(i)));
             }
-            Operator.LoadData(TeamData,MarketData,isRun,disadvantage, Bukkit.getWorlds());
+            Operator.LoadData(TeamData,MarketData,isRun, MoneyDisAdvantage.valueOf(disadvantage), Bukkit.getWorlds());
         }
     }
 
@@ -197,7 +234,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         Map<String, ItemPrice> MarketData = Operator.getMarketData();
         Map<String, Float> teamData = Operator.getTeamMoneyData();
         boolean MarketState = Operator.getMarketState();
-        String disadvantage = Operator.getDisadvantageName();
+        String disadvantage = Operator.getDisadvantage().getString();
         List<String> TeamNames = new ArrayList<>(teamData.keySet());
         List<Float> TeamMoneys = new ArrayList<>();
         for(String team : TeamNames){
@@ -225,3 +262,12 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
     }
 
 }
+
+
+//チームの所持金表示
+//金額が変わる
+//死んだときの処理
+//個人でも利用したい
+//アイテム変更したい
+//保存データ
+//コマンド回り

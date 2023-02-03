@@ -14,7 +14,7 @@ public class CommandParser {
     public final boolean isSuccess;//パース成功したかどうか
     public int amount_of_money = 0;//金額
     public String team_name = "none";//相手のチーム名
-    public String disadvantage = "none";//デバフの種類
+    public MoneyDisAdvantage disadvantage = MoneyDisAdvantage.Health;//デバフの種類
     public int X;
     public int Y;
     public int Z;
@@ -88,15 +88,15 @@ public class CommandParser {
      */
     public static CommandParser parse_disadvantage(CommandSender sender, String[] args) {
         List<String> argsList = Arrays.asList(args);
-        String disadvantage;
-        if (argsList.contains("-disable_buy")) {
-            disadvantage = "disable_buy";
-        }else if(argsList.contains("-health")){
-            disadvantage = "health";
-        }else if(argsList.contains("-none")){
-            disadvantage = "none";
+        MoneyDisAdvantage disadvantage;
+        if (argsList.contains("-" + MoneyDisAdvantage.DisableBuy.getString())) {
+            disadvantage = MoneyDisAdvantage.DisableBuy;
+        }else if(argsList.contains("-" + MoneyDisAdvantage.Health.getString())){
+            disadvantage = MoneyDisAdvantage.Health;
+        }else if(argsList.contains("-" + MoneyDisAdvantage.None.getString())){
+            disadvantage = MoneyDisAdvantage.None;
         }else {
-            sender.sendMessage(ChatColor.RED + "設定を決めてください -disable_buy -health -none");
+            sender.sendMessage(ChatColor.RED + "設定を入力してください");
             return new CommandParser(false);
         }
         CommandParser Me = new CommandParser(true);

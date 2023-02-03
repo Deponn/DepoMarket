@@ -14,7 +14,6 @@ public class PlayersMenuOperator {
     private final int SLOT_OF_ENCHANT = 0;
     private final int INDEX_OF_MAIN_MENU = -1;
     private final int INDEX_OF_OUT_OF_MENU = -2;
-    private final float BOUND_OF_MONEY = 200000;
     private Player player;
     private final PluginOperator operator;
     private Boolean player_is_in_Menu;
@@ -39,7 +38,7 @@ public class PlayersMenuOperator {
      * クリックしたスロットごとに処理をおこなうメソッド。アイテム選択メニューではおしたスロット番号がアイテム番号となり記録される。
      * 取引アイテムのリストも番号と連動している。
      */
-    public void MenuClick(int ClickedSlot, String disadvantage) {
+    public void MenuClick(int ClickedSlot) {
 
         //メインメニューのとき。選んだアイテムのサブメニューに行く処理
         if (player_inv_state == INDEX_OF_MAIN_MENU) {
@@ -62,13 +61,13 @@ public class PlayersMenuOperator {
             if (ClickedSlot >= 0 & ClickedSlot < operator.dataBaseTradeItem.getTradeAmountList().size()) {
                 int Amount = operator.dataBaseTradeItem.getTradeAmountList().get(ClickedSlot);
                 if (operator.market.getPrice(EnName) * Amount < 30000) {
-                    BuyItem(material,EnName,Amount, disadvantage);
+                    BuyItem(material,EnName,Amount);
                 }
                 MakeSubMenu(player_inv_state);
             } else if (ClickedSlot >= 9 & ClickedSlot <  operator.dataBaseTradeItem.getTradeAmountList().size() + 9) {
                 int Amount = operator.dataBaseTradeItem.getTradeAmountList().get(ClickedSlot - 9);
                 if (operator.market.getPrice(EnName) * Amount < 30000) {
-                    SellItem(material,EnName,Amount, disadvantage);
+                    SellItem(material,EnName,Amount);
                 }
                 MakeSubMenu(player_inv_state);
 
@@ -80,10 +79,10 @@ public class PlayersMenuOperator {
             //エンチャントアイテム取引メニューのとき。選んだ場合売り買いをし、メニューを更新
         } else if (player_inv_state == SLOT_OF_ENCHANT) {
             if (ClickedSlot >= 0 & ClickedSlot < operator.dataBaseTradeItem.getItemEnchantList().size()) {
-                BuyEnchantItem(ClickedSlot, disadvantage);
+                BuyEnchantItem(ClickedSlot);
                 MakeEnchantMenu();
             } else if (ClickedSlot >= 9 & ClickedSlot < operator.dataBaseTradeItem.getItemEnchantList().size() + 9) {
-                SellEnchantItem(ClickedSlot - 9, disadvantage);
+                SellEnchantItem(ClickedSlot - 9);
                 MakeEnchantMenu();
             } else if (ClickedSlot == 25) {
                 player.sendMessage(Math.round(operator.teamMoneyOperator.getTeamMoney(player)) + "円");
@@ -93,7 +92,7 @@ public class PlayersMenuOperator {
         }
     }
     public void MakeMainMenu() {
-        final Inventory MainMenu = operator.menuMaker.MainMenu(operator.dataBaseTradeItem.getMenuSlotList(), operator.teamMoneyOperator.getTeamMoney(player));
+        final Inventory MainMenu = MenuMaker.MainMenu(operator.dataBaseTradeItem.getMenuSlotList(), operator.teamMoneyOperator.getTeamMoney(player),operator.market);
         player.openInventory((MainMenu));
         player_is_in_Menu = true;
         player_inv_state = INDEX_OF_MAIN_MENU;
@@ -103,14 +102,14 @@ public class PlayersMenuOperator {
         final Material SelectedMaterial = operator.dataBaseTradeItem.getMenuSlotList().get(ClickedSlot).getMaterial();
         final String SelectedJpName = operator.dataBaseTradeItem.getMenuSlotList().get(ClickedSlot).getJpName();
         final String SelectedEnName = operator.dataBaseTradeItem.getMenuSlotList().get(ClickedSlot).getEnName();
-        final Inventory submenu = operator.menuMaker.SubMenu(SelectedMaterial, SelectedJpName, SelectedEnName, operator.dataBaseTradeItem.getTradeAmountList(), operator.teamMoneyOperator.getTeamMoney(player));
+        final Inventory submenu = MenuMaker.SubMenu(SelectedMaterial, SelectedJpName, SelectedEnName, operator.dataBaseTradeItem.getTradeAmountList(), operator.teamMoneyOperator.getTeamMoney(player),operator.market);
         player.openInventory(submenu);
         player_inv_state = ClickedSlot;
         player_is_in_Menu = true;
     }
 
     private void MakeEnchantMenu() {
-        final Inventory EnchantMenu = operator.menuMaker.EnchantMenu(operator.dataBaseTradeItem.getItemEnchantList(), operator.teamMoneyOperator.getTeamMoney(player));
+        final Inventory EnchantMenu = MenuMaker.EnchantMenu(operator.dataBaseTradeItem.getItemEnchantList(), operator.teamMoneyOperator.getTeamMoney(player),operator.market);
         player.openInventory(EnchantMenu);
         player_inv_state = SLOT_OF_ENCHANT;
         player_is_in_Menu = true;
@@ -129,14 +128,14 @@ public class PlayersMenuOperator {
 
     //買いの時、買えるか判定して取引処理メソッドを呼ぶ。
     // 取引メソッドは普通アイテム用とエンチャントアイテム用があり、それらは統合された取引メソッドを呼ぶ
-    private void BuyItem(Material SelectedMaterial,String SelectedEnName, int tradeAmount, String disadvantage) {
+    private void BuyItem(Material SelectedMaterial,String SelectedEnName, int tradeAmount) {
         if (operator.teamMoneyOperator.PlayerInTeam(player)) {
-            if (disadvantage.equals("disable_buy") && operator.teamMoneyOperator.getTeamMoney(player) <= 0) {
+            if (operator.getDisadvantage() == MoneyDisAdvantage.DisableBuy && operator.teamMoneyOperator.getTeamMoney(player) <= 0) {
                 player.sendMessage("お金が足りません");
             } else {
-                if (operator.teamMoneyOperator.getTeamMoney(player) >= -BOUND_OF_MONEY) {
+                if (operator.teamMoneyOperator.getTeamMoney(player) >= -Const.BOUND_OF_MONEY) {
                     TradeItem(SelectedMaterial,SelectedEnName,tradeAmount, true);
-                    if (disadvantage.equals("health")) {
+                    if (operator.getDisadvantage() == MoneyDisAdvantage.Health) {
                         operator.teamMoneyOperator.setTeamHealth(player);
                     }
                 } else {
@@ -150,11 +149,11 @@ public class PlayersMenuOperator {
     }
 
     //売りの時、売れるか判定して取引処理メソッドを呼ぶ
-    private void SellItem(Material SelectedMaterial,String SelectedEnName, int tradeAmount, String disadvantage) {
+    private void SellItem(Material SelectedMaterial,String SelectedEnName, int tradeAmount) {
         if (operator.teamMoneyOperator.PlayerInTeam(player)) {
-            if (operator.teamMoneyOperator.getTeamMoney(player) <= BOUND_OF_MONEY * 10) {
+            if (operator.teamMoneyOperator.getTeamMoney(player) <= Const.BOUND_OF_MONEY * 10) {
                 TradeItem(SelectedMaterial,SelectedEnName,tradeAmount,false);
-                if (disadvantage.equals("health")) {
+                if (operator.getDisadvantage() == MoneyDisAdvantage.Health) {
                     operator.teamMoneyOperator.setTeamHealth(player);
                 }
             } else {
@@ -172,14 +171,14 @@ public class PlayersMenuOperator {
     }
 
     //買いの時、買えるか判定して取引処理メソッドを呼ぶ。
-    private void BuyEnchantItem(int EnchantIndex, String disadvantage) {
+    private void BuyEnchantItem(int EnchantIndex) {
         if (operator.teamMoneyOperator.PlayerInTeam(player)) {
-            if (disadvantage.equals("disable_buy") && operator.teamMoneyOperator.getTeamMoney(player) <= 0) {
+            if (operator.getDisadvantage() == MoneyDisAdvantage.DisableBuy && operator.teamMoneyOperator.getTeamMoney(player) <= 0) {
                 player.sendMessage("お金が足りません");
             } else {
-                if (operator.teamMoneyOperator.getTeamMoney(player) >= -BOUND_OF_MONEY) {
+                if (operator.teamMoneyOperator.getTeamMoney(player) >= -Const.BOUND_OF_MONEY) {
                     TradeEnchantItem(EnchantIndex, true);
-                    if (disadvantage.equals("health")) {
+                    if (operator.getDisadvantage() == MoneyDisAdvantage.Health) {
                         operator.teamMoneyOperator.setTeamHealth(player);
                     }
                 } else {
@@ -192,11 +191,11 @@ public class PlayersMenuOperator {
     }
 
     //売りの時、売れるか判定して取引処理メソッドを呼ぶ
-    private void SellEnchantItem(int EnchantIndex, String disadvantage) {
+    private void SellEnchantItem(int EnchantIndex) {
         if (operator.teamMoneyOperator.PlayerInTeam(player)) {
-            if (operator.teamMoneyOperator.getTeamMoney(player) <= BOUND_OF_MONEY * 10) {
+            if (operator.teamMoneyOperator.getTeamMoney(player) <= Const.BOUND_OF_MONEY * 10) {
                 TradeEnchantItem(EnchantIndex, false);
-                if (disadvantage.equals("health")) {
+                if (operator.getDisadvantage() == MoneyDisAdvantage.Health) {
                     operator.teamMoneyOperator.setTeamHealth(player);
                 }
             } else {

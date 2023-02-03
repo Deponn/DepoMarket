@@ -17,13 +17,11 @@ import java.util.List;
  */
 public class PluginOperator {
 
-    private final String CUSTOMER_NAME = "Depo_Customer";
     public final MarketOperator market;
     public final TeamMoneyOperator teamMoneyOperator;
     public final DataBaseTradeItem dataBaseTradeItem;
-    public final MenuMaker menuMaker;
     private final Map<String, PlayersMenuOperator> playersMenuOperators;
-    private String Disadvantage;
+    private MoneyDisAdvantage Disadvantage;
     private boolean existData;
 
     //必要なオブジェクトを実体化し保持
@@ -32,12 +30,11 @@ public class PluginOperator {
         this.market = new MarketOperator(dataBaseTradeItem.getInitialPriceList());
         this.teamMoneyOperator = new TeamMoneyOperator();
         this.playersMenuOperators = new HashMap<>();
-        this.menuMaker = new MenuMaker(27, 9, market);
-        this.Disadvantage = "health";
+        this.Disadvantage = MoneyDisAdvantage.Health;
         this.existData = false;
     }
     //データをロードする。初期化してからコンフィグにセーブデータがあれば呼ばれる
-    public void LoadData(Map<String, Float> teamData, Map<String, ItemPrice> marketData, boolean isRun, String disadvantage, List<World> world) {
+    public void LoadData(Map<String, Float> teamData, Map<String, ItemPrice> marketData, boolean isRun, MoneyDisAdvantage disadvantage, List<World> world) {
         market.loadData(isRun, marketData);
         teamMoneyOperator.LoadTeams(teamData);
         Disadvantage = disadvantage;
@@ -50,10 +47,10 @@ public class PluginOperator {
     }
 
     public boolean getMarketState() {
-        return market.getMarketState();
+        return market.isMarketRun();
     }
 
-    public String getDisadvantageName() {
+    public MoneyDisAdvantage getDisadvantage() {
         return Disadvantage;
     }
 
@@ -61,8 +58,8 @@ public class PluginOperator {
         return teamMoneyOperator.getData();
     }
 
-    private void InitializeMarket() {
-        if (!market.getMarketState()) {
+    public void InitializeMarket() {
+        if (!market.isMarketRun()) {
             market.Initialize(dataBaseTradeItem.getInitialPriceList());
             teamMoneyOperator.Initialize();
             playersMenuOperators.clear();
@@ -73,85 +70,74 @@ public class PluginOperator {
         }
     }
 
-    public boolean StartMarket() {
-        InitializeMarket();
+    public void StartMarket() {
         if(existData) {
             market.StartMarket();
         }else {
             Bukkit.getLogger().info("データが存在しないので初期化してから初めてください");
         }
-        return true;
     }
 
-    public boolean StopMarket() {
+    public void StopMarket() {
         market.StopMarket();
         teamMoneyOperator.resetTeamHealth();
         teamMoneyOperator.ScoreBoardDestroy();
-        return true;
     }
 
     //商人として村人を生む。村人にはタグ付けして管理。
-    public boolean PlaceCustomer(Player player) {
+    public void PlaceCustomer(Player player) {
         Villager Customer = (Villager) player.getWorld().spawnEntity(player.getLocation(), EntityType.VILLAGER);
         Customer.setCustomName("取引商人");
-        Customer.addScoreboardTag(CUSTOMER_NAME);
+        Customer.addScoreboardTag(Const.CUSTOMER_NAME);
         Customer.setInvulnerable(true);
         Customer.setRemoveWhenFarAway(false);
-        return true;
     }
-    public boolean PlaceCustomer(int X,int Y ,int Z) {
+    public void PlaceCustomer(int X,int Y ,int Z) {
         Villager Customer = (Villager) Bukkit.getWorlds().get(0).spawnEntity(new Location(Bukkit.getWorlds().get(0), X,Y,Z), EntityType.VILLAGER);
         Customer.setCustomName("取引商人");
-        Customer.addScoreboardTag(CUSTOMER_NAME);
+        Customer.addScoreboardTag(Const.CUSTOMER_NAME);
         Customer.setInvulnerable(true);
         Customer.setRemoveWhenFarAway(false);
-        return true;
     }
     //タグ付けされた村人を殺す
-    public boolean KillAllCustomer() {
+    public void KillAllCustomer() {
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getLivingEntities()) {
                 if (entity instanceof Villager) {
-                    if (entity.getScoreboardTags().contains(CUSTOMER_NAME)) {
+                    if (entity.getScoreboardTags().contains(Const.CUSTOMER_NAME)) {
                         ((Villager) entity).setHealth(0);
                     }
                 }
             }
         }
-        return true;
     }
 
-    public boolean GiveMoney( String targetTeamName, Float Amount) {
-        if (market.getMarketState()) {
+    public void GiveMoney( String targetTeamName, Float Amount) {
+        if (market.isMarketRun()) {
             Bukkit.getLogger().info(targetTeamName+"に"+ Amount + "円だけお金をあげました");
             teamMoneyOperator.addTeamMoney(targetTeamName, Amount);
         } else {
             Bukkit.getLogger().info("市場が動いていません");
         }
-        return true;
     }
 
-    public boolean SetDisAdvantage(Player player, String disadvantageName) {
-        if (!market.getMarketState()) {
+    public void SetDisAdvantage(Player player, MoneyDisAdvantage  disadvantageName) {
+        if (!market.isMarketRun()) {
             Disadvantage = disadvantageName;
-            switch (Disadvantage) {
-                case "none":
-                    player.sendMessage("借金デバフなしに設定しました");
-                    break;
-                case "health":
-                    player.sendMessage("借金デバフとしてHPが減るようになりました");
-                    break;
-                case "disable_buy":
-                    player.sendMessage("借金できないように設定しました");
+            if (Disadvantage == MoneyDisAdvantage.None) {
+                player.sendMessage("借金デバフなしに設定しました");
+            } else if (Disadvantage == MoneyDisAdvantage.Health) {
+                player.sendMessage("借金デバフとしてHPが減るようになりました");
+            } else if (Disadvantage == MoneyDisAdvantage.DisableBuy) {
+                player.sendMessage("借金できないように設定しました");
             }
         } else {
             player.sendMessage("市場を止めてから設定してください");
         }
-        return true;
     }
 
     //すべてのチームの所持金を確認
-    public boolean LookTeams(Player player) {
+    public void LookTeams(Player player) {
         Map<String, Float> teamData = teamMoneyOperator.getData();
         Set<String> teams = teamData.keySet();
         for (String key : teams) {
@@ -161,37 +147,35 @@ public class PluginOperator {
                 player.sendMessage(key + ":" + "     " + Math.round(teamData.get(key)) + "円");
             }
         }
-        return true;
     }
     public void KillEvent(Player Killer,Player KilledPlayer) {
-        if(market.getMarketState()) {
-            Killer.sendMessage("キルしたのでチームが5000円を獲得しました。");
-            KilledPlayer.sendMessage("キルされたので敵チームが5000円を獲得しました");
-            teamMoneyOperator.addTeamMoney(Killer, 5000);
-            teamMoneyOperator.addPlayerMoney(Killer, 5000);
+        if(market.isMarketRun()) {
+            Killer.sendMessage("キルしたのでチームが" + Const.PrizeMoney + "円を獲得しました。");
+            KilledPlayer.sendMessage("キルされたので敵チームが" + Const.PrizeMoney + "円を獲得しました");
+            teamMoneyOperator.addTeamMoney(Killer,  Const.PrizeMoney);
+            teamMoneyOperator.addPlayerMoney(Killer,  Const.PrizeMoney);
         }
     }
     public void KillEvent(Player KilledPlayer) {
-        if (market.getMarketState()) {
+        if (market.isMarketRun()) {
             KilledPlayer.sendMessage("キルではないため、所持金の変動はありません");
         }
     }
-    public boolean LookScore(Player player){
+    public void LookScore(Player player){
         for (World world : Bukkit.getWorlds()) {
             List<Player> players = world.getPlayers();
             for (Player targetPlayer : players){
                 player.chat(targetPlayer.getName() + ":     " + teamMoneyOperator.getPlayerMoney(targetPlayer));
             }
         }
-        return true;
     }
 
     //村人をクリックしたときに商人タグがあれば取引メニューに移行
     public boolean CustomerClick(Player player, Entity ClickedEntity) {
-        if (market.getMarketState()) {
+        if (market.isMarketRun()) {
             if (ClickedEntity instanceof Villager) {
                 Villager ClickedCustomer = (Villager) ClickedEntity;
-                if (ClickedCustomer.getScoreboardTags().contains(CUSTOMER_NAME)) {
+                if (ClickedCustomer.getScoreboardTags().contains(Const.CUSTOMER_NAME)) {
                     if (!playersMenuOperators.containsKey(player.getName())) {
                         playersMenuOperators.put(player.getName(), new PlayersMenuOperator(player, this));
                     }
@@ -203,7 +187,7 @@ public class PluginOperator {
         } else {
             if (ClickedEntity instanceof Villager) {
                 Villager ClickedCustomer = (Villager) ClickedEntity;
-                if (ClickedCustomer.getScoreboardTags().contains(CUSTOMER_NAME)) {
+                if (ClickedCustomer.getScoreboardTags().contains(Const.CUSTOMER_NAME)) {
                     player.sendMessage("市場が閉鎖しているため取引できません");
                     return true;
                 }
@@ -223,7 +207,7 @@ public class PluginOperator {
     public void MenuClick(Player player, ItemStack item, int ClickedSlot) {
         if (item != null) {
             if (!item.getType().isAir()) {
-                playersMenuOperators.get(player.getName()).MenuClick(ClickedSlot, Disadvantage);
+                playersMenuOperators.get(player.getName()).MenuClick(ClickedSlot);
             }
         }
     }
@@ -238,7 +222,7 @@ public class PluginOperator {
 
     //プレイヤーが死んでもHPが減ったままにする
     public void setPlayerHealth(Player player) {
-        if(market.getMarketState()) {
+        if(market.isMarketRun()) {
             teamMoneyOperator.setTeamHealth(player);
         }
     }

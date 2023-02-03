@@ -25,14 +25,9 @@ public class CommandSuggest implements TabCompleter{
      */
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if(command.getName().equalsIgnoreCase("DpGiveMoney")) {
+        if(command.getName().equalsIgnoreCase(CmdName.GiveMoney.getCmd())) {
             return suggest_give_money(sender, args);
-        }else if (command.getName().equalsIgnoreCase("DpSetDisadvantage")){
-        if (command.getName().equalsIgnoreCase("DpTax")) {
-            return suggest_tax(sender, args);
-        }else if(command.getName().equalsIgnoreCase("DpGiveMoney")) {
-            return suggest_tax(sender, args);
-        }else if (command.getName().equalsIgnoreCase("DpSetDisadvantage")){
+        }else if (command.getName().equalsIgnoreCase(CmdName.SetDisadvantage.getCmd())){
             return suggest_disadvantage(sender, args);
         }else {
             return new ArrayList<String>();
@@ -74,8 +69,13 @@ public class CommandSuggest implements TabCompleter{
      */
     private static List<String> suggest_disadvantage(CommandSender sender, String[] args) {
         List<String> argsList = Arrays.asList(args);
-        return Stream.of("-disable_buy", "-health","-none")
-                .filter(s -> !argsList.contains(s))
-                .collect(Collectors.toList());
+        List<String> suggestList = new ArrayList<>();
+        if (argsList.size() > 1) {
+            for (MoneyDisAdvantage moneyDisAdvantage : MoneyDisAdvantage.values()) {
+                suggestList.add( "-" + moneyDisAdvantage.getString());
+            }
+            return suggestList;
+        }
+        return suggestList;
     }
 }

@@ -14,7 +14,6 @@ import java.util.*;
  * チームごとに所持金を計算する。プレイヤーがチームに所属するかも判定。存在するチームをロードしてチーム名と所持金を記録。
  */
 public class TeamMoneyOperator {
-    final float MONEY_HEALTH = 200000f;
     private final Scoreboard scoreboard;
     private final Map<String, Float> teams = new HashMap<>();
     private final Map<Player,Float> playerMoney = new HashMap<>();
@@ -102,7 +101,7 @@ public class TeamMoneyOperator {
                     if (playerNames.contains(targetPlayer.getName())) {
                         AttributeInstance healthAttribute = targetPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
                         //お金の量が0から離れれば離れるほど、HPも増減する。ハイパボリックタンジェントを利用
-                        Objects.requireNonNull(healthAttribute).setBaseValue(20 * (1 + Math.tanh(getTeamMoney(player) / MONEY_HEALTH)));
+                        Objects.requireNonNull(healthAttribute).setBaseValue(20 * (1 + Math.tanh(getTeamMoney(player) / Const.MONEY_HEALTH)));
                     }
                 }
             }
@@ -125,7 +124,7 @@ public class TeamMoneyOperator {
             List<Player> players = world.getPlayers();
             for (Player targetPlayer : players) {
                 AttributeInstance healthAttribute = targetPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-                Objects.requireNonNull(healthAttribute).setBaseValue(20 * (1 + Math.tanh(getTeamMoney(targetPlayer) / MONEY_HEALTH)));
+                Objects.requireNonNull(healthAttribute).setBaseValue(20 * (1 + Math.tanh(getTeamMoney(targetPlayer) / Const.MONEY_HEALTH)));
             }
         }
     }
@@ -155,25 +154,22 @@ public class TeamMoneyOperator {
     }
 
     private void ScoreBoardMake(){
-        Objective objective = scoreboard.getObjective("DpMoney");
+        Objective objective = scoreboard.getObjective(Const.ScoreBoardName);
         if ( objective == null ) {
-            objective = scoreboard.registerNewObjective("DpMoney", "dummy","所持金");
+            objective = scoreboard.registerNewObjective(Const.ScoreBoardName, "dummy","所持金");
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        }
-        for(String teamName : teams.keySet()){
-            objective.getScore(teamName).setScore(Math.round(teams.get(teamName)));
         }
     }
     private void ScoreBoardMake(String teamName){
-        Objective objective = scoreboard.getObjective("DpMoney");
+        Objective objective = scoreboard.getObjective(Const.ScoreBoardName);
         if ( objective == null ) {
-            objective = scoreboard.registerNewObjective("DpMoney", "dummy","所持金");
+            objective = scoreboard.registerNewObjective(Const.ScoreBoardName, "dummy","所持金");
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         }
         objective.getScore(teamName).setScore(Math.round(teams.get(teamName)));
     }
     public void ScoreBoardDestroy(){
-        Objective objective = scoreboard.getObjective("DpMoney");
+        Objective objective = scoreboard.getObjective(Const.ScoreBoardName);
         if ( objective != null ) {
             objective.unregister();
         }

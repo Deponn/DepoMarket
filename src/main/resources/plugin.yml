@@ -7,18 +7,18 @@ description: Plugin that add market and economy to minecraft
 
 
 commands: #自作プラグインのコマンドを宣言
-  EnableDpPlugin:
+  DpEnableDpPlugin:
     description: プラグインを有効にする
     usage: /    EnableDpPlugin
     permission: market
-  DisableDpPlugin:
+  DpDisableDpPlugin:
     description: プラグインを無効にする
     usage: /    DisableDpPlugin
     permission: market
-  DpStartMarket:
   DpInitializeMarket:
     description: マーケットのデータを初期化する
-    usage: /  DpInitializeMarket [自分の名前]
+    usage: /  DpInitializeMarket
+    permission: market
   DpStartMarket:
     description: マーケットを開始
     usage: /  DpStartMarket
@@ -50,6 +50,7 @@ commands: #自作プラグインのコマンドを宣言
   DpLookTeams:
     description: 全チームの所持金を見る
     usage: /     DpLookTeams
+    permission: market
   DpNewTeam:
     description: チームが新たに作られた時用
     usage: /    DpNewTeam

@@ -51,7 +51,7 @@ public class MarketOperator {
     public float getPrice(String nameEn){
         return ItemDataList.getOrDefault(nameEn,new ItemPrice(0f)).getPrice();
     }
-    public boolean getMarketState(){
+    public boolean isMarketRun(){
         return market_run_flag;
     }
     public Map<String, ItemPrice> getData(){
