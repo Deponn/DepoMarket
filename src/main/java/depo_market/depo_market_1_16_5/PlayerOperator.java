@@ -1,6 +1,9 @@
 package depo_market.depo_market_1_16_5;
 
 import depo_market.depo_market_1_16_5.ItemStack.ItemEnchantData;
+import depo_market.depo_market_1_16_5.PropertiesAndConstant.Const;
+import depo_market.depo_market_1_16_5.PropertiesAndConstant.MoneyDisAd;
+import depo_market.depo_market_1_16_5.PropertiesAndConstant.MyProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

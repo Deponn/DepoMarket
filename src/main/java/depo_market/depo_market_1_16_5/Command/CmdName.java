@@ -20,7 +20,7 @@ public enum CmdName {
     private final String Command;
 
     // コンストラクタを定義
-    private CmdName(String Command) {
+    CmdName(String Command) {
         this.Command = Command;
     }
 

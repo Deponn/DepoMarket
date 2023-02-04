@@ -1,4 +1,4 @@
-package depo_market.depo_market_1_16_5.Data;
+package depo_market.depo_market_1_16_5.ItemDataBase;
 
 import depo_market.depo_market_1_16_5.ItemStack.ItemEnchantData;
 import depo_market.depo_market_1_16_5.ItemStack.ItemMenuSlot;

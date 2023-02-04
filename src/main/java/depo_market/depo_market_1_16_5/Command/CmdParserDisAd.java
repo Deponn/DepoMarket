@@ -1,6 +1,6 @@
 package depo_market.depo_market_1_16_5.Command;
 
-import depo_market.depo_market_1_16_5.MoneyDisAd;
+import depo_market.depo_market_1_16_5.PropertiesAndConstant.MoneyDisAd;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CmdParserDisAd implements CmdParser{
 
-    public final boolean isSuccess;//パース成功したかどうか
+    private final boolean isSuccess;//パース成功したかどうか
 
     public final MoneyDisAd disadvantage;//デバフの種類
 

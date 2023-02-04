@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class CmdParserSetPoint implements CmdParser {
 
-    public final boolean isSuccess;//パース成功したかどうか
+    private final boolean isSuccess;//パース成功したかどうか
     public final Integer X;
     public final Integer Y;
     public final Integer Z;

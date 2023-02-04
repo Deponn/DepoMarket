@@ -1,7 +1,7 @@
 package depo_market.depo_market_1_16_5;
 
-import depo_market.depo_market_1_16_5.Data.DBInterface;
-import depo_market.depo_market_1_16_5.Data.DBKojosen;
+import depo_market.depo_market_1_16_5.ItemDataBase.DBInterface;
+import depo_market.depo_market_1_16_5.ItemDataBase.DBKojosen;
 
 import java.util.HashMap;
 import java.util.Map;

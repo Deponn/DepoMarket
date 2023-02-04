@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CmdParserGiveMoney implements CmdParser{
-    public final boolean isSuccess;//パース成功したかどうか
+    private final boolean isSuccess;//パース成功したかどうか
     public final Integer amount_of_money;//金額
     public final String team_name;//相手のチーム名
 
@@ -24,8 +24,8 @@ public class CmdParserGiveMoney implements CmdParser{
 
     public static CmdParserGiveMoney Parse(CommandSender sender, String[] args) {
         List<String> argsList = Arrays.asList(args);
-        String team_name = "none";
-        int amount_of_money = 0;
+        String team_name;
+        int amount_of_money;
 
         if (argsList.contains("-team")) {
             // 引数が何番目か取得し、番号を採用する

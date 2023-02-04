@@ -1,6 +1,6 @@
 package depo_market.depo_market_1_16_5.Command;
 
-import depo_market.depo_market_1_16_5.MoneyDisAd;
+import depo_market.depo_market_1_16_5.PropertiesAndConstant.MoneyDisAd;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -31,7 +31,7 @@ public class CommandSuggest implements TabCompleter{
         }else if (command.getName().equalsIgnoreCase(CmdName.SetDisadvantage.getCmd())){
             return suggest_disadvantage(sender, args);
         }else {
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
     }
     /**

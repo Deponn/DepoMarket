@@ -1,8 +1,8 @@
 package depo_market.depo_market_1_16_5;
 
 import depo_market.depo_market_1_16_5.Command.*;
+import depo_market.depo_market_1_16_5.PropertiesAndConstant.MoneyDisAd;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -93,7 +93,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             } else if (cmd.getName().equalsIgnoreCase(CmdName.GiveMoney.getCmd())) {
                 //コマンド引数を処理
                 CmdParserGiveMoney parser = CmdParserGiveMoney.Parse(sender, args);
-                if (!parser.isSuccess) {
+                if (!parser.isSuccess()) {
                     // パース失敗
                     return true;
                 }
@@ -105,7 +105,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                 return true;
             } else if (cmd.getName().equalsIgnoreCase(CmdName.SetPointCustomer.getCmd())) {
                 CmdParserSetPoint parser = CmdParserSetPoint.parse(sender, args);
-                if (!parser.isSuccess) {
+                if (!parser.isSuccess()) {
                     // パース失敗
                     return true;
                 }
@@ -138,7 +138,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             } else if (cmd.getName().equalsIgnoreCase(CmdName.SetDisadvantage.getCmd())) {
                 //コマンド引数を処理
                 CmdParserDisAd parser = CmdParserDisAd.parse(sender, args);
-                if (!parser.isSuccess) {
+                if (!parser.isSuccess()) {
                     // パース失敗
                     return true;
                 }
@@ -189,7 +189,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e){
         if(isEnabledPlugin) {
-            Player player = (Player) e.getEntity();
+            Player player =  e.getEntity();
             Player killer = player.getKiller();
             if (killer != null) {
                 Operator.KillEvent(killer, player);
@@ -252,7 +252,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             ItemBuy.add(MarketData.get(item).getAmountOfBought());
             ItemSell.add(MarketData.get(item).getAmountOfSold());
         }
-        FileConfiguration configuration = getConfig();;
+        FileConfiguration configuration = getConfig();
         configuration.set("disadvantage",disadvantage);
         configuration.set("Depo_isRun",MarketState);
         configuration.set("Depo_teams",TeamNames);

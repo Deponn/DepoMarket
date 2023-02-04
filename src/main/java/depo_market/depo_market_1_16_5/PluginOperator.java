@@ -1,5 +1,9 @@
 package depo_market.depo_market_1_16_5;
 
+import depo_market.depo_market_1_16_5.PropertiesAndConstant.Const;
+import depo_market.depo_market_1_16_5.PropertiesAndConstant.MoneyDisAd;
+import depo_market.depo_market_1_16_5.PropertiesAndConstant.MyProperties;
+import depo_market.depo_market_1_16_5.PropertiesAndConstant.TempProperties;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -90,7 +94,7 @@ public class PluginOperator {
                 Bukkit.getLogger().info("市場を開きます");
             }
             else {
-                Bukkit.getLogger().info("市場はすでに起動中です");;
+                Bukkit.getLogger().info("市場はすでに起動中です");
             }
         }else {
             Bukkit.getLogger().info("データが存在しないので初期化してから初めてください");
@@ -103,7 +107,7 @@ public class PluginOperator {
                 player.sendMessage("市場を開きます");
             }
             else {
-                player.sendMessage("市場はすでに起動中です");;
+                player.sendMessage("市場はすでに起動中です");
             }
         }else {
             player.sendMessage("データが存在しないので初期化してから初めてください");

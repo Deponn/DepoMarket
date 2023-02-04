@@ -1,4 +1,4 @@
-package depo_market.depo_market_1_16_5;
+package depo_market.depo_market_1_16_5.PropertiesAndConstant;
 
 public class MyProperties {
 

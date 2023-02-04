@@ -1,4 +1,4 @@
-package depo_market.depo_market_1_16_5;
+package depo_market.depo_market_1_16_5.PropertiesAndConstant;
 
 public enum MoneyDisAd {
     DisableBuy("disable_buy"),
@@ -8,7 +8,7 @@ public enum MoneyDisAd {
     private final String Name;
 
     // コンストラクタを定義
-    private MoneyDisAd(String name) {
+    MoneyDisAd(String name) {
         this.Name = name;
     }
 

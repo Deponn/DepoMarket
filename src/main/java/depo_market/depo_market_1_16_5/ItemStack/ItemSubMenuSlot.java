@@ -1,6 +1,5 @@
 package depo_market.depo_market_1_16_5.ItemStack;
 
-import depo_market.depo_market_1_16_5.ItemStack.ItemStackData;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
