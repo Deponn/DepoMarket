@@ -69,23 +69,26 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         //コマンドが無効なら処理をしない
         if(isEnabledPlugin) {
             if (cmd.getName().equalsIgnoreCase(CmdName.InitializeMarket.getCmd())) {
-                Operator.InitializeMarket();
                 if ((sender instanceof Player)) {
-                    sender.sendMessage(ChatColor.DARK_GRAY + "市場を初期化");
+                    Operator.InitializeMarket((Player) sender);
+                }else {
+                    Operator.InitializeMarket();
                 }
                 return true;
             } else if (cmd.getName().equalsIgnoreCase(CmdName.StartMarket.getCmd())) {
-                Operator.StartMarket();
                 if ((sender instanceof Player)) {
-                    sender.sendMessage(ChatColor.DARK_GRAY + "市場を開始");
+                    Operator.StartMarket((Player) sender);
+                }else {
+                    Operator.StartMarket();
                 }
                 return true;
             } else if (cmd.getName().equalsIgnoreCase(CmdName.StopMarket.getCmd())) {
-                Operator.StopMarket();
-                saveData();
                 if ((sender instanceof Player)) {
-                    sender.sendMessage(ChatColor.DARK_GRAY + "市場を開始");
+                    Operator.StopMarket((Player) sender);
+                }else {
+                    Operator.StopMarket();
                 }
+                saveData();
                 return true;
             } else if (cmd.getName().equalsIgnoreCase(CmdName.GiveMoney.getCmd())) {
                 //コマンド引数を処理
@@ -225,7 +228,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             for (int i = 0; i < ItemNames.size(); i++) {
                 MarketData.put(ItemNames.get(i),new ItemPrice(ItemPrices.get(i),ItemBuy.get(i),ItemSell.get(i)));
             }
-            Operator.LoadData(TeamData,MarketData,isRun, MoneyDisAd.valueOf(disadvantage), Bukkit.getWorlds());
+            Operator.LoadData(TeamData,MarketData,isRun, MoneyDisAd.valueOf(disadvantage));
         }
     }
 

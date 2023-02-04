@@ -1,9 +1,5 @@
 package depo_market.depo_market_1_16_5;
 
-import depo_market.depo_market_1_16_5.Data.Const;
-import depo_market.depo_market_1_16_5.Data.DBInterface;
-
-import depo_market.depo_market_1_16_5.Data.DBKojosen;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,7 +9,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,76 +16,122 @@ import java.util.List;
  */
 public class PluginOperator {
 
-    public final MarketOperator market;
-    public final TeamMoneyOperator teamMoneyOperator;
-    public final DBInterface dataBaseTradeItem;
-    private final Map<String, PlayersMenuOperator> playersMenuOperators;
-    private MoneyDisAd Disadvantage;
-    private boolean existData;
+    private boolean isRun;
+    private MyProperties myProperties;
+    private MyOperators myOperators;
+    private TempProperties tempProperties;
+    private boolean isExistingData;
 
     //必要なオブジェクトを実体化し保持
     public PluginOperator() {
-        this.dataBaseTradeItem = new DBKojosen();
-        this.market = new MarketOperator(dataBaseTradeItem.getInitialPriceList());
-        this.teamMoneyOperator = new TeamMoneyOperator();
-        this.playersMenuOperators = new HashMap<>();
-        this.Disadvantage = MoneyDisAd.Health;
-        this.existData = false;
+        this.isRun = false;
+        this.tempProperties = new TempProperties(MoneyDisAd.Health);
+        this.myProperties = new MyProperties(tempProperties);
+        this.myOperators = new MyOperators();
+        this.isExistingData = false;
     }
-    //データをロードする。初期化してからコンフィグにセーブデータがあれば呼ばれる
-    public void LoadData(Map<String, Float> teamData, Map<String, ItemPrice> marketData, boolean isRun, MoneyDisAd disadvantage, List<World> world) {
-        market.loadData(isRun, marketData);
-        teamMoneyOperator.LoadTeams(teamData);
-        Disadvantage = disadvantage;
-        teamMoneyOperator.setAllTeamHealth(world);
-        existData = true;
-    }
-
-    public Map<String, ItemPrice> getMarketData() {
-        return market.getData();
-    }
-
-    public boolean getMarketState() {
-        return market.isMarketRun();
-    }
-
-    public MoneyDisAd getDisadvantage() {
-        return Disadvantage;
-    }
-
-    public Map<String, Float> getTeamMoneyData() {
-        return teamMoneyOperator.getData();
-    }
-
     public void InitializeMarket() {
-        if (!market.isMarketRun()) {
-            market.Initialize(dataBaseTradeItem.getInitialPriceList());
-            teamMoneyOperator.Initialize();
-            playersMenuOperators.clear();
-            existData = true;
+        if (!isRun) {
+            myOperators = new MyOperators();
+            tempProperties = new TempProperties(MoneyDisAd.Health);
+            myProperties = new MyProperties(tempProperties);
+            isExistingData = true;
             Bukkit.getLogger().info("市場を初期化しました");
         } else {
             Bukkit.getLogger().info("市場が動いてる間は初期化できません");
         }
     }
+    public void InitializeMarket(Player player) {
+        if (!isRun) {
+            myOperators = new MyOperators();
+            tempProperties = new TempProperties(MoneyDisAd.Health);
+            myProperties = new MyProperties(tempProperties);
+            isExistingData = true;
+            player.sendMessage("市場を初期化しました");
+        } else {
+            player.sendMessage("市場が動いてる間は初期化できません");
+        }
+    }
+
+    //データをロードする。初期化してからコンフィグにセーブデータがあれば呼ばれる
+    public void LoadData(Map<String, Float> teamData, Map<String, ItemPrice> marketData, boolean isRun, MoneyDisAd disadvantage) {
+        myOperators.market.loadData(marketData);
+        myOperators.teamOperator.LoadData(teamData);
+        myOperators.teamOperator.setAllTeamHealth();
+
+        tempProperties = new TempProperties(disadvantage);
+        myProperties = new MyProperties(tempProperties);
+
+        this.isRun = isRun;
+        isExistingData = true;
+    }
+
+    public Map<String, ItemPrice> getMarketData() {
+        return myOperators.market.getData();
+    }
+
+    public boolean getMarketState() {
+        return isRun;
+    }
+
+    public MoneyDisAd getDisadvantage() {
+        return myProperties.Disadvantage;
+    }
+
+    public Map<String, Float> getTeamMoneyData() {
+        return myOperators.teamOperator.getData();
+    }
 
     public void StartMarket() {
-        if(existData) {
-            market.StartMarket();
+        if(isExistingData) {
+            if(!isRun) {
+                myProperties = new MyProperties(tempProperties);
+                isRun = true;
+                Bukkit.getLogger().info("市場を開きます");
+            }
+            else {
+                Bukkit.getLogger().info("市場はすでに起動中です");;
+            }
         }else {
             Bukkit.getLogger().info("データが存在しないので初期化してから初めてください");
         }
     }
-
-    public void StopMarket() {
-        market.StopMarket();
-        teamMoneyOperator.resetTeamHealth();
-        teamMoneyOperator.ScoreBoardDestroy();
+    public void StartMarket(Player player){
+        if(isExistingData) {
+            if(!isRun) {
+                isRun = true;
+                player.sendMessage("市場を開きます");
+            }
+            else {
+                player.sendMessage("市場はすでに起動中です");;
+            }
+        }else {
+            player.sendMessage("データが存在しないので初期化してから初めてください");
+        }
     }
-
+    public void StopMarket() {
+        if(isRun) {
+            isRun = false;
+            myOperators.teamOperator.resetAllTeamHealth();
+            myOperators.teamOperator.ScoreBoardDestroy();
+            Bukkit.getLogger().info("市場停止");
+        }else {
+            Bukkit.getLogger().info("市場はすでに停止です");
+        }
+    }
+    public void StopMarket(Player player) {
+        if(isRun) {
+            isRun = false;
+            myOperators.teamOperator.resetAllTeamHealth();
+            myOperators.teamOperator.ScoreBoardDestroy();
+            player.sendMessage("市場停止");
+        }else {
+            player.sendMessage("市場はすでに停止です");
+        }
+    }
     public void LoadNewTeams(Player player) {
+        myOperators.teamOperator.LoadNewTeams();
         player.sendMessage("チームリロードしました");
-        teamMoneyOperator.LoadNewTeams();
     }
     //商人として村人を生む。村人にはタグ付けして管理。
     public void PlaceCustomer(Player player) {
@@ -121,22 +162,22 @@ public class PluginOperator {
     }
 
     public void GiveMoney( String targetTeamName, Float Amount) {
-        if (market.isMarketRun()) {
+        if (isRun) {
             Bukkit.getLogger().info(targetTeamName+"に"+ Amount + "円だけお金をあげました");
-            teamMoneyOperator.addTeamMoney(targetTeamName, Amount);
+            myOperators.teamOperator.addTeamMoney(targetTeamName, Amount);
         } else {
             Bukkit.getLogger().info("市場が動いていません");
         }
     }
 
     public void SetDisAdvantage(Player player, MoneyDisAd disadvantageName) {
-        if (!market.isMarketRun()) {
-            Disadvantage = disadvantageName;
-            if (Disadvantage == MoneyDisAd.None) {
-                player.sendMessage("借金デバフなしに設定しました");
-            } else if (Disadvantage == MoneyDisAd.Health) {
+        if (!isRun) {
+            tempProperties.Disadvantage = disadvantageName;
+            if (tempProperties.Disadvantage == MoneyDisAd.None) {
+                player.sendMessage("借金デバフなしに設定しました。");
+            } else if (tempProperties.Disadvantage == MoneyDisAd.Health) {
                 player.sendMessage("借金デバフとしてHPが減るようになりました");
-            } else if (Disadvantage == MoneyDisAd.DisableBuy) {
+            } else if (tempProperties.Disadvantage == MoneyDisAd.DisableBuy) {
                 player.sendMessage("借金できないように設定しました");
             }
         } else {
@@ -146,7 +187,7 @@ public class PluginOperator {
 
     //すべてのチームの所持金を確認
     public void LookTeams(Player player) {
-        Map<String, Float> teamData = teamMoneyOperator.getData();
+        Map<String, Float> teamData = myOperators.teamOperator.getData();
         Set<String> teams = teamData.keySet();
         for (String key : teams) {
             if (Math.round(teamData.get(key)) < 0) {
@@ -157,38 +198,39 @@ public class PluginOperator {
         }
     }
     public void KillEvent(Player Killer,Player KilledPlayer) {
-        if(market.isMarketRun()) {
+        if(isRun) {
             Killer.sendMessage("キルしたのでチームが" + Const.PrizeMoney + "円を獲得しました。");
             KilledPlayer.sendMessage("キルされたので敵チームが" + Const.PrizeMoney + "円を獲得しました");
-            teamMoneyOperator.addTeamMoney(Killer,  Const.PrizeMoney);
-            teamMoneyOperator.addPlayerMoney(Killer,  Const.PrizeMoney);
+            myOperators.teamOperator.addTeamMoney(Killer,  Const.PrizeMoney);
+            myOperators.playerOperatorMap.get(Killer.getName()).addPlayerMoney(Const.PrizeMoney);
         }
     }
     public void KillEvent(Player KilledPlayer) {
-        if (market.isMarketRun()) {
+        if (isRun) {
             KilledPlayer.sendMessage("キルではないため、所持金の変動はありません");
         }
     }
     public void LookScore(Player player){
         for (World world : Bukkit.getWorlds()) {
             List<Player> players = world.getPlayers();
-            for (Player targetPlayer : players){
-                player.chat(targetPlayer.getName() + ":     " + teamMoneyOperator.getPlayerMoney(targetPlayer));
+            for (Player targetPlayer : players) {
+                if (myOperators.playerOperatorMap.containsKey(targetPlayer.getName())) {
+                    player.chat(targetPlayer.getName() + ":     " + myOperators.playerOperatorMap.get(targetPlayer.getName()).getPlayerMoney());
+                }
             }
         }
     }
 
     //村人をクリックしたときに商人タグがあれば取引メニューに移行
     public void CustomerClick(Player player, Entity ClickedEntity) {
-        if (market.isMarketRun()) {
+        if (isRun) {
             if (ClickedEntity instanceof Villager) {
                 Villager ClickedCustomer = (Villager) ClickedEntity;
                 if (ClickedCustomer.getScoreboardTags().contains(Const.CUSTOMER_NAME)) {
-                    if (!playersMenuOperators.containsKey(player.getName())) {
-                        playersMenuOperators.put(player.getName(), new PlayersMenuOperator(player, this));
+                    if (!myOperators.playerOperatorMap.containsKey(player.getName())) {
+                        myOperators.playerOperatorMap.put(player.getName(), new PlayerOperator(player, myOperators,myProperties));
                     }
-                    playersMenuOperators.get(player.getName()).setPlayer(player);
-                    playersMenuOperators.get(player.getName()).MakeMainMenu();
+                    myOperators.playerOperatorMap.get(player.getName()).MakeMainMenu();
                 }
             }
         } else {
@@ -203,8 +245,8 @@ public class PluginOperator {
 
     //プレイヤーがメニュー状態なら真を返す。返された側は真ならアイテムをインベントリから取れないようにする。
     public boolean isMenu(Player player) {
-        if (playersMenuOperators.containsKey(player.getName())) {
-            return playersMenuOperators.get(player.getName()).isMenu();
+        if (myOperators.playerOperatorMap.containsKey(player.getName())) {
+            return myOperators.playerOperatorMap.get(player.getName()).isInMenu();
         }
         return false;
     }
@@ -212,14 +254,14 @@ public class PluginOperator {
     public void MenuClick(Player player, ItemStack item, int ClickedSlot) {
         if (item != null) {
             if (!item.getType().isAir()) {
-                playersMenuOperators.get(player.getName()).MenuClick(ClickedSlot);
+                myOperators.playerOperatorMap.get(player.getName()).MenuClick(ClickedSlot);
             }
         }
     }
 
     public boolean MenuClose(Player player) {
-        if (playersMenuOperators.containsKey(player.getName())) {
-            return playersMenuOperators.get(player.getName()).MenuClose();
+        if (myOperators.playerOperatorMap.containsKey(player.getName())) {
+            return myOperators.playerOperatorMap.get(player.getName()).MenuClose();
         } else {
             return false;
         }
@@ -227,8 +269,8 @@ public class PluginOperator {
 
     //プレイヤーが死んでもHPが減ったままにする
     public void setPlayerHealth(Player player) {
-        if(market.isMarketRun()) {
-            teamMoneyOperator.setTeamHealth(player);
+        if(isRun) {
+            myOperators.teamOperator.setPlayerTeamHealth(player);
         }
     }
 }
