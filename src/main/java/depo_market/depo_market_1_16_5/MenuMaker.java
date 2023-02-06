@@ -57,7 +57,7 @@ public class MenuMaker {
         for(Integer Amount : TradeAmountList) {
             Item = new ItemSubMenuSlot(material, nameJp,Amount);
             Item.setLore("買う", "価格:" + Math.round(market.getPrice(nameEn) * Amount) + "円");
-            if(Amount == 1 || Math.round(market.getPrice(nameEn) * Amount) < Const.BOUND_OF_BUY) {
+            if(Amount == 1 || Math.round(market.getPrice(nameEn) * Amount) < Const.BoundOfBuy) {
                 subItemMenuSlotList.add(Item);
                 counter += 1;
             }
@@ -69,7 +69,7 @@ public class MenuMaker {
         for(Integer Amount : TradeAmountList) {
             Item = new ItemSubMenuSlot(material, nameJp,Amount);
             Item.setLore("売る", "価格:" + Math.round(market.getPrice(nameEn) * Amount) + "円");
-            if(Amount == 1 || Math.round(market.getPrice(nameEn) * Amount) < Const.BOUND_OF_BUY) {
+            if(Amount == 1 || Math.round(market.getPrice(nameEn) * Amount) < Const.BoundOfBuy) {
                 subItemMenuSlotList.add(Item);
                 counter = counter + 1;
             }

@@ -1,5 +1,7 @@
 package depo_market.depo_market_1_16_5.Command;
 
+import depo_market.depo_market_1_16_5.ItemDataBase.DBDefault;
+import depo_market.depo_market_1_16_5.ItemDataBase.DBList;
 import depo_market.depo_market_1_16_5.PropertiesAndConstant.Const;
 import depo_market.depo_market_1_16_5.PropertiesAndConstant.MoneyDisAd;
 import org.bukkit.Bukkit;
@@ -72,8 +74,12 @@ public class CommandSuggest implements TabCompleter{
     private static List<String> Suggest_Properties(CommandSender sender, String[] args) {
         List<String> argsList = Arrays.asList(args);
         List<String> suggestList = new ArrayList<>();
-        String DisAd = "-" + Const.DisadvantageProperties;
-        String PrMoney = "-" + Const.PrizeMoneyProperties;
+        String DisAd = "-" + Const.DisadvantagePropName;
+        String PrMoney = "-" + Const.PrizeMoneyPropName;
+        String BoundMoney = "-" + Const.BoundOfMoneyPropName;
+        String PriceMoveRate = "-" + Const.PriceMoveRatePropName;
+        String DBItem = "-" + Const.DBItemPropName;
+        String isTeamGame = "-" + Const.isTeamGamePropName;
         if (argsList.size() > 1 && DisAd.equals(argsList.get(argsList.size() - 2))) {
             for (MoneyDisAd moneyDisAd : MoneyDisAd.values()) {
                 suggestList.add(moneyDisAd.getString());
@@ -81,8 +87,16 @@ public class CommandSuggest implements TabCompleter{
             return suggestList;
         }else if(argsList.size() > 1 && PrMoney.equals(argsList.get(argsList.size() - 2))) {
             return Arrays.asList("0","1000","5000");
+        }else if(argsList.size() > 1 && BoundMoney.equals(argsList.get(argsList.size() - 2))) {
+            return Arrays.asList("0","1000","5000");
+        }else if(argsList.size() > 1 && PriceMoveRate.equals(argsList.get(argsList.size() - 2))) {
+            return Arrays.asList("0","0.5","1");
+        }else if(argsList.size() > 1 && DBItem.equals(argsList.get(argsList.size() - 2))) {
+            return Arrays.asList(DBList.Kojosen.getName(), DBList.Default.getName());
+        }else if(argsList.size() > 1 && isTeamGame.equals(argsList.get(argsList.size() - 2))) {
+            return Arrays.asList("true","false");
         }else if(argsList.size() == 1) {
-            return Stream.of(DisAd, PrMoney)
+            return Stream.of(DisAd, PrMoney,BoundMoney,PriceMoveRate,DBItem,isTeamGame)
                     .filter(s -> !argsList.contains(s))
                     .collect(Collectors.toList());
         }else {

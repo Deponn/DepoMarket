@@ -64,13 +64,13 @@ public class PlayerOperator {
                 //50000円以上の取引ができない
                 if (ClickedSlot >= 0 & ClickedSlot < operator.DBTradeItem.getTradeAmountList().size()) {
                     int Amount = operator.DBTradeItem.getTradeAmountList().get(ClickedSlot);
-                    if (operator.market.getPrice(EnName) * Amount < Const.BOUND_OF_BUY) {
+                    if (operator.market.getPrice(EnName) * Amount < Const.BoundOfBuy) {
                         BuyItem(material, EnName, Amount);
                     }
                     MakeSubMenu(player_inv_state);
                 } else if (ClickedSlot >= 9 & ClickedSlot < operator.DBTradeItem.getTradeAmountList().size() + 9) {
                     int Amount = operator.DBTradeItem.getTradeAmountList().get(ClickedSlot - 9);
-                    if (operator.market.getPrice(EnName) * Amount < Const.BOUND_OF_BUY) {
+                    if (operator.market.getPrice(EnName) * Amount < Const.BoundOfBuy) {
                         SellItem(material, EnName, Amount);
                     }
                     MakeSubMenu(player_inv_state);
@@ -147,7 +147,7 @@ public class PlayerOperator {
                 if (operator.prop.Disadvantage == MoneyDisAd.DisableBuy && operator.teamOp.getTeamMoney(player) <= 0) {
                     player.sendMessage("お金が足りません");
                 } else {
-                    if (operator.teamOp.getTeamMoney(player) >= -Const.BOUND_OF_MONEY) {
+                    if (operator.teamOp.getTeamMoney(player) >= - operator.prop.BoundOfMoney) {
                         TradeItem(SelectedMaterial, SelectedEnName, tradeAmount, true);
                         if (operator.prop.Disadvantage  == MoneyDisAd.Health) {
                             operator.teamOp.setPlayerTeamHealth(player);
@@ -168,7 +168,7 @@ public class PlayerOperator {
         Player player = Bukkit.getPlayer(playerID);
         if (player != null) {
             if (operator.teamOp.isPlayerInAnyTeam(player)) {
-                if (operator.teamOp.getTeamMoney(player) <= Const.BOUND_OF_MONEY * 10) {
+                if (operator.teamOp.getTeamMoney(player) <= operator.prop.BoundOfMoney * 10) {
                     TradeItem(SelectedMaterial, SelectedEnName, tradeAmount, false);
                     if (operator.prop.Disadvantage  == MoneyDisAd.Health) {
                         operator.teamOp.setPlayerTeamHealth(player);
@@ -196,7 +196,7 @@ public class PlayerOperator {
                 if (operator.prop.Disadvantage  == MoneyDisAd.DisableBuy && operator.teamOp.getTeamMoney(player) <= 0) {
                     player.sendMessage("お金が足りません");
                 } else {
-                    if (operator.teamOp.getTeamMoney(player) >= -Const.BOUND_OF_MONEY) {
+                    if (operator.teamOp.getTeamMoney(player) >= - operator.prop.BoundOfMoney) {
                         TradeEnchantItem(EnchantIndex, true);
                         if (operator.prop.Disadvantage  == MoneyDisAd.Health) {
                             operator.teamOp.setPlayerTeamHealth(player);
@@ -216,7 +216,7 @@ public class PlayerOperator {
         Player player = Bukkit.getPlayer(playerID);
         if (player != null) {
             if (operator.teamOp.isPlayerInAnyTeam(player)) {
-                if (operator.teamOp.getTeamMoney(player) <= Const.BOUND_OF_MONEY * 10) {
+                if (operator.teamOp.getTeamMoney(player) <= operator.prop.BoundOfMoney * 10) {
                     TradeEnchantItem(EnchantIndex, false);
                     if (operator.prop.Disadvantage  == MoneyDisAd.Health) {
                         operator.teamOp.setPlayerTeamHealth(player);

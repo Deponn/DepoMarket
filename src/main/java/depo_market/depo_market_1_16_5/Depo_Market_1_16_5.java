@@ -1,8 +1,8 @@
 package depo_market.depo_market_1_16_5;
 
 import depo_market.depo_market_1_16_5.Command.*;
-import depo_market.depo_market_1_16_5.PropertiesAndConstant.ChangeProperties;
 import depo_market.depo_market_1_16_5.PropertiesAndConstant.Const;
+import depo_market.depo_market_1_16_5.PropertiesAndConstant.MyProperties;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -151,7 +151,8 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                     // パース失敗
                     return true;
                 }
-                ChangeProperties.PropertiesChange(parser.PropertiesName, parser.Value);
+                player.sendMessage(parser.PropertiesName + "を" + parser.Value + "に設定しました。初期化すると反映されます");
+                MyProperties.PropertiesChange(parser.PropertiesName, parser.Value);
                 return true;
             }
         }
@@ -210,9 +211,9 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
     private void loadData(){
         //コンフィグが存在する場合はロードする。リストをそれぞれロードし、マップに変換。順序がそろってる前提
         FileConfiguration configuration = getConfig();
-        boolean ConfExist = configuration.contains("Dp_Version");
+        boolean ConfExist = configuration.contains(Const.VersionPropName);
         if(ConfExist) {
-            if (Objects.equals(configuration.getString("Dp_Version"), Const.thisVersion)) {
+            if (Objects.equals(configuration.getString(Const.VersionPropName), Const.thisVersion)) {
                 boolean isRun = configuration.getBoolean("Dp_isRun");
                 List<String> TeamNames = configuration.getStringList("Dp_teams");
                 List<Float> TeamMoneys = configuration.getFloatList("Dp_moneys");
@@ -253,7 +254,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             ItemSell.add(MarketData.get(item).getAmountOfSold());
         }
         FileConfiguration configuration = getConfig();
-        configuration.set("Dp_Version",Const.thisVersion);
+        configuration.set(Const.VersionPropName,Const.thisVersion);
         configuration.set("Dp_isRun",MarketState);
         configuration.set("Dp_teams",TeamNames);
         configuration.set("Dp_moneys",TeamMoneys);
