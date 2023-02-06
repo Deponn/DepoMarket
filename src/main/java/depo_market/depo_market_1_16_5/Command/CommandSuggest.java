@@ -1,5 +1,6 @@
 package depo_market.depo_market_1_16_5.Command;
 
+import depo_market.depo_market_1_16_5.PropertiesAndConstant.Const;
 import depo_market.depo_market_1_16_5.PropertiesAndConstant.MoneyDisAd;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -28,8 +29,8 @@ public class CommandSuggest implements TabCompleter{
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if(command.getName().equalsIgnoreCase(CmdName.GiveMoney.getCmd())) {
             return suggest_give_money(sender, args);
-        }else if (command.getName().equalsIgnoreCase(CmdName.SetDisadvantage.getCmd())){
-            return suggest_disadvantage(sender, args);
+        }else if (command.getName().equalsIgnoreCase(CmdName.ChangeProperties.getCmd())){
+            return Suggest_Properties(sender, args);
         }else {
             return new ArrayList<>();
         }
@@ -62,21 +63,30 @@ public class CommandSuggest implements TabCompleter{
         }
     }
     /**
-     * デバフを決めるコマンドのTAB補完候補を返す
+     * プロパティを決めるコマンドのTAB補完候補を返す
      *
      * @param sender コマンド送信者
      * @param args   引数
      * @return コマンド補完候補
      */
-    private static List<String> suggest_disadvantage(CommandSender sender, String[] args) {
+    private static List<String> Suggest_Properties(CommandSender sender, String[] args) {
         List<String> argsList = Arrays.asList(args);
         List<String> suggestList = new ArrayList<>();
-        if (argsList.size() > 1) {
+        String DisAd = "-" + Const.DisadvantageProperties;
+        String PrMoney = "-" + Const.PrizeMoneyProperties;
+        if (argsList.size() > 1 && DisAd.equals(argsList.get(argsList.size() - 2))) {
             for (MoneyDisAd moneyDisAd : MoneyDisAd.values()) {
-                suggestList.add( "-" + moneyDisAd.getString());
+                suggestList.add(moneyDisAd.getString());
             }
             return suggestList;
+        }else if(argsList.size() > 1 && PrMoney.equals(argsList.get(argsList.size() - 2))) {
+            return Arrays.asList("0","1000","5000");
+        }else if(argsList.size() == 1) {
+            return Stream.of(DisAd, PrMoney)
+                    .filter(s -> !argsList.contains(s))
+                    .collect(Collectors.toList());
+        }else {
+            return suggestList;
         }
-        return suggestList;
     }
 }

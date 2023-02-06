@@ -12,10 +12,10 @@ public enum CmdName {
     SetPointCustomer("DpSetPointCustomer"),
     KillAllCustomer("DpKillAllCustomer"),
     GiveMoney("DpGiveMoney"),
-    SetDisadvantage("DpSetDisadvantage"),
     LookTeams("DpLookTeams"),
     NewTeam("DpNewTeam"),
-    LookScore("DpLookScore");
+    LookScore("DpLookScore"),
+    ChangeProperties("DpChangeProperties");
 
     private final String Command;
 

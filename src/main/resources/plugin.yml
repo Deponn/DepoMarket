@@ -43,10 +43,6 @@ commands: #自作プラグインのコマンドを宣言
     description: お金をあげる
     usage: /  DpGiveMoney [チーム名] [金額]
     permission: market
-  DpSetDisadvantage:
-    description: 借金した時のデバフを決める
-    usage: /  DpSetDisadvantage [デバフ名]
-    permission: market
   DpLookTeams:
     description: 全チームの所持金を見る
     usage: /     DpLookTeams
@@ -58,6 +54,10 @@ commands: #自作プラグインのコマンドを宣言
   DpLookScore:
     description: スコアを見る
     usage: /     DpLookScore
+    permission: market
+  DpChangeProperties:
+    description: プロパティ変更
+    usage: /       DpChangeProperties
     permission: market
 
 permissions:

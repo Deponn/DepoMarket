@@ -1,7 +1,8 @@
 package depo_market.depo_market_1_16_5;
 
 import depo_market.depo_market_1_16_5.Command.*;
-import depo_market.depo_market_1_16_5.PropertiesAndConstant.MoneyDisAd;
+import depo_market.depo_market_1_16_5.PropertiesAndConstant.ChangeProperties;
+import depo_market.depo_market_1_16_5.PropertiesAndConstant.Const;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -55,14 +56,14 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             loadData();
             isEnabledPlugin = true;
             if ((sender instanceof Player)) {
-                sender.sendMessage(ChatColor.DARK_GRAY + "プラグイン有効化");
+                sender.sendMessage("プラグイン有効化");
             }
             return true;
         }else if(cmd.getName().equalsIgnoreCase(CmdName.DisablePlugin.getCmd())) {
             saveData();
             isEnabledPlugin = false;
             if ((sender instanceof Player)) {
-                sender.sendMessage(ChatColor.DARK_GRAY + "プラグイン無効化");
+                sender.sendMessage("プラグイン無効化");
             }
             return true;
         }
@@ -100,7 +101,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                 float amount = parser.amount_of_money; //floatに変換
                 Operator.GiveMoney(parser.team_name, amount);
                 if ((sender instanceof Player)) {
-                    sender.sendMessage(ChatColor.DARK_GRAY + parser.team_name + "に" + amount + "円お金をあげました");
+                    sender.sendMessage(ChatColor.GREEN + parser.team_name + "に" + amount + "円お金をあげました");
                 }
                 return true;
             } else if (cmd.getName().equalsIgnoreCase(CmdName.SetPointCustomer.getCmd())) {
@@ -111,13 +112,13 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                 }
                 Operator.PlaceCustomer(parser.X, parser.Y, parser.Z);
                 if ((sender instanceof Player)) {
-                    sender.sendMessage(ChatColor.DARK_GRAY + "商人を" + parser.X + parser.Y + parser.Z + "に置きました");
+                    sender.sendMessage(ChatColor.GREEN + "商人を" + parser.X + parser.Y + parser.Z + "に置きました");
                 }
                 return true;
             } else if (cmd.getName().equalsIgnoreCase(CmdName.KillAllCustomer.getCmd())) {
                 Operator.KillAllCustomer();
                 if ((sender instanceof Player)) {
-                    sender.sendMessage(ChatColor.DARK_GRAY + "商人を全滅させました。");
+                    sender.sendMessage(ChatColor.GREEN + "商人を全滅させました。");
                 }
                 return true;
             }
@@ -135,15 +136,6 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                 Operator.PlaceCustomer(player);
                 player.sendMessage("商人設置");
                 return true;
-            } else if (cmd.getName().equalsIgnoreCase(CmdName.SetDisadvantage.getCmd())) {
-                //コマンド引数を処理
-                CmdParserDisAd parser = CmdParserDisAd.parse(sender, args);
-                if (!parser.isSuccess()) {
-                    // パース失敗
-                    return true;
-                }
-                Operator.SetDisAdvantage(player, parser.disadvantage);
-                return true;
             } else if (cmd.getName().equalsIgnoreCase(CmdName.LookTeams.getCmd())) {
                 Operator.LookTeams(player);
                 return true;
@@ -152,6 +144,14 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                 return true;
             }else if (cmd.getName().equalsIgnoreCase(CmdName.NewTeam.getCmd())) {
                 Operator.LoadNewTeams(player);
+                return true;
+            } else if(cmd.getName().equalsIgnoreCase(CmdName.ChangeProperties.getCmd())){
+                CmdParserChangeProperties parser = CmdParserChangeProperties.parse(sender, args);
+                if (!parser.isSuccess()) {
+                    // パース失敗
+                    return true;
+                }
+                ChangeProperties.PropertiesChange(parser.PropertiesName, parser.Value);
                 return true;
             }
         }
@@ -210,25 +210,26 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
     private void loadData(){
         //コンフィグが存在する場合はロードする。リストをそれぞれロードし、マップに変換。順序がそろってる前提
         FileConfiguration configuration = getConfig();
-        boolean ConfExist = configuration.contains("Depo_isRun");
-        if(ConfExist){
-            boolean isRun = configuration.getBoolean("Depo_isRun");
-            String disadvantage = configuration.getString("disadvantage");
-            List<String> TeamNames = configuration.getStringList("Depo_teams");
-            List<Float> TeamMoneys = configuration.getFloatList("Depo_moneys");
-            List<String> ItemNames = configuration.getStringList("Depo_Items");
-            List<Float> ItemPrices = configuration.getFloatList("Depo_Prices");
-            List<Integer> ItemBuy = configuration.getIntegerList("Depo_buy");
-            List<Integer> ItemSell = configuration.getIntegerList("Depo_sell");
-            Map<String,Float> TeamData = new HashMap<>();
-            for (int i = 0; i < TeamNames.size(); i++) {
-                TeamData.put(TeamNames.get(i),TeamMoneys.get(i));
+        boolean ConfExist = configuration.contains("Dp_Version");
+        if(ConfExist) {
+            if (Objects.equals(configuration.getString("Dp_Version"), Const.thisVersion)) {
+                boolean isRun = configuration.getBoolean("Dp_isRun");
+                List<String> TeamNames = configuration.getStringList("Dp_teams");
+                List<Float> TeamMoneys = configuration.getFloatList("Dp_moneys");
+                List<String> ItemNames = configuration.getStringList("Dp_Items");
+                List<Float> ItemPrices = configuration.getFloatList("Dp_Prices");
+                List<Integer> ItemBuy = configuration.getIntegerList("Dp_buy");
+                List<Integer> ItemSell = configuration.getIntegerList("Dp_sell");
+                Map<String, Float> TeamData = new HashMap<>();
+                for (int i = 0; i < TeamNames.size(); i++) {
+                    TeamData.put(TeamNames.get(i), TeamMoneys.get(i));
+                }
+                Map<String, ItemPrice> MarketData = new HashMap<>();
+                for (int i = 0; i < ItemNames.size(); i++) {
+                    MarketData.put(ItemNames.get(i), new ItemPrice(ItemPrices.get(i), ItemBuy.get(i), ItemSell.get(i)));
+                }
+                Operator.LoadData(TeamData, MarketData, isRun);
             }
-            Map<String,ItemPrice> MarketData = new HashMap<>();
-            for (int i = 0; i < ItemNames.size(); i++) {
-                MarketData.put(ItemNames.get(i),new ItemPrice(ItemPrices.get(i),ItemBuy.get(i),ItemSell.get(i)));
-            }
-            Operator.LoadData(TeamData,MarketData,isRun, MoneyDisAd.valueOf(disadvantage));
         }
     }
 
@@ -237,7 +238,6 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
         Map<String, ItemPrice> MarketData = Operator.getMarketData();
         Map<String, Float> teamData = Operator.getTeamMoneyData();
         boolean MarketState = Operator.getMarketState();
-        String disadvantage = Operator.getDisadvantage().getString();
         List<String> TeamNames = new ArrayList<>(teamData.keySet());
         List<Float> TeamMoneys = new ArrayList<>();
         for(String team : TeamNames){
@@ -253,24 +253,19 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             ItemSell.add(MarketData.get(item).getAmountOfSold());
         }
         FileConfiguration configuration = getConfig();
-        configuration.set("disadvantage",disadvantage);
-        configuration.set("Depo_isRun",MarketState);
-        configuration.set("Depo_teams",TeamNames);
-        configuration.set("Depo_moneys",TeamMoneys);
-        configuration.set("Depo_Items",ItemNames);
-        configuration.set("Depo_Prices",ItemPrices);
-        configuration.set("Depo_buy",ItemBuy);
-        configuration.set("Depo_sell",ItemSell);
+        configuration.set("Dp_Version",Const.thisVersion);
+        configuration.set("Dp_isRun",MarketState);
+        configuration.set("Dp_teams",TeamNames);
+        configuration.set("Dp_moneys",TeamMoneys);
+        configuration.set("Dp_Items",ItemNames);
+        configuration.set("Dp_Prices",ItemPrices);
+        configuration.set("Dp_buy",ItemBuy);
+        configuration.set("Dp_sell",ItemSell);
         saveConfig();
     }
 
 }
 
-
-//チームの所持金表示
 //金額が変わる
-//死んだときの処理
 //個人でも利用したい
 //アイテム変更したい
-//保存データ
-//コマンド回り

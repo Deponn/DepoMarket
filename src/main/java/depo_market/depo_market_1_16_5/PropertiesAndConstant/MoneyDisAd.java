@@ -17,4 +17,12 @@ public enum MoneyDisAd {
         return this.Name;
     }
 
+    public static MoneyDisAd getEnum(String name){
+        for(MoneyDisAd moneyDisAd : MoneyDisAd.values()){
+            if(moneyDisAd.getString().equals(name)){
+                return moneyDisAd;
+            }
+        }
+        return null;
+    }
 }
