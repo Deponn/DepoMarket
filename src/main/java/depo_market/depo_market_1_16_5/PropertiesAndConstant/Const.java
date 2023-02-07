@@ -14,6 +14,7 @@ public class Const {
     public static final int WholeSlotNum = 27;
     public static final float MONEY_HEALTH = 200000f;
     public static final float BoundOfBuy = 30000f;
+    public static final double PriceMoveRateBase = 10000;
     public static final String PropertiesFileName = "DpMarket.properties";
     public static final String VersionPropName =  "Dp_Version";
     public static final String thisVersion = "3.3";
@@ -24,7 +25,7 @@ public class Const {
     public static final String BoundOfMoneyPropName = "BoundOfMoney";
     public static final float Default_BoundOfMoney = 200000f;
     public static final String PriceMoveRatePropName = "PriceMoveRate";
-    public static final float Default_PriceMove = 1f;
+    public static final float Default_PriceMove = 0f;
     public static final String DBItemPropName = "DBItem";
     public static final String Default_DBItem = DBList.Kojosen.getName();
     public static final String isTeamGamePropName = "isTeamGame";

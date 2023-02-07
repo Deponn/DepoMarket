@@ -267,6 +267,5 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
 
 }
 
-//金額が変わる
 //個人でも利用したい
-//アイテム変更したい
+

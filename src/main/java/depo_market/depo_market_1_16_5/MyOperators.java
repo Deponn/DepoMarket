@@ -1,7 +1,6 @@
 package depo_market.depo_market_1_16_5;
 
 import depo_market.depo_market_1_16_5.ItemDataBase.DBInterface;
-import depo_market.depo_market_1_16_5.ItemDataBase.DBKojosen;
 import depo_market.depo_market_1_16_5.ItemDataBase.DBList;
 import depo_market.depo_market_1_16_5.PropertiesAndConstant.MyProperties;
 import org.bukkit.entity.Player;
@@ -21,7 +20,7 @@ public class MyOperators {
     public MyOperators() {
         this.prop = new MyProperties();
         this.DBTradeItem = DBList.getItemDataBase(prop.ItemDataBase);
-        this.market = new MarketOperator(DBTradeItem.getInitialPriceList());
+        this.market = new MarketOperator(this);
         this.teamOp = new TeamOperator();
         this.playerOperatorMap = new HashMap<>();
 
