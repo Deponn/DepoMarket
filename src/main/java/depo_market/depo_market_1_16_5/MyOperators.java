@@ -21,7 +21,11 @@ public class MyOperators {
         this.prop = new MyProperties();
         this.DBTradeItem = DBList.getItemDataBase(prop.ItemDataBase);
         this.market = new MarketOperator(this);
-        this.teamOp = new TeamOperator();
+        if(prop.isTeamGame) {
+            this.teamOp = new TeamOperator();
+        }else {
+            this.teamOp = new PersonalMoneyOperator();
+        }
         this.playerOperatorMap = new HashMap<>();
 
     }

@@ -75,6 +75,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                 }else {
                     Operator.InitializeMarket();
                 }
+                saveData();
                 return true;
             } else if (cmd.getName().equalsIgnoreCase(CmdName.StartMarket.getCmd())) {
                 if ((sender instanceof Player)) {
