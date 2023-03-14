@@ -50,7 +50,7 @@ public class PluginOperator {
     public void LoadData(Map<String, Float> teamData, Map<String, ItemPrice> marketData, boolean isRun) {
         myOperators.market.loadData(marketData);
         myOperators.teamOp.LoadData(teamData);
-        myOperators.teamOp.setAllTeamHealth();
+        myOperators.teamOp.setAllHealth();
         this.isRun = isRun;
         isExistingData = true;
     }
@@ -96,7 +96,7 @@ public class PluginOperator {
     public void StopMarket() {
         if(isRun) {
             isRun = false;
-            myOperators.teamOp.resetAllTeamHealth();
+            myOperators.teamOp.resetAllHealth();
             myOperators.teamOp.ScoreBoardDestroy();
             Bukkit.getLogger().info("市場停止");
         }else {
@@ -106,7 +106,7 @@ public class PluginOperator {
     public void StopMarket(Player player) {
         if(isRun) {
             isRun = false;
-            myOperators.teamOp.resetAllTeamHealth();
+            myOperators.teamOp.resetAllHealth();
             myOperators.teamOp.ScoreBoardDestroy();
             player.sendMessage("市場停止");
         }else {
@@ -148,7 +148,7 @@ public class PluginOperator {
     public void GiveMoney( String targetTeamName, Float Amount) {
         if (isRun) {
             Bukkit.getLogger().info(targetTeamName+"に"+ Amount + "円だけお金をあげました");
-            myOperators.teamOp.addTeamMoney(targetTeamName, Amount);
+            myOperators.teamOp.addMoney(targetTeamName, Amount);
         } else {
             Bukkit.getLogger().info("市場が動いていません");
         }
@@ -170,7 +170,7 @@ public class PluginOperator {
         if(isRun) {
             Killer.sendMessage("キルしたのでチームが" + myOperators.prop.PrizeMoney + "円を獲得しました。");
             KilledPlayer.sendMessage("キルされたので敵チームが" + myOperators.prop.PrizeMoney + "円を獲得しました");
-            myOperators.teamOp.addTeamMoney(Killer,  myOperators.prop.PrizeMoney);
+            myOperators.teamOp.addMoney(Killer,  myOperators.prop.PrizeMoney);
             myOperators.getPlayerOperator(Killer).addPlayerMoney(myOperators.prop.PrizeMoney);
         }
     }
@@ -237,7 +237,7 @@ public class PluginOperator {
     //プレイヤーが死んでもHPが減ったままにする
     public void setPlayerHealth(Player player) {
         if(isRun) {
-            myOperators.teamOp.setPlayerTeamHealth(player);
+            myOperators.teamOp.setHealth(player);
         }
     }
 }

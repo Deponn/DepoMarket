@@ -10,7 +10,7 @@ import org.bukkit.scoreboard.*;
 
 import java.util.*;
 
-public class PersonalMoneyOperator extends TeamOperator{
+public class PersonalMoneyOperator implements MoneyOperator{
     private final Scoreboard scoreboard;
     private final Map<String, Float> personsMoney;
 
@@ -23,11 +23,12 @@ public class PersonalMoneyOperator extends TeamOperator{
         for (World world : worlds){
             List<Player> players = world.getPlayers();
             for (Player player : players){
+                Bukkit.getLogger().info("aaa" + player.getName());
                 personsMoney.put(player.getName(),0f);
             }
         }
         ScoreBoardMake();
-        setAllTeamHealth();
+        setAllHealth();
     }
 
     //スコアボードに存在するチームを確認。初めて確認されたチームなら所持金を初期値０にする
@@ -54,45 +55,41 @@ public class PersonalMoneyOperator extends TeamOperator{
     }
 
     //チームにお金を加算
-    public void addTeamMoney(String playerName, float money) {
-        if(isPlayerInAnyTeam(playerName)) {
+    public void addMoney(String playerName, float money) {
+        if(isInAnyTeam(playerName)) {
             personsMoney.put(playerName, personsMoney.get(playerName) + money);
             ScoreBoardMake(playerName);
         }
     }
-    public void addTeamMoney(Player player, float money) {
-        if(isPlayerInAnyTeam(player.getName())) {
+    public void addMoney(Player player, float money) {
+        if(isInAnyTeam(player)) {
             personsMoney.put(player.getName(), personsMoney.get(player.getName()) + money);
             ScoreBoardMake(player.getName());
         }
     }
-    public float getTeamMoney(Player player){
-        if(isPlayerInAnyTeam(player.getName())) {
+    public float getMoney(Player player){
+        if(isInAnyTeam(player)) {
             return personsMoney.get(player.getName());
         }else {
             return 0;
         }
     }
-    public float getTeamMoney(String playerName){
-        if(isPlayerInAnyTeam(playerName)) {
-            return personsMoney.get(playerName);
-        }else {
-            return 0;
-        }
-    }
 
-    public boolean isPlayerInAnyTeam(String playerName){
+    public boolean isInAnyTeam(Player player){
+        return personsMoney.containsKey(player.getName());
+    }
+    public boolean isInAnyTeam(String playerName){
         return personsMoney.containsKey(playerName);
     }
 
     //プレイヤーがいるチームの全員のHPを管理する。チームのすべてのプレイヤーを検索しHPを変更。
-    public void setPlayerTeamHealth(Player player) {
-        if(isPlayerInAnyTeam(player.getName())) {
+    public void setHealth(Player player) {
+        if(isInAnyTeam(player)) {
             changeHealth(player, personsMoney.get(player.getName()));
         }
     }
     //すべてのチームの全員のHPを元に戻す
-    public void resetAllTeamHealth() {
+    public void resetAllHealth() {
         List<World> worlds = Bukkit.getWorlds();
         for (World world : worlds){
             List<Player> players = world.getPlayers();
@@ -103,19 +100,31 @@ public class PersonalMoneyOperator extends TeamOperator{
         }
     }
     //すべてのチームの全員のHPを更新
-    public void setAllTeamHealth() {
+    public void setAllHealth() {
         List<World> worlds = Bukkit.getWorlds();
         for (World world : worlds){
             List<Player> players = world.getPlayers();
             for (Player player : players){
-                if(isPlayerInAnyTeam(player)) {
-                    changeHealth(player, personsMoney.get(player.getName()));
+                if(isInAnyTeam(player)) {
+                    try {
+                        Set<String> playerssss = personsMoney.keySet();
+                        for (String playerrr : playerssss) {
+                            Bukkit.getLogger().info("playerrrr" + playerrr);
+                        }
+                        for (String playerrr : playerssss) {
+                            Bukkit.getLogger().info(String.valueOf(personsMoney.get(playerrr)));
+                        }
+                        Bukkit.getLogger().info("player" + player.getName());
+                        changeHealth(player, personsMoney.get(player.getName()));
+                    }catch (Exception e){
+                        Bukkit.getLogger().info("errrrr" + e.getMessage());
+                    }
                 }
             }
         }
     }
 
-    private void changeHealth(Player player, float money){
+    private void changeHealth(Player player, float money) {
         AttributeInstance healthAttribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         //お金の量が0から離れれば離れるほど、HPも増減する。ハイパボリックタンジェントを利用
         Objects.requireNonNull(healthAttribute).setBaseValue(20 * (1 + Math.tanh(money / Const.MONEY_HEALTH)));

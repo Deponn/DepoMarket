@@ -39,7 +39,7 @@ public class MyProperties {
                     boundOfMoney = Float.parseFloat(settings.getProperty(Const.BoundOfMoneyPropName));
                     priceMoveRate = Float.parseFloat(settings.getProperty(Const.PriceMoveRatePropName));
                     itemDataBase = settings.getProperty(Const.DBItemPropName);
-                    teamGame = Boolean.getBoolean(settings.getProperty(Const.isTeamGamePropName));
+                    teamGame = Boolean.parseBoolean(settings.getProperty(Const.isTeamGamePropName));
                     flag = true;
                 }
             }
@@ -59,6 +59,8 @@ public class MyProperties {
             this.PriceMoveRate = priceMoveRate;
             this.ItemDataBase = itemDataBase;
             this.isTeamGame = teamGame;
+
+
         } catch (IOException e) {
             Bukkit.getLogger().info(e.getMessage());
             throw new RuntimeException(e);

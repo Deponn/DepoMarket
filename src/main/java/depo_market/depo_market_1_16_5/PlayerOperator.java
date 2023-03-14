@@ -53,7 +53,7 @@ public class PlayerOperator {
                         MakeSubMenu(ClickedSlot);
                     }
                 } else if (ClickedSlot == 25) {
-                    player.sendMessage(Math.round(operator.teamOp.getTeamMoney(player)) + "円");
+                    player.sendMessage(Math.round(operator.teamOp.getMoney(player)) + "円");
                 } else if (ClickedSlot == 26) {
                     player.closeInventory();
                 }
@@ -76,7 +76,7 @@ public class PlayerOperator {
                     MakeSubMenu(player_inv_state);
 
                 } else if (ClickedSlot == 25) {
-                    player.sendMessage(Math.round(operator.teamOp.getTeamMoney(player)) + "円");
+                    player.sendMessage(Math.round(operator.teamOp.getMoney(player)) + "円");
                 } else if (ClickedSlot == 26) {
                     MakeMainMenu();
                 }
@@ -89,7 +89,7 @@ public class PlayerOperator {
                     SellEnchantItem(ClickedSlot - 9);
                     MakeEnchantMenu();
                 } else if (ClickedSlot == 25) {
-                    player.sendMessage(Math.round(operator.teamOp.getTeamMoney(player)) + "円");
+                    player.sendMessage(Math.round(operator.teamOp.getMoney(player)) + "円");
                 } else if (ClickedSlot == 26) {
                     MakeMainMenu();
                 }
@@ -99,7 +99,7 @@ public class PlayerOperator {
     public void MakeMainMenu() {
         Player player = Bukkit.getPlayer(playerID);
         if (player != null) {
-            final Inventory MainMenu = MenuMaker.MainMenu(operator.DBTradeItem.getMenuSlotList(), operator.teamOp.getTeamMoney(player), operator.market);
+            final Inventory MainMenu = MenuMaker.MainMenu(operator.DBTradeItem.getMenuSlotList(), operator.teamOp.getMoney(player), operator.market);
             player.openInventory((MainMenu));
             player_is_in_Menu = true;
             player_inv_state = INDEX_OF_MAIN_MENU;
@@ -112,7 +112,7 @@ public class PlayerOperator {
             final Material SelectedMaterial = operator.DBTradeItem.getMenuSlotList().get(ClickedSlot).getMaterial();
             final String SelectedJpName = operator.DBTradeItem.getMenuSlotList().get(ClickedSlot).getJpName();
             final String SelectedEnName = operator.DBTradeItem.getMenuSlotList().get(ClickedSlot).getEnName();
-            final Inventory submenu = MenuMaker.SubMenu(SelectedMaterial, SelectedJpName, SelectedEnName, operator.DBTradeItem.getTradeAmountList(), operator.teamOp.getTeamMoney(player), operator.market);
+            final Inventory submenu = MenuMaker.SubMenu(SelectedMaterial, SelectedJpName, SelectedEnName, operator.DBTradeItem.getTradeAmountList(), operator.teamOp.getMoney(player), operator.market);
             player.openInventory(submenu);
             player_inv_state = ClickedSlot;
             player_is_in_Menu = true;
@@ -122,7 +122,7 @@ public class PlayerOperator {
     private void MakeEnchantMenu() {
         Player player = Bukkit.getPlayer(playerID);
         if (player != null) {
-            final Inventory EnchantMenu = MenuMaker.EnchantMenu(operator.DBTradeItem.getItemEnchantList(), operator.teamOp.getTeamMoney(player), operator.market);
+            final Inventory EnchantMenu = MenuMaker.EnchantMenu(operator.DBTradeItem.getItemEnchantList(), operator.teamOp.getMoney(player), operator.market);
             player.openInventory(EnchantMenu);
             player_inv_state = SLOT_OF_ENCHANT;
             player_is_in_Menu = true;
@@ -143,14 +143,14 @@ public class PlayerOperator {
     private void BuyItem(Material SelectedMaterial,String SelectedEnName, int tradeAmount) {
         Player player = Bukkit.getPlayer(playerID);
         if (player != null) {
-            if (operator.teamOp.isPlayerInAnyTeam(player)) {
-                if (operator.prop.Disadvantage == MoneyDisAd.DisableBuy && operator.teamOp.getTeamMoney(player) <= 0) {
+            if (operator.teamOp.isInAnyTeam(player)) {
+                if (operator.prop.Disadvantage == MoneyDisAd.DisableBuy && operator.teamOp.getMoney(player) <= 0) {
                     player.sendMessage("お金が足りません");
                 } else {
-                    if (operator.teamOp.getTeamMoney(player) >= - operator.prop.BoundOfMoney) {
+                    if (operator.teamOp.getMoney(player) >= - operator.prop.BoundOfMoney) {
                         TradeItem(SelectedMaterial, SelectedEnName, tradeAmount, true);
                         if (operator.prop.Disadvantage  == MoneyDisAd.Health) {
-                            operator.teamOp.setPlayerTeamHealth(player);
+                            operator.teamOp.setHealth(player);
                         }
                     } else {
                         player.sendMessage("これ以上借金できません");
@@ -167,11 +167,11 @@ public class PlayerOperator {
     private void SellItem(Material SelectedMaterial,String SelectedEnName, int tradeAmount) {
         Player player = Bukkit.getPlayer(playerID);
         if (player != null) {
-            if (operator.teamOp.isPlayerInAnyTeam(player)) {
-                if (operator.teamOp.getTeamMoney(player) <= operator.prop.BoundOfMoney * 10) {
+            if (operator.teamOp.isInAnyTeam(player)) {
+                if (operator.teamOp.getMoney(player) <= operator.prop.BoundOfMoney * 10) {
                     TradeItem(SelectedMaterial, SelectedEnName, tradeAmount, false);
                     if (operator.prop.Disadvantage  == MoneyDisAd.Health) {
-                        operator.teamOp.setPlayerTeamHealth(player);
+                        operator.teamOp.setHealth(player);
                     }
                 } else {
                     player.sendMessage("これ以上貯金できません");
@@ -192,14 +192,14 @@ public class PlayerOperator {
     private void BuyEnchantItem(int EnchantIndex) {
         Player player = Bukkit.getPlayer(playerID);
         if (player != null) {
-            if (operator.teamOp.isPlayerInAnyTeam(player)) {
-                if (operator.prop.Disadvantage  == MoneyDisAd.DisableBuy && operator.teamOp.getTeamMoney(player) <= 0) {
+            if (operator.teamOp.isInAnyTeam(player)) {
+                if (operator.prop.Disadvantage  == MoneyDisAd.DisableBuy && operator.teamOp.getMoney(player) <= 0) {
                     player.sendMessage("お金が足りません");
                 } else {
-                    if (operator.teamOp.getTeamMoney(player) >= - operator.prop.BoundOfMoney) {
+                    if (operator.teamOp.getMoney(player) >= - operator.prop.BoundOfMoney) {
                         TradeEnchantItem(EnchantIndex, true);
                         if (operator.prop.Disadvantage  == MoneyDisAd.Health) {
-                            operator.teamOp.setPlayerTeamHealth(player);
+                            operator.teamOp.setHealth(player);
                         }
                     } else {
                         player.sendMessage("これ以上借金できません");
@@ -215,11 +215,11 @@ public class PlayerOperator {
     private void SellEnchantItem(int EnchantIndex) {
         Player player = Bukkit.getPlayer(playerID);
         if (player != null) {
-            if (operator.teamOp.isPlayerInAnyTeam(player)) {
-                if (operator.teamOp.getTeamMoney(player) <= operator.prop.BoundOfMoney * 10) {
+            if (operator.teamOp.isInAnyTeam(player)) {
+                if (operator.teamOp.getMoney(player) <= operator.prop.BoundOfMoney * 10) {
                     TradeEnchantItem(EnchantIndex, false);
                     if (operator.prop.Disadvantage  == MoneyDisAd.Health) {
-                        operator.teamOp.setPlayerTeamHealth(player);
+                        operator.teamOp.setHealth(player);
                     }
                 } else {
                     player.sendMessage("これ以上貯金できません");
@@ -268,7 +268,7 @@ public class PlayerOperator {
                 }
                 earnMoney = operator.market.sell(SelectedEnName, tradedAmount);//金額を計算。値段も変動
             }
-            operator.teamOp.addTeamMoney(player, earnMoney);//お金をチームに加算。
+            operator.teamOp.addMoney(player, earnMoney);//お金をチームに加算。
             addPlayerMoney(earnMoney);//お金をプレイヤーに加算。
         }
     }
