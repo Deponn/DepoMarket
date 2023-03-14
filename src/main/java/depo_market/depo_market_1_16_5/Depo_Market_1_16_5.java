@@ -102,7 +102,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                 float amount = parser.amount_of_money; //floatに変換
                 Operator.GiveMoney(parser.team_name, amount);
                 if ((sender instanceof Player)) {
-                    sender.sendMessage(ChatColor.GREEN + parser.team_name + "に" + amount + "円お金をあげました");
+                    sender.sendMessage(ChatColor.GREEN + parser.team_name + "の所持金を" + amount + "円しました");
                 }
                 return true;
             } else if (cmd.getName().equalsIgnoreCase(CmdName.SetPointCustomer.getCmd())) {

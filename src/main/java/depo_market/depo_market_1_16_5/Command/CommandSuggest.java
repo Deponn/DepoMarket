@@ -92,7 +92,7 @@ public class CommandSuggest implements TabCompleter{
         }else if(argsList.size() > 1 && PriceMoveRate.equals(argsList.get(argsList.size() - 2))) {
             return Arrays.asList("0","0.5","1");
         }else if(argsList.size() > 1 && DBItem.equals(argsList.get(argsList.size() - 2))) {
-            return Arrays.asList(DBList.Kojosen.getName(), DBList.Default.getName());
+            return Arrays.asList(DBList.Kojosen.getName(),DBList.Kojosen2.getName(), DBList.Default.getName());
         }else if(argsList.size() > 1 && isTeamGame.equals(argsList.get(argsList.size() - 2))) {
             return Arrays.asList("true","false");
         }else if(argsList.size() == 1) {

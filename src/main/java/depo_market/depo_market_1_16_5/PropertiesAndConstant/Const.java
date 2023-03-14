@@ -17,7 +17,7 @@ public class Const {
     public static final double PriceMoveRateBase = 10000;
     public static final String PropertiesFileName = "DpMarket.properties";
     public static final String VersionPropName =  "Dp_Version";
-    public static final String thisVersion = "3.3";
+    public static final String thisVersion = "3.4";
     public static final String DisadvantagePropName = "Disadvantage";
     public static final MoneyDisAd Default_DisAd = MoneyDisAd.Health;
     public static final String PrizeMoneyPropName = "PrizeMoney";
@@ -27,7 +27,7 @@ public class Const {
     public static final String PriceMoveRatePropName = "PriceMoveRate";
     public static final float Default_PriceMove = 0f;
     public static final String DBItemPropName = "DBItem";
-    public static final String Default_DBItem = DBList.Kojosen.getName();
+    public static final String Default_DBItem = DBList.Kojosen2.getName();
     public static final String isTeamGamePropName = "isTeamGame";
     public static final boolean Default_isTeamGame = true;
 

@@ -5,8 +5,8 @@ import java.util.Objects;
 
 public enum DBList {
     Kojosen("Kojosen"),
-    Default("Default");
-
+    Default("Default"),
+    Kojosen2("Kojosen2");
     private final String Name;
     DBList(String name) {
         this.Name = name;
@@ -21,6 +21,8 @@ public enum DBList {
             return new DBDefault();
         }else if(Objects.equals(name, DBList.Kojosen.Name)){
             return new DBKojosen();
+        }else if(Objects.equals(name, DBList.Kojosen2.Name)){
+            return new DBKojosen2();
         }else {
             return new DBEmpty();
         }

@@ -3,6 +3,7 @@ package depo_market.depo_market_1_16_5;
 import depo_market.depo_market_1_16_5.ItemDataBase.DBInterface;
 import depo_market.depo_market_1_16_5.ItemDataBase.DBList;
 import depo_market.depo_market_1_16_5.PropertiesAndConstant.MyProperties;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -21,6 +22,7 @@ public class MyOperators {
         this.prop = new MyProperties();
         this.DBTradeItem = DBList.getItemDataBase(prop.ItemDataBase);
         this.market = new MarketOperator(this);
+        Bukkit.getLogger().info(String.valueOf(prop.isTeamGame));
         if(prop.isTeamGame) {
             this.teamOp = new TeamOperator();
         }else {
