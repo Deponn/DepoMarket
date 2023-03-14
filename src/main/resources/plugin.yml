@@ -7,9 +7,18 @@ description: Plugin that add market and economy to minecraft
 
 
 commands: #自作プラグインのコマンドを宣言
+  DpEnableDpPlugin:
+    description: プラグインを有効にする
+    usage: /    EnableDpPlugin
+    permission: market
+  DpDisableDpPlugin:
+    description: プラグインを無効にする
+    usage: /    DisableDpPlugin
+    permission: market
   DpInitializeMarket:
     description: マーケットのデータを初期化する
-    usage: /  DpInitializeMarket [自分の名前]
+    usage: /  DpInitializeMarket
+    permission: market
   DpStartMarket:
     description: マーケットを開始
     usage: /  DpStartMarket
@@ -22,29 +31,34 @@ commands: #自作プラグインのコマンドを宣言
     description: マーケット窓口を一人分実体化
     usage: /  DpPlaceCustomer
     permission: market
-  DpKillAllCustomers:
-    description: 全マーケット窓口を削除
-    usage: /  DpKillAllCustomers
+  DpSetPointCustomer:
+    description: マーケット窓口を一人分実体化
+    usage: /  DpSetPointCustomer
     permission: market
-  DpTax:
-    description: 徴税
-    usage: /  DpTax [チーム名] [金額]
+  DpKillAllCustomer:
+    description: 全マーケット窓口を削除
+    usage: /  DpKillAllCustomer
     permission: market
   DpGiveMoney:
     description: お金をあげる
     usage: /  DpGiveMoney [チーム名] [金額]
     permission: market
-  DpSetDisadvantage:
-    description: 借金した時のデバフを決める
-    usage: /  DpSetDisadvantage [デバフ名]
+  DpLookTeams:
+    description: 全チームの所持金を見る
+    usage: /     DpLookTeams
     permission: market
   DpNewTeam:
     description: チームが新たに作られた時用
     usage: /    DpNewTeam
     permission: market
-  DpLookTeams:
-    description: 全チームの所持金を見る
-    usage: /   DpLookTeams
+  DpLookScore:
+    description: スコアを見る
+    usage: /     DpLookScore
+    permission: market
+  DpChangeProperties:
+    description: プロパティ変更
+    usage: /       DpChangeProperties
+    permission: market
 
 permissions:
   market:

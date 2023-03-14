@@ -1,5 +1,7 @@
-package depo_market.depo_market_1_16_5;
+package depo_market.depo_market_1_16_5.ItemDataBase;
 
+import depo_market.depo_market_1_16_5.ItemStack.ItemEnchantData;
+import depo_market.depo_market_1_16_5.ItemStack.ItemMenuSlot;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 
@@ -7,17 +9,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DataBaseTradeItem {
-    private final ArrayList<ItemMenuSlot> MenuSlotList = new ArrayList<>();//メインメニューのアイテムリスト
-    private final ArrayList<Integer> TradeAmountList = new ArrayList<>();//サブメニューに表示する数量リスト
-    private final ArrayList<ItemEnchantData> itemEnchantList = new ArrayList<>();//エンチャントアイテムのリスト
-    private final ArrayList<ItemMenuSlot> InitialPriceList = new ArrayList<>();//取引アイテムの全種類リスト
-    private final Map<String, Float> InitialPriceMap = new HashMap<>();//取引アイテムの全種類の初期金額マップ
+public class DBDefault implements DBInterface{
+    private final ArrayList<ItemMenuSlot> MenuSlotList;//メインメニューのアイテムリスト
+    private final ArrayList<Integer> TradeAmountList;//サブメニューに表示する数量リスト
+    private final ArrayList<ItemEnchantData> itemEnchantList;//エンチャントアイテムのリスト
+    private final ArrayList<ItemMenuSlot> InitialPriceList;//取引アイテムの全種類リスト
+    private final Map<String, Float> InitialPriceMap;//取引アイテムの全種類の初期金額マップ
 
     /**
      * 初期値データやメニューに表示するアイテムのデータを生成するコンストラクタ
      */
-    public DataBaseTradeItem(){
+    public DBDefault(){
+        MenuSlotList = new ArrayList<>();//メインメニューのアイテムリスト
+        TradeAmountList = new ArrayList<>();//サブメニューに表示する数量リスト
+        itemEnchantList = new ArrayList<>();//エンチャントアイテムのリスト
+        InitialPriceList = new ArrayList<>();//取引アイテムの全種類リスト
+        InitialPriceMap = new HashMap<>();//取引アイテムの全種類の初期金額マップ
+
         this.TradeAmountList.add(1);
         this.TradeAmountList.add(4);
         this.TradeAmountList.add(16);
@@ -47,15 +55,6 @@ public class DataBaseTradeItem {
         this.MenuSlotList.add(new ItemMenuSlot(Material.BEDROCK, "BEDROCK", "岩盤", 10000f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.ENDER_EYE, "ENDER_EYE", "エンダーアイ", 10000f));
         ItemEnchantData eItem;
-        eItem = new ItemEnchantData(Material.BOW, "PoweredBOW", "火ダメノックバック弓", 30000f);
-        eItem.addEnchant(Enchantment.ARROW_DAMAGE, 5);
-        eItem.addEnchant(Enchantment.ARROW_FIRE, 1);
-        eItem.addEnchant(Enchantment.ARROW_KNOCKBACK, 2);
-        this.itemEnchantList.add(eItem);
-        eItem = new ItemEnchantData(Material.DIAMOND_SWORD, "PoweredDIAMOND_SWORD", "ノックバックダメージ強化ダイヤ剣", 20000f);
-        eItem.addEnchant(Enchantment.KNOCKBACK, 2);
-        eItem.addEnchant(Enchantment.DAMAGE_ALL, 5);
-        this.itemEnchantList.add(eItem);
         eItem = new ItemEnchantData(Material.DIAMOND_PICKAXE, "D_PICK_1", "幸運修繕効率強化耐久ピッケル", 20000f);
         eItem.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 3);
         eItem.addEnchant(Enchantment.MENDING, 1);
@@ -74,6 +73,8 @@ public class DataBaseTradeItem {
         eItem.addEnchant(Enchantment.LURE, 3);
         eItem.addEnchant(Enchantment.DURABILITY, 3);
         this.itemEnchantList.add(eItem);
+
+
         for (int i = 1; i < MenuSlotList.size(); i++) {
             InitialPriceList.add(MenuSlotList.get(i));
         }

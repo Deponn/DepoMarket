@@ -1,4 +1,4 @@
-package depo_market.depo_market_1_16_5;
+package depo_market.depo_market_1_16_5.ItemStack;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * メニューに表示するアイテムのデータを保持するオブジェクトの拡張。アイテムの量も保持
  */
-public class ItemSubMenuSlot extends ItemStackData{
+public class ItemSubMenuSlot extends ItemStackData {
 
     private final int Amount;
 
