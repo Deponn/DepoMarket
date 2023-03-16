@@ -3,13 +3,12 @@ package depo_market.depo_market_1_16_5.Command;
 public enum CmdName {
 
 
-    EnablePlugin("DpEnableDpPlugin"),
-    DisablePlugin("DpDisableDpPlugin"),
+    EnablePlugin("DpEnableMarketPlugin"),
+    DisablePlugin("DpDisableMarketPlugin"),
     InitializeMarket("DpInitializeMarket"),
     StartMarket("DpStartMarket"),
     StopMarket("DpStopMarket"),
     PlaceCustomer("DpPlaceCustomer"),
-    SetPointCustomer("DpSetPointCustomer"),
     KillAllCustomer("DpKillAllCustomer"),
     GiveMoney("DpGiveMoney"),
     LookTeams("DpLookTeams"),

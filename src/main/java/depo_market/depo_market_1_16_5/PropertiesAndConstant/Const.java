@@ -1,7 +1,5 @@
 package depo_market.depo_market_1_16_5.PropertiesAndConstant;
 
-import depo_market.depo_market_1_16_5.ItemDataBase.DBInterface;
-import depo_market.depo_market_1_16_5.ItemDataBase.DBKojosen;
 import depo_market.depo_market_1_16_5.ItemDataBase.DBList;
 
 import java.util.ArrayList;
@@ -21,7 +19,7 @@ public class Const {
     public static final String DisadvantagePropName = "Disadvantage";
     public static final MoneyDisAd Default_DisAd = MoneyDisAd.Health;
     public static final String PrizeMoneyPropName = "PrizeMoney";
-    public static final float Default_PrizeMoney = 5000f;
+    public static final float Default_PrizeMoney = 2000f;
     public static final String BoundOfMoneyPropName = "BoundOfMoney";
     public static final float Default_BoundOfMoney = 200000f;
     public static final String PriceMoveRatePropName = "PriceMoveRate";

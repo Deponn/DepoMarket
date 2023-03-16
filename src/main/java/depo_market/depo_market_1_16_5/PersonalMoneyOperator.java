@@ -23,7 +23,6 @@ public class PersonalMoneyOperator implements MoneyOperator{
         for (World world : worlds){
             List<Player> players = world.getPlayers();
             for (Player player : players){
-                Bukkit.getLogger().info("aaa" + player.getName());
                 personsMoney.put(player.getName(),0f);
             }
         }
@@ -107,17 +106,9 @@ public class PersonalMoneyOperator implements MoneyOperator{
             for (Player player : players){
                 if(isInAnyTeam(player)) {
                     try {
-                        Set<String> playerssss = personsMoney.keySet();
-                        for (String playerrr : playerssss) {
-                            Bukkit.getLogger().info("playerrrr" + playerrr);
-                        }
-                        for (String playerrr : playerssss) {
-                            Bukkit.getLogger().info(String.valueOf(personsMoney.get(playerrr)));
-                        }
-                        Bukkit.getLogger().info("player" + player.getName());
                         changeHealth(player, personsMoney.get(player.getName()));
                     }catch (Exception e){
-                        Bukkit.getLogger().info("errrrr" + e.getMessage());
+                        Bukkit.getLogger().info("error" + e.getMessage());
                     }
                 }
             }

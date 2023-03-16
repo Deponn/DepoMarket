@@ -31,6 +31,8 @@ public class CommandSuggest implements TabCompleter{
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if(command.getName().equalsIgnoreCase(CmdName.GiveMoney.getCmd())) {
             return suggest_give_money(sender, args);
+        }else if (command.getName().equalsIgnoreCase(CmdName.PlaceCustomer.getCmd())){
+                return suggest_PlaceCustomer(sender, args);
         }else if (command.getName().equalsIgnoreCase(CmdName.ChangeProperties.getCmd())){
             return Suggest_Properties(sender, args);
         }else {
@@ -63,6 +65,13 @@ public class CommandSuggest implements TabCompleter{
                     .filter(s -> !argsList.contains(s))
                     .collect(Collectors.toList());
         }
+    }
+    private static List<String> suggest_PlaceCustomer(CommandSender sender, String[] args) {
+        List<String> argsList = Arrays.asList(args);
+        if (argsList.size() <3) {
+            return Arrays.asList("1000","0","2000");
+        }
+        return new ArrayList<>();
     }
     /**
      * プロパティを決めるコマンドのTAB補完候補を返す

@@ -47,14 +47,13 @@ public class DBKojosen2 implements DBInterface {
         this.MenuSlotList.add(new ItemMenuSlot(Material.ARROW, "Arrow", "矢", 50f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.BOW, "BOW", "弓", 1500f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.CROSSBOW, "CROSSBOW", "クロスボウ", 1000f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.LEATHER, "Leather", "革", 100f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.IRON_SWORD, "IRON_SWORD", "鉄剣", 1000f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.SHIELD, "SHIELD", "盾", 1500f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.CHAINMAIL_HELMET, "CHAINMAIL_HELMET", "チェーン鎧頭", 1500f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.CHAINMAIL_CHESTPLATE, "CHAINMAIL_CHESTPLATE", "チェーン鎧上", 2000f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.CHAINMAIL_LEGGINGS, "CHAINMAIL_LEGGINGS", "チェーン鎧下", 2000f));
-        this.MenuSlotList.add(new ItemMenuSlot(Material.CHAINMAIL_BOOTS, "CHAINMAIL_BOOTS", "チェーン鎧靴", 1500f));
-
+        this.MenuSlotList.add(new ItemMenuSlot(Material.LEATHER_HELMET, "LEATHER_HELMET", "`革鎧頭", 500f));
+        this.MenuSlotList.add(new ItemMenuSlot(Material.CHAINMAIL_CHESTPLATE, "CHAINMAIL_CHESTPLATE", "チェーン鎧上", 3000f));
+        this.MenuSlotList.add(new ItemMenuSlot(Material.LEATHER_LEGGINGS, "LEATHER_LEGGINGS", "革鎧下", 500f));
+        this.MenuSlotList.add(new ItemMenuSlot(Material.LEATHER_BOOTS, "LEATHER_BOOTS", "革鎧靴", 500f));
+        this.MenuSlotList.add(new ItemMenuSlot(Material.TOTEM_OF_UNDYING, "TOTEM_OF_UNDYING", "トーテム", 10000f));
 
         ItemEnchantData eItem;
         eItem = new ItemEnchantData(Material.DIAMOND_PICKAXE, "LuckyPICKAXE", "幸運ピッケル", 30000f);

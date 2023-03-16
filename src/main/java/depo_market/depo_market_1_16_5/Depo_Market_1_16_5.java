@@ -105,15 +105,26 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
                     sender.sendMessage(ChatColor.GREEN + parser.team_name + "の所持金を" + amount + "円しました");
                 }
                 return true;
-            } else if (cmd.getName().equalsIgnoreCase(CmdName.SetPointCustomer.getCmd())) {
+            } else if (cmd.getName().equalsIgnoreCase(CmdName.PlaceCustomer.getCmd())) {
                 CmdParserSetPoint parser = CmdParserSetPoint.parse(sender, args);
                 if (!parser.isSuccess()) {
                     // パース失敗
                     return true;
                 }
+                if(parser.noXYZ){
+                    if ((sender instanceof Player)) {
+                        Player player = (Player) sender;
+                        Operator.PlaceCustomer(player);
+                        player.sendMessage("商人設置");
+                    }else {
+                        // コマブロやコンソールからの実行の場合
+                        sender.sendMessage(ChatColor.DARK_GRAY + "このコマンドはプレイヤーのみが使えます。");
+                    }
+                    return true;
+                }
                 Operator.PlaceCustomer(parser.X, parser.Y, parser.Z);
                 if ((sender instanceof Player)) {
-                    sender.sendMessage(ChatColor.GREEN + "商人を" + parser.X + parser.Y + parser.Z + "に置きました");
+                    sender.sendMessage(ChatColor.GREEN + "商人を" + parser.X + "," + parser.Y + "," + parser.Z + "に置きました");
                 }
                 return true;
             } else if (cmd.getName().equalsIgnoreCase(CmdName.KillAllCustomer.getCmd())) {
@@ -133,11 +144,7 @@ public final class Depo_Market_1_16_5 extends JavaPlugin implements Listener{
             Player player = (Player) sender;
 
             // コマンド処理...
-            if (cmd.getName().equalsIgnoreCase(CmdName.PlaceCustomer.getCmd())) {
-                Operator.PlaceCustomer(player);
-                player.sendMessage("商人設置");
-                return true;
-            } else if (cmd.getName().equalsIgnoreCase(CmdName.LookTeams.getCmd())) {
+            if (cmd.getName().equalsIgnoreCase(CmdName.LookTeams.getCmd())) {
                 Operator.LookTeams(player);
                 return true;
             } else if (cmd.getName().equalsIgnoreCase(CmdName.LookScore.getCmd())) {
