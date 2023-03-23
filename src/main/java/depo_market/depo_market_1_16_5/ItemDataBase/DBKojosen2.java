@@ -41,6 +41,7 @@ public class DBKojosen2 implements DBInterface {
         this.MenuSlotList.add(new ItemMenuSlot(Material.OAK_LOG, "Oak", "オークの原木", 150f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.COBBLESTONE, "CobbleStone", "丸石", 20f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.SAND, "Sand", "砂", 40f));
+        this.MenuSlotList.add(new ItemMenuSlot(Material.SANDSTONE, "SandStone", "砂石", 160f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.DIRT, "DIRT", "土", 20f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.BREAD, "Bread", "パン", 150f));
         this.MenuSlotList.add(new ItemMenuSlot(Material.COOKED_BEEF, "COOKED_BEEF", "肉", 300f));
